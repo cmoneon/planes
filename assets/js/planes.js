@@ -3089,7 +3089,7 @@ Class(function Mobile() {
     var _hideNav, _iMax, _iFull, _iLock, _iLast, _orientationPrevent, _type;
     this.sleepTime = 10000;
     this.scrollTop = 0;
-    this.autoResizeReload = true;
+    this.autoResizeReload = false;
     Mobile.ScreenLock;
     if (Device.mobile) {
         for (var b in Device.browser) {
@@ -3198,7 +3198,8 @@ Class(function Mobile() {
             _type = _this.phone ? "phone" : "tablet"
         });
         function determineType() {
-            Device.mobile.tablet = (function() {
+            var isPhoneByUA = Device.detect(["iphone", "ipod"]) || (Device.detect("android") && !Device.detect("tablet"));
+            Device.mobile.tablet = !isPhoneByUA && (function() {
                 if (Stage.width > Stage.height) {
                     return document.body.clientWidth > 800
                 } else {
@@ -5148,84 +5149,114 @@ Mobile.Class(function Accelerometer() {
     this.rotationRate = {};
     this.toRadians = Math.PI / 180;
     HydraEvents.createLocalEmitter(this);
+    function getScreenOrientation() {
+        if (typeof window.orientation !== "undefined") {
+            return window.orientation;
+        }
+        if (window.screen && window.screen.orientation && typeof window.screen.orientation.angle === "number") {
+            return window.screen.orientation.angle;
+        }
+        return 0;
+    }
     function updateAccel(e) {
-        switch (window.orientation) {
-        case 0:
-            _this.x = -e.acceleration.x;
-            _this.y = e.acceleration.y;
-            _this.z = e.acceleration.z;
-            if (e.rotationRate) {
-                _this.rotationRate.alpha = e.rotationRate.beta * _this.toRadians;
-                _this.rotationRate.beta = -e.rotationRate.alpha * _this.toRadians;
-                _this.rotationRate.gamma = e.rotationRate.gamma * _this.toRadians
-            }
-            break;
+        if (!e) {
+            return;
+        }
+        var acc = e.acceleration;
+        if (!acc || acc.x === null || typeof acc.x === "undefined") {
+            acc = e.accelerationIncludingGravity;
+        }
+        var ax = (acc && typeof acc.x === "number" && !isNaN(acc.x)) ? acc.x : 0;
+        var ay = (acc && typeof acc.y === "number" && !isNaN(acc.y)) ? acc.y : 0;
+        var az = (acc && typeof acc.z === "number" && !isNaN(acc.z)) ? acc.z : 0;
+
+        var rot = e.rotationRate;
+        var rAlpha = (rot && typeof rot.alpha === "number" && !isNaN(rot.alpha)) ? rot.alpha : 0;
+        var rBeta = (rot && typeof rot.beta === "number" && !isNaN(rot.beta)) ? rot.beta : 0;
+        var rGamma = (rot && typeof rot.gamma === "number" && !isNaN(rot.gamma)) ? rot.gamma : 0;
+
+        var orient = getScreenOrientation();
+        switch (orient) {
         case 180:
-            _this.x = e.acceleration.x;
-            _this.y = -e.acceleration.y;
-            _this.z = e.acceleration.z;
-            if (e.rotationRate) {
-                _this.rotationRate.alpha = -e.rotationRate.beta * _this.toRadians;
-                _this.rotationRate.beta = e.rotationRate.alpha * _this.toRadians;
-                _this.rotationRate.gamma = e.rotationRate.gamma * _this.toRadians
-            }
+            _this.x = ax;
+            _this.y = -ay;
+            _this.z = az;
+            _this.rotationRate.alpha = -rBeta * _this.toRadians;
+            _this.rotationRate.beta = rAlpha * _this.toRadians;
+            _this.rotationRate.gamma = rGamma * _this.toRadians;
             break;
         case 90:
-            _this.x = e.acceleration.y;
-            _this.y = e.acceleration.x;
-            _this.z = e.acceleration.z;
-            if (e.rotationRate) {
-                _this.rotationRate.alpha = e.rotationRate.alpha * _this.toRadians;
-                _this.rotationRate.beta = e.rotationRate.beta * _this.toRadians;
-                _this.rotationRate.gamma = e.rotationRate.gamma * _this.toRadians
-            }
+            _this.x = ay;
+            _this.y = ax;
+            _this.z = az;
+            _this.rotationRate.alpha = rAlpha * _this.toRadians;
+            _this.rotationRate.beta = rBeta * _this.toRadians;
+            _this.rotationRate.gamma = rGamma * _this.toRadians;
             break;
         case -90:
-            _this.x = -e.acceleration.y;
-            _this.y = -e.acceleration.x;
-            _this.z = e.acceleration.z;
-            if (e.rotationRate) {
-                _this.rotationRate.alpha = -e.rotationRate.alpha * _this.toRadians;
-                _this.rotationRate.beta = -e.rotationRate.beta * _this.toRadians;
-                _this.rotationRate.gamma = e.rotationRate.gamma * _this.toRadians
-            }
-            break
+        case 270:
+            _this.x = -ay;
+            _this.y = -ax;
+            _this.z = az;
+            _this.rotationRate.alpha = -rAlpha * _this.toRadians;
+            _this.rotationRate.beta = -rBeta * _this.toRadians;
+            _this.rotationRate.gamma = rGamma * _this.toRadians;
+            break;
+        case 0:
+        default:
+            _this.x = -ax;
+            _this.y = ay;
+            _this.z = az;
+            _this.rotationRate.alpha = rBeta * _this.toRadians;
+            _this.rotationRate.beta = -rAlpha * _this.toRadians;
+            _this.rotationRate.gamma = rGamma * _this.toRadians;
+            break;
         }
         _this.fire("motion", null)
     }
     function updateOrientation(e) {
+        if (!e) {
+            return;
+        }
         for (var key in e) {
             if (key.toLowerCase().strpos("heading")) {
                 _this.heading = e[key]
             }
         }
-        switch (window.orientation) {
-        case 0:
-            _this.alpha = e.beta * _this.toRadians;
-            _this.beta = -e.alpha * _this.toRadians;
-            _this.gamma = e.gamma * _this.toRadians;
-            break;
+        var beta = (typeof e.beta === "number" && !isNaN(e.beta)) ? e.beta : 0;
+        var alpha = (typeof e.alpha === "number" && !isNaN(e.alpha)) ? e.alpha : 0;
+        var gamma = (typeof e.gamma === "number" && !isNaN(e.gamma)) ? e.gamma : 0;
+
+        var orient = getScreenOrientation();
+        switch (orient) {
         case 180:
-            _this.alpha = -e.beta * _this.toRadians;
-            _this.beta = e.alpha * _this.toRadians;
-            _this.gamma = e.gamma * _this.toRadians;
+            _this.alpha = -beta * _this.toRadians;
+            _this.beta = alpha * _this.toRadians;
+            _this.gamma = gamma * _this.toRadians;
             break;
         case 90:
-            _this.alpha = e.alpha * _this.toRadians;
-            _this.beta = e.beta * _this.toRadians;
-            _this.gamma = e.gamma * _this.toRadians;
+            _this.alpha = alpha * _this.toRadians;
+            _this.beta = beta * _this.toRadians;
+            _this.gamma = gamma * _this.toRadians;
             break;
         case -90:
-            _this.alpha = -e.alpha * _this.toRadians;
-            _this.beta = -e.beta * _this.toRadians;
-            _this.gamma = e.gamma * _this.toRadians;
-            break
+        case 270:
+            _this.alpha = -alpha * _this.toRadians;
+            _this.beta = -beta * _this.toRadians;
+            _this.gamma = gamma * _this.toRadians;
+            break;
+        case 0:
+        default:
+            _this.alpha = beta * _this.toRadians;
+            _this.beta = -alpha * _this.toRadians;
+            _this.gamma = gamma * _this.toRadians;
+            break;
         }
-        _this.tilt = e.beta * _this.toRadians;
-        _this.yaw = e.alpha * _this.toRadians;
-        _this.roll = -e.gamma * _this.toRadians;
+        _this.tilt = beta * _this.toRadians;
+        _this.yaw = alpha * _this.toRadians;
+        _this.roll = -gamma * _this.toRadians;
         if (Mobile.os == "Android") {
-            _this.heading = compassHeading(e.alpha, e.beta, e.gamma)
+            _this.heading = compassHeading(alpha, beta, gamma)
         }
         _this.fire("orientation", null)
     }
@@ -5266,6 +5297,30 @@ Mobile.Class(function Accelerometer() {
         _this.x = _this.y = _this.z = 0;
         window.removeEventListener("deviceorientation", updateOrientation)
     }
+    ;
+    this.requestPermission = function() {
+        if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
+            DeviceMotionEvent.requestPermission().then(function(state) {
+                if (state === "granted") {
+                    _this.capture();
+                }
+            }).catch(function() {});
+        }
+        if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+            DeviceOrientationEvent.requestPermission().catch(function() {});
+        }
+    };
+    if (typeof window !== "undefined") {
+        var onFirstTouch = function() {
+            window.removeEventListener("touchstart", onFirstTouch);
+            window.removeEventListener("touchend", onFirstTouch);
+            window.removeEventListener("click", onFirstTouch);
+            _this.requestPermission();
+        };
+        window.addEventListener("touchstart", onFirstTouch, { passive: true });
+        window.addEventListener("touchend", onFirstTouch, { passive: true });
+        window.addEventListener("click", onFirstTouch, { passive: true });
+    }
 }, "Static");
 Mobile.Class(function ScreenLock() {
     Inherit(this, Component);
@@ -5282,7 +5337,7 @@ Mobile.Class(function ScreenLock() {
         var width = document.body.clientWidth;
         var height = document.body.clientHeight;
         _lockedNodes.forEach(function(e) {
-            if (Device.getFullscreen() && window.screen && window.screen.orientation.lock) {
+            if (Device.getFullscreen() && window.screen && window.screen.orientation && window.screen.orientation.lock) {
                 try {
                     var lock = window.screen.orientation.lock("portrait");
                     if (lock && lock.catch) {
@@ -25650,11 +25705,11 @@ Data.Class(function WebNotifications() {
             if (navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage(getAssets())
             } else {
-                navigator.serviceWorker.getRegistration("http://planes.damvan.ca/").then(function(reg) {
-                    if (reg.active) {
+                navigator.serviceWorker.getRegistration().then(function(reg) {
+                    if (reg && reg.active) {
                         reg.active.postMessage(getAssets())
                     }
-                })
+                }).catch(function() {})
             }
         } else {
             console.log("sw not available")
@@ -25777,7 +25832,7 @@ Data.Class(function Planes() {
                         return
                     }
                     var plane = e;
-                    plane.data = JSON.parse(plane.data);
+                    plane.data = (typeof plane.data === "string") ? JSON.parse(plane.data) : (plane.data || plane);
                     plane.number = obj.number;
                     myPlanes.push(plane);
                     load()
@@ -26001,7 +26056,7 @@ Data.Class(function Planes() {
                         return
                     }
                     var plane = e;
-                    plane.data = JSON.parse(plane.data);
+                    plane.data = (typeof plane.data === "string") ? JSON.parse(plane.data) : (plane.data || plane);
                     plane.number = obj.number;
                     _myPlanes[0] = plane;
                     callback(plane)
@@ -26022,7 +26077,7 @@ Data.Class(function Planes() {
                         return
                     }
                     var plane = e;
-                    plane.data = JSON.parse(plane.data);
+                    plane.data = (typeof plane.data === "string") ? JSON.parse(plane.data) : (plane.data || plane);
                     plane.number = obj.number;
                     _myPlanes[0] = plane;
                     callback(plane)
@@ -26059,7 +26114,7 @@ Data.Class(function Planes() {
                 }
                 _caughtPlane = {};
                 _caughtPlane.id = e.id;
-                _caughtPlane.data = JSON.parse(e.data);
+                _caughtPlane.data = (typeof e.data === "string") ? JSON.parse(e.data) : (e.data || e);
                 callback(_caughtPlane.data)
             }).catch(function() {
                 callback(_defaultPlane.data);
@@ -26879,13 +26934,6 @@ Data.Class(function User() {
                     loadIpGeo()
                 }
             }, function(error) {
-                if (error && (error.code == error.PERMISSION_DENIED || error.code == 1)) {
-                    window.LOCATION_DENIED = true;
-                    if (window.Blocker && Blocker.instance) {
-                        Blocker.instance("location")
-                    }
-                    return
-                }
                 loadIpGeo()
             }, {
                 enableHighAccuracy: true,
@@ -27172,7 +27220,7 @@ Class(function AudioController() {
         }
     }
     this.updateFlock = function(index, pos, releasedPlanes) {
-        if (disableAllAudio || disablePlaneSounds || _numberOfFlocks === 0) {
+        if (disableAllAudio || disablePlaneSounds || _numberOfFlocks === 0 || !pos) {
             return
         }
         var camera = World.instance().camera;
@@ -27270,7 +27318,9 @@ Class(function Blocker() {
     function initContainer() {
         $container = _this.container;
         $container.size("100%");
-        Stage.add($container)
+        if (window.Stage && Stage.add) {
+            Stage.add($container)
+        }
     }
     function initLoader() {
         _loader = _this.initClass(LoaderDesktop);
@@ -28457,7 +28507,9 @@ Class(function ContainerMobile() {
     function initContainer() {
         $container = _this.container;
         $container.size("100%");
-        Stage.add($container)
+        if (window.Stage && Stage.add) {
+            Stage.add($container)
+        }
     }
     function initLoader() {
         _loader = _this.initClass(LoaderMobile)
@@ -29317,7 +29369,9 @@ Class(function Playground() {
     function initContainer() {
         $container = _this.container;
         $container.size("100%");
-        Stage.add($container)
+        if (window.Stage && Stage.add) {
+            Stage.add($container)
+        }
     }
     function initThree() {
         _scene = new THREE.Scene();
@@ -30284,7 +30338,7 @@ Class(function PlaneFlockingChunk(_index, _numParticles, _geometry, _numThreads)
         }
         _geometry.attributes.offset.needsUpdate = true;
         _geometry.attributes.orientation.needsUpdate = true;
-        if (!Device.mobile) {
+        if (!Device.mobile && audioPos) {
             AudioController.updateFlock(_index, audioPos, releasedPlanes[_index])
         }
         recycle(e.values)
