@@ -10384,7 +10384,7 @@ Class(function Config() {
     this.THROTTLE_SECOND = 5;
     this.THROTTLE_SECOND_IO = 10;
     this.LOCATIONS = [{
-        location: "Antigonish, Canada",
+        location: "Nova Scotia, Canada",
         coords: {
             lat: 45.62,
             lng: -61.99
@@ -10393,61 +10393,61 @@ Class(function Config() {
         realtime: true,
         country: "CA"
     }, {
-        location: "Halifax, Canada",
+        location: "Alberta, Canada",
         coords: {
-            lat: 44.65,
-            lng: -63.59
+            lat: 56.35,
+            lng: -115.20
         },
         priority: 4,
         realtime: true,
         country: "CA"
     }, {
-        location: "Truro, Canada",
+        location: "Texas, USA",
         coords: {
-            lat: 45.36,
-            lng: -63.27
+            lat: 31.50,
+            lng: -99.05
         },
         priority: 4,
         realtime: true,
-        country: "CA"
+        country: "US"
     }, {
-        location: "Kentville, Canada",
+        location: "California, USA",
         coords: {
-            lat: 45.09,
-            lng: -64.36
+            lat: 36.55,
+            lng: -118.99
         },
         priority: 4,
         realtime: true,
-        country: "CA"
+        country: "US"
     }, {
-        location: "Ottawa, Canada",
+        location: "Kyoto, Japan",
         coords: {
-            lat: 45.42,
-            lng: -75.70
+            lat: 35.29,
+            lng: 135.57
         },
         priority: 4,
         realtime: false,
-        country: "CA"
+        country: "JP"
     }, {
-        location: "St. John's, Canada",
+        location: "Wales, UK",
         coords: {
-            lat: 47.56,
-            lng: -52.73
+            lat: 51.99,
+            lng: -4.33
         },
         priority: 4,
         realtime: true,
-        country: "CA"
+        country: "UK"
     }, {
-        location: "Surrey, Canada",
+        location: "Scotland, UK",
         coords: {
-            lat: 49.19,
-            lng: -122.85
+            lat: 57.11,
+            lng: -4.28
         },
         priority: 4,
         realtime: true,
-        country: "CA"
+        country: "UK"
     }, {
-        location: "Cedar Rapids, USA",
+        location: "Iowa, USA",
         coords: {
             lat: 41.97,
             lng: -91.66
@@ -10456,7 +10456,7 @@ Class(function Config() {
         realtime: true,
         country: "US"
     }, {
-        location: "Denver, USA",
+        location: "Colorado, USA",
         coords: {
             lat: 39.73,
             lng: -104.98
@@ -10465,7 +10465,7 @@ Class(function Config() {
         realtime: true,
         country: "US"
     }, {
-        location: "Montreal, Canada",
+        location: "Quebec, Canada",
         coords: {
             lat: 45.501689,
             lng: -73.567256
@@ -10474,7 +10474,7 @@ Class(function Config() {
         realtime: true,
         country: "CA"
     }, {
-        location: "Seattle, USA",
+        location: "Washington, USA",
         coords: {
             lat: 47.60,
             lng: -122.32
@@ -10483,7 +10483,7 @@ Class(function Config() {
         realtime: true,
         country: "US"
     }, {
-        location: "Sheffield, UK",
+        location: "England, UK",
         coords: {
             lat: 53.38,
             lng: -1.47
@@ -10492,7 +10492,7 @@ Class(function Config() {
         realtime: false,
         country: "GB"
     }, {
-        location: "Austin, USA",
+        location: "Texas, USA",
         coords: {
             lat: 30.267153,
             lng: -97.743061
@@ -10500,17 +10500,8 @@ Class(function Config() {
         priority: 4,
         realtime: true,
         country: "US"
-    }, {
-        location: "Glasgow, UK",
-        coords: {
-            lat: 55.86,
-            lng: -4.25
-        },
-        priority: 4,
-        realtime: true,
-        country: "GB"
-    }, {
-        location: "Florence, Italy",
+    },  {
+        location: "Firenze, Italy",
         coords: {
             lat: 43.77,
             lng: 11.25
@@ -10518,24 +10509,6 @@ Class(function Config() {
         priority: 4,
         realtime: true,
         country: "IT"
-    }, {
-        location: "Lunenburg, Canada",
-        coords: {
-            lat: 44.37,
-            lng: -64.30
-        },
-        priority: 4,
-        realtime: true,
-        country: "CA"
-    }, {
-        location: "Red Deer, Canada",
-        coords: {
-            lat: -52.27,
-            lng: -113.80
-        },
-        priority: 4,
-        realtime: false,
-        country: "CA"
     }]
 }, "static");
 Class(function Copy() {
