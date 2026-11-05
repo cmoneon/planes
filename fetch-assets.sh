@@ -161,33 +161,28 @@ for asset in "${ASSETS[@]}"; do
 done
 
 for audio in "${AUDIO_ASSETS[@]}"; do
-  dest="$REPO_ROOT/assets/audio/desktop_lq/sounds/$audio.ogg"
+  for ext in ogg mp3; do
+    dest="$REPO_ROOT/assets/audio/desktop_lq/sounds/$audio.$ext"
 
-  if [[ -f "$dest" ]]; then
-    echo "  skip  assets/audio/desktop_lq/sounds/$audio.ogg"
-    (( skip++ )) || true
-    continue
-  fi
+    if [[ -f "$dest" ]]; then
+      echo "  skip  assets/audio/desktop_lq/sounds/$audio.$ext"
+      (( skip++ )) || true
+      continue
+    fi
 
-  mkdir -p "$(dirname "$dest")"
-  url="$BASE/assets/audio/desktop_lq/sounds/$audio.ogg"
+    mkdir -p "$(dirname "$dest")"
+    url="$BASE/assets/audio/desktop_lq/sounds/$audio.$ext"
 
-  if curl -fsSL --max-time 30 -o "$dest" "$url"; then
-    echo "  ok    assets/audio/desktop_lq/sounds/$audio.ogg"
-    (( ok++ )) || true
-  else
-    rm -f "$dest"
-    url="$BASE/assets/audio/desktop_lq/sounds/$audio.mp3"
     if curl -fsSL --max-time 30 -o "$dest" "$url"; then
-      echo "  ok    assets/audio/desktop_lq/sounds/$audio.mp3"
+      echo "  ok    assets/audio/desktop_lq/sounds/$audio.$ext"
       (( ok++ )) || true
     else
-      echo "  FAIL  assets/audio/desktop_lq/sounds/$audio.(ogg|mp3)"
+      echo "  FAIL  assets/audio/desktop_lq/sounds/$audio.$ext"
       rm -f "$dest"
       (( fail++ )) || true
-      fail_list+=("assets/audio/desktop_lq/sounds/$audio.(ogg|mp3)")
+      fail_list+=("assets/audio/desktop_lq/sounds/$audio.$ext")
     fi
-  fi
+  done
 done
 
 echo ""
