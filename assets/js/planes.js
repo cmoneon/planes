@@ -1,24 +1,24 @@
 window.Global = {};
-window.getURL = function(url, target) {
+window.getURL = function (url, target) {
     if (!target) {
         target = "_blank"
     }
     window.open(url, target)
 }
-;
+    ;
 if (typeof (console) === "undefined") {
     window.console = {};
-    console.log = console.error = console.info = console.debug = console.warn = console.trace = function() {}
+    console.log = console.error = console.info = console.debug = console.warn = console.trace = function () { }
 }
 if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame = (function() {
-        return window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback, element) {
+    window.requestAnimationFrame = (function () {
+        return window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
             window.setTimeout(callback, 1000 / 60)
         }
     }
     )()
 }
-window.performance = (function() {
+window.performance = (function () {
     if (window.performance && window.performance.now) {
         return window.performance
     } else {
@@ -26,11 +26,11 @@ window.performance = (function() {
     }
 }
 )();
-Date.now = Date.now || function() {
+Date.now = Date.now || function () {
     return +new Date
 }
-;
-window.Class = function(_class, _type) {
+    ;
+window.Class = function (_class, _type) {
     var _this = this || window;
     var _string = _class.toString();
     var _name = _class.toString().match(/function ([^\(]+)/)[1];
@@ -40,12 +40,12 @@ window.Class = function(_class, _type) {
         _type = null
     }
     _type = (_type || "").toLowerCase();
-    _class.prototype.__call = function() {
+    _class.prototype.__call = function () {
         if (this.events) {
             this.events.scope(this)
         }
     }
-    ;
+        ;
     if (!_type) {
         _this[_name] = _class;
         _static && _static()
@@ -54,16 +54,16 @@ window.Class = function(_class, _type) {
             _this[_name] = new _class()
         } else {
             if (_type == "singleton") {
-                _this[_name] = (function() {
+                _this[_name] = (function () {
                     var __this = {};
                     var _instance;
-                    __this.instance = function() {
+                    __this.instance = function () {
                         if (!_instance) {
                             _instance = new _class()
                         }
                         return _instance
                     }
-                    ;
+                        ;
                     return __this
                 }
                 )()
@@ -77,12 +77,12 @@ window.Class = function(_class, _type) {
         this[_name]._namespace = this.__namespace
     }
 }
-;
-window.Inherit = function(child, parent, param) {
+    ;
+window.Inherit = function (child, parent, param) {
     if (typeof param === "undefined") {
         param = child
     }
-    var p = new parent(param,true);
+    var p = new parent(param, true);
     var save = {};
     for (var method in p) {
         child[method] = p[method];
@@ -91,7 +91,7 @@ window.Inherit = function(child, parent, param) {
     if (child.__call) {
         child.__call()
     }
-    defer(function() {
+    defer(function () {
         for (method in p) {
             if ((child[method] && save[method]) && child[method] !== save[method]) {
                 child["_" + method] = save[method]
@@ -101,9 +101,9 @@ window.Inherit = function(child, parent, param) {
         child = parent = param = null
     })
 }
-;
-window.Implement = function(cl, intr) {
-    Render.nextFrame(function() {
+    ;
+window.Implement = function (cl, intr) {
+    Render.nextFrame(function () {
         var intrface = new intr();
         for (var property in intrface) {
             if (typeof cl[property] === "undefined") {
@@ -117,8 +117,8 @@ window.Implement = function(cl, intr) {
         }
     })
 }
-;
-window.Namespace = function(name) {
+    ;
+window.Namespace = function (name) {
     if (typeof name === "string") {
         window[name] = {
             Class: window.Class
@@ -127,20 +127,20 @@ window.Namespace = function(name) {
         name.Class = window.Class
     }
 }
-;
-window.Interface = function(display) {
+    ;
+window.Interface = function (display) {
     var name = display.toString().match(/function ([^\(]+)/)[1];
     Hydra.INTERFACES[name] = display
 }
-;
+    ;
 window.THREAD = false;
 Class(function HydraObject(_selector, _type, _exists, _useFragment) {
     this._children = new LinkedList();
     this.__useFragment = _useFragment;
     this._initSelector(_selector, _type, _exists)
-}, function() {
+}, function () {
     var prototype = HydraObject.prototype;
-    prototype._initSelector = function(_selector, _type, _exists) {
+    prototype._initSelector = function (_selector, _type, _exists) {
         if (_selector && typeof _selector !== "string") {
             this.div = _selector
         } else {
@@ -174,15 +174,15 @@ Class(function HydraObject(_selector, _type, _exists, _useFragment) {
         }
         this.div.hydraObject = this
     }
-    ;
-    prototype.addChild = prototype.add = function(child) {
+        ;
+    prototype.addChild = prototype.add = function (child) {
         var div = this.div;
-        var createFrag = function() {
+        var createFrag = function () {
             if (this.__useFragment) {
                 if (!this._fragment) {
                     this._fragment = document.createDocumentFragment();
                     var _this = this;
-                    defer(function() {
+                    defer(function () {
                         if (!_this._fragment || !_this.div) {
                             return _this._fragment = null
                         }
@@ -216,12 +216,12 @@ Class(function HydraObject(_selector, _type, _exists, _useFragment) {
         }
         return this
     }
-    ;
-    prototype.clone = function() {
+        ;
+    prototype.clone = function () {
         return $(this.div.cloneNode(true))
     }
-    ;
-    prototype.create = function(name, type) {
+        ;
+    prototype.create = function (name, type) {
         var $obj = $(name, type);
         this.addChild($obj);
         if (this.__root) {
@@ -230,8 +230,8 @@ Class(function HydraObject(_selector, _type, _exists, _useFragment) {
         }
         return $obj
     }
-    ;
-    prototype.empty = function() {
+        ;
+    prototype.empty = function () {
         var child = this._children.start();
         while (child) {
             if (child && child.remove) {
@@ -242,33 +242,33 @@ Class(function HydraObject(_selector, _type, _exists, _useFragment) {
         this.div.innerHTML = "";
         return this
     }
-    ;
-    prototype.parent = function() {
+        ;
+    prototype.parent = function () {
         return this._parent
     }
-    ;
-    prototype.children = function() {
+        ;
+    prototype.children = function () {
         return this.div.children ? this.div.children : this.div.childNodes
     }
-    ;
-    prototype.append = function(callback, params) {
+        ;
+    prototype.append = function (callback, params) {
         if (!this.__root) {
             this.__root = this;
             this.__append = {}
         }
         return callback.apply(this, params)
     }
-    ;
-    prototype.removeChild = function(object, keep) {
+        ;
+    prototype.removeChild = function (object, keep) {
         try {
             object.div.parentNode.removeChild(object.div)
-        } catch (e) {}
+        } catch (e) { }
         if (!keep) {
             this._children.remove(object)
         }
     }
-    ;
-    prototype.remove = prototype.destroy = function() {
+        ;
+    prototype.remove = prototype.destroy = function () {
         this.removed = true;
         var parent = this._parent;
         if (!!(parent && !parent.removed && parent.removeChild)) {
@@ -293,7 +293,7 @@ Class(function Hydra() {
     this.READY = false;
     this.HASH = window.location.hash.slice(1);
     this.LOCAL = !window._BUILT_ && (location.hostname.indexOf("local") > -1 || location.hostname.split(".")[0] == "10" || location.hostname.split(".")[0] == "192");
-    (function() {
+    (function () {
         initLoad()
     }
     )();
@@ -329,8 +329,8 @@ Class(function Hydra() {
             Hydra.Main = new window.Main()
         }
     }
-    this.development = function(flag, array) {
-        var matchArray = function(prop) {
+    this.development = function (flag, array) {
+        var matchArray = function (prop) {
             if (!array) {
                 return false
             }
@@ -343,7 +343,7 @@ Class(function Hydra() {
         };
         clearInterval(_inter);
         if (flag) {
-            _inter = setInterval(function() {
+            _inter = setInterval(function () {
                 for (var prop in window) {
                     if (prop.strpos("webkit")) {
                         continue
@@ -366,8 +366,8 @@ Class(function Hydra() {
             }, 1000)
         }
     }
-    ;
-    this.getArguments = function(value) {
+        ;
+    this.getArguments = function (value) {
         var saved = this.arguments;
         var args = [];
         for (var i = 1; i < saved.length; i++) {
@@ -377,26 +377,26 @@ Class(function Hydra() {
         }
         return args
     }
-    ;
-    this.getClassName = function(obj) {
+        ;
+    this.getClassName = function (obj) {
         return obj.constructor.name || obj.constructor.toString().match(/function ([^\(]+)/)[1]
     }
-    ;
-    this.ready = function(callback) {
+        ;
+    this.ready = function (callback) {
         if (this.READY) {
             return callback()
         }
         _readyCallbacks.push(callback)
     }
-    ;
-    this.$ = function(selector, type, exists) {
-        return new HydraObject(selector,type,exists)
+        ;
+    this.$ = function (selector, type, exists) {
+        return new HydraObject(selector, type, exists)
     }
-    ;
-    this.__triggerReady = function() {
+        ;
+    this.__triggerReady = function () {
         loaded()
     }
-    ;
+        ;
     this.INTERFACES = {};
     this.HTML = {};
     this.JSON = {};
@@ -405,7 +405,7 @@ Class(function Hydra() {
     window.$ = this.$;
     window.ready = this.ready
 }, "Static");
-Hydra.ready(function() {
+Hydra.ready(function () {
     window.__window = $(window);
     window.__document = $(document);
     window.__body = $(document.getElementsByTagName("body")[0]);
@@ -414,26 +414,26 @@ Hydra.ready(function() {
     Stage.__useFragment = true;
     Stage.width = document.body.clientWidth || document.documentElement.offsetWidth || window.innerWidth;
     Stage.height = document.body.clientHeight || document.documentElement.offsetHeight || window.innerHeight;
-    (function() {
+    (function () {
         var _time = Date.now();
         var _last;
-        setTimeout(function() {
+        setTimeout(function () {
             var list = ["hidden", "msHidden", "webkitHidden"];
             var hidden, eventName;
-            (function() {
+            (function () {
                 for (var key in list) {
                     if (document[list[key]] !== "undefined") {
                         hidden = list[key];
                         switch (hidden) {
-                        case "hidden":
-                            eventName = "visibilitychange";
-                            break;
-                        case "msHidden":
-                            eventName = "msvisibilitychange";
-                            break;
-                        case "webkitHidden":
-                            eventName = "webkitvisibilitychange";
-                            break
+                            case "hidden":
+                                eventName = "visibilitychange";
+                                break;
+                            case "msHidden":
+                                eventName = "msvisibilitychange";
+                                break;
+                            case "webkitHidden":
+                                eventName = "webkitvisibilitychange";
+                                break
                         }
                         return
                     }
@@ -449,7 +449,7 @@ Hydra.ready(function() {
                     window.onblur = onblur
                 }
             } else {
-                document.addEventListener(eventName, function() {
+                document.addEventListener(eventName, function () {
                     var time = Date.now();
                     if (time - _time > 10) {
                         if (document[hidden] === false) {
@@ -480,7 +480,7 @@ Hydra.ready(function() {
         }
     }
     )();
-    window.onresize = function() {
+    window.onresize = function () {
         if (!Device.mobile) {
             Stage.width = document.body.clientWidth || document.documentElement.offsetWidth || window.innerWidth;
             Stage.height = document.body.clientHeight || document.documentElement.offsetHeight || window.innerHeight;
@@ -488,8 +488,8 @@ Hydra.ready(function() {
         }
     }
 });
-(function() {
-    $.fn.text = function(text) {
+(function () {
+    $.fn.text = function (text) {
         if (typeof text !== "undefined") {
             if (this.__cacheText != text) {
                 this.div.textContent = text
@@ -500,8 +500,8 @@ Hydra.ready(function() {
             return this.div.textContent
         }
     }
-    ;
-    $.fn.html = function(text, force) {
+        ;
+    $.fn.html = function (text, force) {
         if (text && !text.strpos("<") && !force) {
             return this.text(text)
         }
@@ -512,38 +512,38 @@ Hydra.ready(function() {
             return this.div.innerHTML
         }
     }
-    ;
-    $.fn.hide = function() {
+        ;
+    $.fn.hide = function () {
         this.div.style.display = "none";
         return this
     }
-    ;
-    $.fn.show = function() {
+        ;
+    $.fn.show = function () {
         this.div.style.display = "";
         return this
     }
-    ;
-    $.fn.visible = function() {
+        ;
+    $.fn.visible = function () {
         this.div.style.visibility = "visible";
         return this
     }
-    ;
-    $.fn.invisible = function() {
+        ;
+    $.fn.invisible = function () {
         this.div.style.visibility = "hidden";
         return this
     }
-    ;
-    $.fn.setZ = function(z) {
+        ;
+    $.fn.setZ = function (z) {
         this.div.style.zIndex = z;
         return this
     }
-    ;
-    $.fn.clearAlpha = function() {
+        ;
+    $.fn.clearAlpha = function () {
         this.div.style.opacity = "";
         return this
     }
-    ;
-    $.fn.size = function(w, h, noScale) {
+        ;
+    $.fn.size = function (w, h, noScale) {
         if (typeof w === "string") {
             if (typeof h === "undefined") {
                 h = "100%"
@@ -565,13 +565,13 @@ Hydra.ready(function() {
         this.height = h;
         return this
     }
-    ;
-    $.fn.mouseEnabled = function(bool) {
+        ;
+    $.fn.mouseEnabled = function (bool) {
         this.div.style.pointerEvents = bool ? "auto" : "none";
         return this
     }
-    ;
-    $.fn.fontStyle = function(family, size, color, style) {
+        ;
+    $.fn.fontStyle = function (family, size, color, style) {
         var font = {};
         if (family) {
             font.fontFamily = family
@@ -588,8 +588,8 @@ Hydra.ready(function() {
         this.css(font);
         return this
     }
-    ;
-    $.fn.bg = function(src, x, y, repeat) {
+        ;
+    $.fn.bg = function (src, x, y, repeat) {
         if (!src) {
             return this
         }
@@ -616,8 +616,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.center = function(x, y, noPos) {
+        ;
+    $.fn.center = function (x, y, noPos) {
         var css = {};
         if (typeof x === "undefined") {
             css.left = "50%";
@@ -641,13 +641,13 @@ Hydra.ready(function() {
         this.css(css);
         return this
     }
-    ;
-    $.fn.mask = function(arg, x, y, w, h) {
+        ;
+    $.fn.mask = function (arg, x, y, w, h) {
         this.div.style[CSS.prefix("Mask")] = (arg.strpos(".") ? "url(" + arg + ")" : arg) + " no-repeat";
         return this
     }
-    ;
-    $.fn.blendMode = function(mode, bg) {
+        ;
+    $.fn.blendMode = function (mode, bg) {
         if (bg) {
             this.div.style["background-blend-mode"] = mode
         } else {
@@ -655,8 +655,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.css = function(obj, value) {
+        ;
+    $.fn.css = function (obj, value) {
         if (typeof value == "boolean") {
             skip = value;
             value = null
@@ -694,8 +694,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.transform = function(props) {
+        ;
+    $.fn.transform = function (props) {
         if (this.multiTween && this.cssTweens && this._cssTweens.length > 1 && this.__transformTime && Render.TIME - this.__transformTime < 15) {
             return
         }
@@ -729,8 +729,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.useMatrix3D = function() {
+        ;
+    $.fn.useMatrix3D = function () {
         this._matrix = new Matrix4();
         this.x = 0;
         this.y = 0;
@@ -741,8 +741,8 @@ Hydra.ready(function() {
         this.scale = 1;
         return this
     }
-    ;
-    $.fn.useMatrix2D = function() {
+        ;
+    $.fn.useMatrix2D = function () {
         this._matrix = new Matrix2();
         this.x = 0;
         this.y = 0;
@@ -750,8 +750,8 @@ Hydra.ready(function() {
         this.scale = 1;
         return this
     }
-    ;
-    $.fn.willChange = function(props) {
+        ;
+    $.fn.willChange = function (props) {
         if (typeof props === "boolean") {
             if (props === true) {
                 this._willChangeLock = true
@@ -772,16 +772,16 @@ Hydra.ready(function() {
             this.div.style["will-change"] = ""
         }
     }
-    ;
-    $.fn.backfaceVisibility = function(visible) {
+        ;
+    $.fn.backfaceVisibility = function (visible) {
         if (visible) {
             this.div.style[CSS.prefix("BackfaceVisibility")] = "visible"
         } else {
             this.div.style[CSS.prefix("BackfaceVisibility")] = "hidden"
         }
     }
-    ;
-    $.fn.enable3D = function(perspective, x, y) {
+        ;
+    $.fn.enable3D = function (perspective, x, y) {
         this.div.style[CSS.prefix("TransformStyle")] = "preserve-3d";
         if (perspective) {
             this.div.style[CSS.prefix("Perspective")] = perspective + "px"
@@ -793,14 +793,14 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.disable3D = function() {
+        ;
+    $.fn.disable3D = function () {
         this.div.style[CSS.prefix("TransformStyle")] = "";
         this.div.style[CSS.prefix("Perspective")] = "";
         return this
     }
-    ;
-    $.fn.transformPoint = function(x, y, z) {
+        ;
+    $.fn.transformPoint = function (x, y, z) {
         var origin = "";
         if (typeof x !== "undefined") {
             origin += (typeof x === "number" ? x + "px " : x + " ")
@@ -814,8 +814,8 @@ Hydra.ready(function() {
         this.div.style[CSS.prefix("TransformOrigin")] = origin;
         return this
     }
-    ;
-    $.fn.tween = function(props, time, ease, delay, callback, manual) {
+        ;
+    $.fn.tween = function (props, time, ease, delay, callback, manual) {
         if (typeof delay === "boolean") {
             manual = delay;
             delay = 0;
@@ -835,8 +835,8 @@ Hydra.ready(function() {
         }
         return TweenManager._detectTween(this, props, time, ease, delay, callback, manual)
     }
-    ;
-    $.fn.clearTransform = function() {
+        ;
+    $.fn.clearTransform = function () {
         if (typeof this.x === "number") {
             this.x = 0
         }
@@ -876,8 +876,8 @@ Hydra.ready(function() {
         this.div.style[Device.styles.vendorTransform] = "";
         return this
     }
-    ;
-    $.fn.stopTween = function() {
+        ;
+    $.fn.stopTween = function () {
         if (this._cssTween) {
             this._cssTween.stop()
         }
@@ -886,9 +886,9 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.keypress = function(callback) {
-        this.div.onkeypress = function(e) {
+        ;
+    $.fn.keypress = function (callback) {
+        this.div.onkeypress = function (e) {
             e = e || window.event;
             e.code = e.keyCode ? e.keyCode : e.charCode;
             if (callback) {
@@ -896,9 +896,9 @@ Hydra.ready(function() {
             }
         }
     }
-    ;
-    $.fn.keydown = function(callback) {
-        this.div.onkeydown = function(e) {
+        ;
+    $.fn.keydown = function (callback) {
+        this.div.onkeydown = function (e) {
             e = e || window.event;
             e.code = e.keyCode;
             if (callback) {
@@ -906,9 +906,9 @@ Hydra.ready(function() {
             }
         }
     }
-    ;
-    $.fn.keyup = function(callback) {
-        this.div.onkeyup = function(e) {
+        ;
+    $.fn.keyup = function (callback) {
+        this.div.onkeyup = function (e) {
             e = e || window.event;
             e.code = e.keyCode;
             if (callback) {
@@ -916,8 +916,8 @@ Hydra.ready(function() {
             }
         }
     }
-    ;
-    $.fn.attr = function(attr, value) {
+        ;
+    $.fn.attr = function (attr, value) {
         if (attr && value) {
             if (value == "") {
                 this.div.removeAttribute(attr)
@@ -931,8 +931,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.val = function(value) {
+        ;
+    $.fn.val = function (value) {
         if (typeof value === "undefined") {
             return this.div.value
         } else {
@@ -940,11 +940,11 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.change = function(callback) {
+        ;
+    $.fn.change = function (callback) {
         var _this = this;
         if (this._type == "select") {
-            this.div.onchange = function() {
+            this.div.onchange = function () {
                 callback({
                     object: _this,
                     value: _this.div.value || ""
@@ -952,55 +952,55 @@ Hydra.ready(function() {
             }
         }
     }
-    ;
-    $.fn.svgSymbol = function(id, width, height) {
+        ;
+    $.fn.svgSymbol = function (id, width, height) {
         var config = SVG.getSymbolConfig(id);
         var svgHTML = '<svg viewBox="0 0 ' + config.width + " " + config.height + '" width="' + width + '" height="' + height + '"><use xlink:href="#' + config.id + '" x="0" y="0" /></svg>';
         this.html(svgHTML, true)
     }
 }
 )();
-(function() {
+(function () {
     var windowsPointer = !!window.MSGesture;
-    var translateEvent = function(evt) {
+    var translateEvent = function (evt) {
         if (Hydra.addEvent == "attachEvent") {
             switch (evt) {
-            case "click":
-                return "onclick";
-                break;
-            case "mouseover":
-                return "onmouseover";
-                break;
-            case "mouseout":
-                return "onmouseleave";
-                break;
-            case "mousedown":
-                return "onmousedown";
-                break;
-            case "mouseup":
-                return "onmouseup";
-                break;
-            case "mousemove":
-                return "onmousemove";
-                break
+                case "click":
+                    return "onclick";
+                    break;
+                case "mouseover":
+                    return "onmouseover";
+                    break;
+                case "mouseout":
+                    return "onmouseleave";
+                    break;
+                case "mousedown":
+                    return "onmousedown";
+                    break;
+                case "mouseup":
+                    return "onmouseup";
+                    break;
+                case "mousemove":
+                    return "onmousemove";
+                    break
             }
         }
         if (windowsPointer) {
             switch (evt) {
-            case "touchstart":
-                return "pointerdown";
-                break;
-            case "touchmove":
-                return "MSGestureChange";
-                break;
-            case "touchend":
-                return "pointerup";
-                break
+                case "touchstart":
+                    return "pointerdown";
+                    break;
+                case "touchmove":
+                    return "MSGestureChange";
+                    break;
+                case "touchend":
+                    return "pointerup";
+                    break
             }
         }
         return evt
     };
-    $.fn.click = function(callback) {
+    $.fn.click = function (callback) {
         var _this = this;
         function click(e) {
             if (!_this.div) {
@@ -1026,8 +1026,8 @@ Hydra.ready(function() {
         this.div.style.cursor = "pointer";
         return this
     }
-    ;
-    $.fn.hover = function(callback) {
+        ;
+    $.fn.hover = function (callback) {
         var _this = this;
         var _over = false;
         var _time;
@@ -1044,15 +1044,15 @@ Hydra.ready(function() {
             _time = time;
             e.object = _this.div.className == "hit" ? _this.parent() : _this;
             switch (e.type) {
-            case "mouseout":
-                e.action = "out";
-                break;
-            case "mouseleave":
-                e.action = "out";
-                break;
-            default:
-                e.action = "over";
-                break
+                case "mouseout":
+                    e.action = "out";
+                    break;
+                case "mouseleave":
+                    e.action = "out";
+                    break;
+                default:
+                    e.action = "over";
+                    break
             }
             if (_over) {
                 if (Mouse._preventClicks) {
@@ -1098,8 +1098,8 @@ Hydra.ready(function() {
         this.div[Hydra.addEvent](translateEvent("mouseout"), hover, true);
         return this
     }
-    ;
-    $.fn.press = function(callback) {
+        ;
+    $.fn.press = function (callback) {
         var _this = this;
         function press(e) {
             if (!_this.div) {
@@ -1107,12 +1107,12 @@ Hydra.ready(function() {
             }
             e.object = _this.div.className == "hit" ? _this.parent() : _this;
             switch (e.type) {
-            case "mousedown":
-                e.action = "down";
-                break;
-            default:
-                e.action = "up";
-                break
+                case "mousedown":
+                    e.action = "down";
+                    break;
+                default:
+                    e.action = "up";
+                    break
             }
             if (!e.pageX) {
                 e.pageX = e.clientX;
@@ -1126,8 +1126,8 @@ Hydra.ready(function() {
         this.div[Hydra.addEvent](translateEvent("mouseup"), press, true);
         return this
     }
-    ;
-    $.fn.bind = function(evt, callback) {
+        ;
+    $.fn.bind = function (evt, callback) {
         if (!this._events) {
             this._events = {}
         }
@@ -1198,8 +1198,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.unbind = function(evt, callback) {
+        ;
+    $.fn.unbind = function (evt, callback) {
         if (!this._events) {
             this._events = {}
         }
@@ -1239,8 +1239,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.interact = function(overCallback, clickCallback) {
+        ;
+    $.fn.interact = function (overCallback, clickCallback) {
         if (!this.hit) {
             this.hit = $(".hit");
             this.hit.css({
@@ -1259,8 +1259,8 @@ Hydra.ready(function() {
             this.hit.touchClick(overCallback, clickCallback)
         }
     }
-    ;
-    $.fn.touchSwipe = function(callback, distance) {
+        ;
+    $.fn.touchSwipe = function (callback, distance) {
         if (!window.addEventListener) {
             return this
         }
@@ -1334,8 +1334,8 @@ Hydra.ready(function() {
         }
         return this
     }
-    ;
-    $.fn.touchClick = function(hover, click) {
+        ;
+    $.fn.touchClick = function (hover, click) {
         if (!window.addEventListener) {
             return this
         }
@@ -1422,36 +1422,36 @@ Class(function MVC() {
     function defineSetter(_this, prop) {
         _setters[prop] = {};
         Object.defineProperty(_this, prop, {
-            set: function(v) {
+            set: function (v) {
                 if (_setters[prop] && _setters[prop].s) {
                     _setters[prop].s.call(_this, v)
                 }
                 v = null
             },
-            get: function() {
+            get: function () {
                 if (_setters[prop] && _setters[prop].g) {
                     return _setters[prop].g.apply(_this)
                 }
             }
         })
     }
-    this.set = function(prop, callback) {
+    this.set = function (prop, callback) {
         if (!_setters[prop]) {
             defineSetter(this, prop)
         }
         _setters[prop].s = callback
     }
-    ;
-    this.get = function(prop, callback) {
+        ;
+    this.get = function (prop, callback) {
         if (!_setters[prop]) {
             defineSetter(this, prop)
         }
         _setters[prop].g = callback
     }
-    ;
-    this.delayedCall = function(callback, time, params) {
+        ;
+    this.delayedCall = function (callback, time, params) {
         var _this = this;
-        var timer = Timer.create(function() {
+        var timer = Timer.create(function () {
             if (_this.destroy) {
                 callback(params)
             }
@@ -1463,13 +1463,13 @@ Class(function MVC() {
         }
         return timer
     }
-    ;
-    this.initClass = function(clss, a, b, c, d, e, f, g) {
+        ;
+    this.initClass = function (clss, a, b, c, d, e, f, g) {
         var name = Utils.timestamp();
         if (window.Hydra) {
             Hydra.arguments = arguments
         }
-        var child = new clss(a,b,c,d,e,f,g);
+        var child = new clss(a, b, c, d, e, f, g);
         if (window.Hydra) {
             Hydra.arguments = null
         }
@@ -1479,7 +1479,7 @@ Class(function MVC() {
             this.classes[name].__id = name
         }
         var lastArg = arguments[arguments.length - 1];
-        if (Array.isArray(lastArg) && lastArg.length == 1 && lastArg[0]instanceof HydraObject) {
+        if (Array.isArray(lastArg) && lastArg.length == 1 && lastArg[0] instanceof HydraObject) {
             lastArg[0].addChild(child)
         } else {
             if (this.element && lastArg !== null) {
@@ -1488,8 +1488,8 @@ Class(function MVC() {
         }
         return child
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         if (this.onDestroy) {
             this.onDestroy()
         }
@@ -1512,19 +1512,19 @@ Class(function MVC() {
         }
         return Utils.nullObject(this)
     }
-    ;
-    this.clearTimers = function() {
+        ;
+    this.clearTimers = function () {
         for (i = 0; i < _timers.length; i++) {
             clearTimeout(_timers[i])
         }
         _timers.length = 0
     }
-    ;
-    this.active = function(name, value, time) {
+        ;
+    this.active = function (name, value, time) {
         if (typeof value !== "undefined") {
             _active[name] = value;
             if (time) {
-                this.delayedCall(function() {
+                this.delayedCall(function () {
                     _active[name] = !_active[name]
                 }, time)
             }
@@ -1532,8 +1532,8 @@ Class(function MVC() {
             return _active[name]
         }
     }
-    ;
-    this.__destroyChild = function(name) {
+        ;
+    this.__destroyChild = function (name) {
         delete this.classes[name]
     }
 });
@@ -1543,29 +1543,29 @@ Class(function Model(name) {
     var _data = 0;
     var _triggered = 0;
     var _callbacks;
-    this.push = function(name, val) {
+    this.push = function (name, val) {
         _storage[name] = val
     }
-    ;
-    this.pull = function(name) {
+        ;
+    this.pull = function (name) {
         return _storage[name]
     }
-    ;
-    this.registerData = function() {
+        ;
+    this.registerData = function () {
         _data++
     }
-    ;
-    this.triggerData = function() {
+        ;
+    this.triggerData = function () {
         _triggered++;
         if (_triggered == _data) {
-            _callbacks && _callbacks.forEach(function(c) {
+            _callbacks && _callbacks.forEach(function (c) {
                 c()
             });
             _callbacks = null
         }
     }
-    ;
-    this.onReady = function(callback) {
+        ;
+    this.onReady = function (callback) {
         if (_callbacks === null) {
             return callback()
         }
@@ -1574,8 +1574,8 @@ Class(function Model(name) {
         }
         _callbacks.push(callback)
     }
-    ;
-    this.initWithData = function(data) {
+        ;
+    this.initWithData = function (data) {
         this.STATIC_DATA = data;
         for (var key in this) {
             var model = this[key];
@@ -1593,18 +1593,18 @@ Class(function Model(name) {
             }
         }
     }
-    ;
-    this.loadData = function(url, callback) {
+        ;
+    this.loadData = function (url, callback) {
         var _this = this;
-        XHR.get(url + "?" + Utils.timestamp(), function(d) {
-            defer(function() {
+        XHR.get(url + "?" + Utils.timestamp(), function (d) {
+            defer(function () {
                 _this.initWithData(d);
                 callback(d)
             })
         })
     }
-    ;
-    this.Class = function(model) {
+        ;
+    this.Class = function (model) {
         var name = model.toString().match(/function ([^\(]+)/)[1];
         this[name] = new model()
     }
@@ -1615,20 +1615,20 @@ Class(function View(_child) {
     var name = Hydra.getClassName(_child);
     this.element = $("." + name);
     this.element.__useFragment = true;
-    this.css = function(obj) {
+    this.css = function (obj) {
         this.element.css(obj);
         return this
     }
-    ;
-    this.transform = function(obj) {
+        ;
+    this.transform = function (obj) {
         this.element.transform(obj || this);
         return this
     }
-    ;
-    this.tween = function(props, time, ease, delay, callback, manual) {
+        ;
+    this.tween = function (props, time, ease, delay, callback, manual) {
         return this.element.tween(props, time, ease, delay, callback, manual)
     }
-    ;
+        ;
     var inter = Hydra.INTERFACES[name] || Hydra.INTERFACES[name + "UI"];
     if (inter) {
         this.ui = {};
@@ -1640,12 +1640,12 @@ Class(function View(_child) {
             this.ui[key] = append[key]
         }
         if (_resize) {
-            this.resize = function() {
+            this.resize = function () {
                 _resize.apply(this.ui, arguments)
             }
         }
     }
-    this.__call = function() {
+    this.__call = function () {
         this.events.scope(this)
     }
 });
@@ -1654,13 +1654,13 @@ Class(function Controller(name) {
     name = Hydra.getClassName(name);
     this.element = this.container = $("#" + name);
     this.element.__useFragment = true;
-    this.css = function(obj) {
+    this.css = function (obj) {
         this.container.css(obj)
     }
 });
 Class(function Component() {
     Inherit(this, MVC);
-    this.__call = function() {
+    this.__call = function () {
         this.events.scope(this);
         delete this.__call
     }
@@ -1676,46 +1676,46 @@ Class(function Utils() {
     function lerp(ratio, start, end) {
         return start + (end - start) * ratio
     }
-    this.doRandom = function(min, max) {
+    this.doRandom = function (min, max) {
         return Math.round(rand(min - 0.5, max + 0.5))
     }
-    ;
-    this.headsTails = function(heads, tails) {
+        ;
+    this.headsTails = function (heads, tails) {
         return !_this.doRandom(0, 1) ? heads : tails
     }
-    ;
-    this.toDegrees = function(rad) {
+        ;
+    this.toDegrees = function (rad) {
         return rad * (180 / Math.PI)
     }
-    ;
-    this.toRadians = function(deg) {
+        ;
+    this.toRadians = function (deg) {
         return deg * (Math.PI / 180)
     }
-    ;
-    this.findDistance = function(p1, p2) {
+        ;
+    this.findDistance = function (p1, p2) {
         var dx = p2.x - p1.x;
         var dy = p2.y - p1.y;
         return Math.sqrt(dx * dx + dy * dy)
     }
-    ;
-    this.timestamp = function() {
+        ;
+    this.timestamp = function () {
         var num = Date.now() + _this.doRandom(0, 99999);
         return num.toString()
     }
-    ;
-    this.hitTestObject = function(obj1, obj2) {
-                var x1 = obj1.x
-                    , y1 = obj1.y
-                    , w = obj1.width
-                    , h = obj1.height;
-                var xp1 = obj2.x
-                    , yp1 = obj2.y
-                    , wp = obj2.width
-                    , hp = obj2.height;
-                var x2 = x1 + w
-                    , y2 = y1 + h
-                    , xp2 = xp1 + wp
-                    , yp2 = yp1 + hp;
+        ;
+    this.hitTestObject = function (obj1, obj2) {
+        var x1 = obj1.x
+            , y1 = obj1.y
+            , w = obj1.width
+            , h = obj1.height;
+        var xp1 = obj2.x
+            , yp1 = obj2.y
+            , wp = obj2.width
+            , hp = obj2.height;
+        var x2 = x1 + w
+            , y2 = y1 + h
+            , xp2 = xp1 + wp
+            , yp2 = yp1 + hp;
         if (xp1 >= x1 && xp1 <= x2) {
             if (yp1 >= y1 && yp1 <= y2) {
                 return true
@@ -1737,16 +1737,16 @@ Class(function Utils() {
         }
         return false
     }
-    ;
-    this.randomColor = function() {
+        ;
+    this.randomColor = function () {
         var color = "#" + Math.floor(Math.random() * 16777215).toString(16);
         if (color.length < 7) {
             color = this.randomColor()
         }
         return color
     }
-    ;
-    this.touchEvent = function(e) {
+        ;
+    this.touchEvent = function (e) {
         var touchEvent = {};
         touchEvent.x = 0;
         touchEvent.y = 0;
@@ -1782,16 +1782,16 @@ Class(function Utils() {
         }
         return touchEvent
     }
-    ;
-    this.clamp = function(num, min, max) {
+        ;
+    this.clamp = function (num, min, max) {
         return Math.min(Math.max(num, min), max)
     }
-    ;
-    this.constrain = function(num, min, max) {
+        ;
+    this.constrain = function (num, min, max) {
         return Math.min(Math.max(num, Math.min(min, max)), Math.max(min, max))
     }
-    ;
-    this.nullObject = function(object) {
+        ;
+    this.nullObject = function (object) {
         if (object.destroy || object.div) {
             for (var key in object) {
                 if (typeof object[key] !== "undefined") {
@@ -1801,8 +1801,8 @@ Class(function Utils() {
         }
         return null
     }
-    ;
-    this.convertRange = this.range = function(oldValue, oldMin, oldMax, newMin, newMax, clamped) {
+        ;
+    this.convertRange = this.range = function (oldValue, oldMin, oldMax, newMin, newMax, clamped) {
         var oldRange = (oldMax - oldMin);
         var newRange = (newMax - newMin);
         var newValue = (((oldValue - oldMin) * newRange) / oldRange) + newMin;
@@ -1811,12 +1811,12 @@ Class(function Utils() {
         }
         return newValue
     }
-    ;
-    this.cloneObject = function(obj) {
+        ;
+    this.cloneObject = function (obj) {
         return JSON.parse(JSON.stringify(obj))
     }
-    ;
-    this.mergeObject = function() {
+        ;
+    this.mergeObject = function () {
         var obj = {};
         for (var i = 0; i < arguments.length; i++) {
             var o = arguments[i];
@@ -1826,16 +1826,16 @@ Class(function Utils() {
         }
         return obj
     }
-    ;
-    this.numberWithCommas = function(num) {
+        ;
+    this.numberWithCommas = function (num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
-    ;
-    this.query = function(key) {
-        return decodeURI(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$","i"), "$1"))
+        ;
+    this.query = function (key) {
+        return decodeURI(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"))
     }
-    ;
-    String.prototype.strpos = function(str) {
+        ;
+    String.prototype.strpos = function (str) {
         if (Array.isArray(str)) {
             for (var i = 0; i < str.length; i++) {
                 if (this.indexOf(str[i]) > -1) {
@@ -1847,12 +1847,12 @@ Class(function Utils() {
         }
         return false
     }
-    ;
-    String.prototype.capitalize = function() {
+        ;
+    String.prototype.capitalize = function () {
         return this.charAt(0).toUpperCase() + this.slice(1)
     }
-    ;
-    Array.prototype.findAndRemove = function(reference) {
+        ;
+    Array.prototype.findAndRemove = function (reference) {
         if (!this.indexOf) {
             return
         }
@@ -1865,7 +1865,7 @@ Class(function Utils() {
 Class(function CSS() {
     var _this = this;
     var _obj, _style, _needsUpdate;
-    Hydra.ready(function() {
+    Hydra.ready(function () {
         _style = "";
         _obj = document.createElement("style");
         _obj.type = "text/css";
@@ -1898,20 +1898,20 @@ Class(function CSS() {
         _obj.innerHTML = _style;
         _needsUpdate = false
     }
-    this._read = function() {
+    this._read = function () {
         return _style
     }
-    ;
-    this._write = function(css) {
+        ;
+    this._write = function (css) {
         _style = css;
         if (!_needsUpdate) {
             _needsUpdate = true;
             Render.nextFrame(setHTML)
         }
     }
-    ;
+        ;
     this._toCSS = objToCSS;
-    this.style = function(selector, obj) {
+    this.style = function (selector, obj) {
         var s = selector + " {";
         for (var key in obj) {
             var prop = objToCSS(key);
@@ -1924,8 +1924,8 @@ Class(function CSS() {
         s += "}";
         _obj.innerHTML += s
     }
-    ;
-    this.get = function(selector, prop) {
+        ;
+    this.get = function (selector, prop) {
         var values = new Object();
         var string = _obj.innerHTML.split(selector + " {");
         for (var i = 0; i < string.length; i++) {
@@ -1950,8 +1950,8 @@ Class(function CSS() {
             return values[prop]
         }
     }
-    ;
-    this.textSize = function($obj) {
+        ;
+    this.textSize = function ($obj) {
         var $clone = $obj.clone();
         $clone.css({
             position: "relative",
@@ -1970,8 +1970,8 @@ Class(function CSS() {
             height: height
         }
     }
-    ;
-    this.prefix = function(style) {
+        ;
+    this.prefix = function (style) {
         return Device.styles.vendor == "" ? style.charAt(0).toLowerCase() + style.slice(1) : Device.styles.vendor + style
     }
 }, "Static");
@@ -1979,7 +1979,7 @@ Class(function Device() {
     var _this = this;
     var _tagDiv;
     this.agent = navigator.userAgent.toLowerCase();
-    this.detect = function(array) {
+    this.detect = function (array) {
         if (typeof array === "string") {
             array = [array]
         }
@@ -1990,13 +1990,13 @@ Class(function Device() {
         }
         return false
     }
-    ;
-    var prefix = (function() {
+        ;
+    var prefix = (function () {
         var pre = "";
         if (!window._NODE_) {
             var styles = window.getComputedStyle(document.documentElement, "");
             pre = (Array.prototype.slice.call(styles).join("").match(/-(moz|webkit|ms)-/) || (styles.OLink === "" && ["", "o"]))[1];
-            var dom = ("WebKit|Moz|MS|O").match(new RegExp("(" + pre + ")","i"))[1]
+            var dom = ("WebKit|Moz|MS|O").match(new RegExp("(" + pre + ")", "i"))[1]
         } else {
             pre = "webkit"
         }
@@ -2012,13 +2012,13 @@ Class(function Device() {
     )();
     function checkForTag(prop) {
         var div = _tagDiv || document.createElement("div")
-          , vendors = "Khtml ms O Moz Webkit".split(" ")
-          , len = vendors.length;
+            , vendors = "Khtml ms O Moz Webkit".split(" ")
+            , len = vendors.length;
         _tagDiv = div;
         if (prop in div.style) {
             return true
         }
-        prop = prop.replace(/^[a-z]/, function(val) {
+        prop = prop.replace(/^[a-z]/, function (val) {
             return val.toUpperCase()
         });
         while (len--) {
@@ -2028,7 +2028,7 @@ Class(function Device() {
         }
         return false
     }
-    this.mobile = !window._NODE_ && (!!(("ontouchstart"in window) || ("onpointerdown"in window)) && this.detect(["ios", "iphone", "ipad", "windows", "android", "blackberry"])) ? {} : false;
+    this.mobile = !window._NODE_ && (!!(("ontouchstart" in window) || ("onpointerdown" in window)) && this.detect(["ios", "iphone", "ipad", "windows", "android", "blackberry"])) ? {} : false;
     if (this.mobile && this.detect("windows") && !this.detect("touch")) {
         this.mobile = false
     }
@@ -2037,7 +2037,7 @@ Class(function Device() {
         this.mobile.phone = !this.mobile.tablet
     }
     this.browser = {};
-    this.browser.ie = (function() {
+    this.browser.ie = (function () {
         if (_this.detect("msie")) {
             return true
         }
@@ -2052,7 +2052,7 @@ Class(function Device() {
     this.browser.chrome = !this.browser.ie && this.detect("chrome");
     this.browser.safari = !this.browser.chrome && !this.browser.ie && this.detect("safari");
     this.browser.firefox = this.detect("firefox");
-    this.browser.version = (function() {
+    this.browser.version = (function () {
         try {
             if (_this.browser.chrome) {
                 return Number(_this.agent.split("chrome/")[1].split(".")[0])
@@ -2078,23 +2078,23 @@ Class(function Device() {
     }
     )();
     this.vendor = prefix.css;
-    this.transformProperty = (function() {
+    this.transformProperty = (function () {
         switch (prefix.lowercase) {
-        case "moz":
-            return "-moz-transform";
-            break;
-        case "webkit":
-            return "-webkit-transform";
-            break;
-        case "o":
-            return "-o-transform";
-            break;
-        case "ms":
-            return "-ms-transform";
-            break;
-        default:
-            return "transform";
-            break
+            case "moz":
+                return "-moz-transform";
+                break;
+            case "webkit":
+                return "-webkit-transform";
+                break;
+            case "o":
+                return "-o-transform";
+                break;
+            case "ms":
+                return "-ms-transform";
+                break;
+            default:
+                return "transform";
+                break
         }
     }
     )();
@@ -2115,7 +2115,7 @@ Class(function Device() {
         this.system.localStorage = false
     }
     this.system.fullscreen = typeof document[prefix.lowercase + "CancelFullScreen"] !== "undefined";
-    this.system.os = (function() {
+    this.system.os = (function () {
         if (_this.detect("mac os")) {
             return "mac"
         } else {
@@ -2152,7 +2152,7 @@ Class(function Device() {
     )();
     this.pixelRatio = window.devicePixelRatio;
     this.media = {};
-    this.media.audio = (function() {
+    this.media.audio = (function () {
         if (!!document.createElement("audio").canPlayType) {
             return _this.detect(["firefox", "opera"]) ? "ogg" : "mp3"
         } else {
@@ -2160,7 +2160,7 @@ Class(function Device() {
         }
     }
     )();
-    this.media.video = (function() {
+    this.media.video = (function () {
         var vid = document.createElement("video");
         if (!!vid.canPlayType) {
             if (Device.mobile) {
@@ -2182,7 +2182,7 @@ Class(function Device() {
     }
     )();
     this.graphics = {};
-    this.graphics.webgl = (function() {
+    this.graphics.webgl = (function () {
         try {
             var gl;
             var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
@@ -2203,7 +2203,7 @@ Class(function Device() {
             output.version = gl.getParameter(gl.VERSION).toLowerCase();
             output.glsl = gl.getParameter(gl.SHADING_LANGUAGE_VERSION).toLowerCase();
             output.extensions = gl.getSupportedExtensions();
-            output.detect = function(matches) {
+            output.detect = function (matches) {
                 if (output.gpu && output.gpu.toLowerCase().strpos(matches)) {
                     return true
                 }
@@ -2217,14 +2217,14 @@ Class(function Device() {
                 }
                 return false
             }
-            ;
+                ;
             return output
         } catch (e) {
             return false
         }
     }
     )();
-    this.graphics.canvas = (function() {
+    this.graphics.canvas = (function () {
         var canvas = document.createElement("canvas");
         return canvas.getContext ? true : false
     }
@@ -2239,18 +2239,18 @@ Class(function Device() {
     this.tween.transition = checkForTag("transition");
     this.tween.css2d = checkForTag("transform");
     this.tween.css3d = checkForTag("perspective");
-    this.tween.complete = (function() {
+    this.tween.complete = (function () {
         if (prefix.unprefixed) {
             return "transitionend"
         }
         return prefix.lowercase + "TransitionEnd"
     }
     )();
-    this.test = function(name, test) {
+    this.test = function (name, test) {
         this[name] = test()
     }
-    ;
-    this.detectGPU = function(matches) {
+        ;
+    this.detectGPU = function (matches) {
         var gpu = _this.graphics.webgl;
         if (gpu.gpu && gpu.gpu.strpos(matches)) {
             return true
@@ -2260,7 +2260,7 @@ Class(function Device() {
         }
         return false
     }
-    ;
+        ;
     function checkFullscreen() {
         if (!_this.getFullscreen()) {
             HydraEvents._fireEvent(HydraEvents.FULLSCREEN, {
@@ -2269,7 +2269,7 @@ Class(function Device() {
             Render.stop(checkFullscreen)
         }
     }
-    this.openFullscreen = function(obj) {
+    this.openFullscreen = function (obj) {
         obj = obj || __body;
         if (obj && _this.system.fullscreen) {
             if (obj == __body) {
@@ -2284,15 +2284,15 @@ Class(function Device() {
             Render.start(checkFullscreen, 10)
         }
     }
-    ;
-    this.closeFullscreen = function() {
+        ;
+    this.closeFullscreen = function () {
         if (_this.system.fullscreen) {
             document[prefix.lowercase + "CancelFullScreen"]()
         }
         Render.stop(checkFullscreen)
     }
-    ;
-    this.getFullscreen = function() {
+        ;
+    this.getFullscreen = function () {
         if (_this.browser.firefox) {
             return document.mozFullScreen
         }
@@ -2310,7 +2310,7 @@ Class(function DynamicObject(_properties) {
     if (typeof prototype.tween !== "undefined") {
         return
     }
-    prototype.tween = function(properties, time, ease, delay, update, complete) {
+    prototype.tween = function (properties, time, ease, delay, update, complete) {
         if (typeof delay !== "number") {
             complete = update;
             update = delay;
@@ -2328,29 +2328,29 @@ Class(function DynamicObject(_properties) {
         this._tween = TweenManager.tween(this, properties, time, ease, delay, complete, update);
         return this._tween
     }
-    ;
-    prototype.stopTween = function(tween) {
+        ;
+    prototype.stopTween = function (tween) {
         var _tween = tween || this._tween;
         if (_tween && _tween.stop) {
             _tween.stop()
         }
     }
-    ;
-    prototype.pause = function() {
+        ;
+    prototype.pause = function () {
         var _tween = this._tween;
         if (_tween && _tween.pause) {
             _tween.pause()
         }
     }
-    ;
-    prototype.resume = function() {
+        ;
+    prototype.resume = function () {
         var _tween = this._tween;
         if (_tween && _tween.resume) {
             _tween.resume()
         }
     }
-    ;
-    prototype.copy = function(pool) {
+        ;
+    prototype.copy = function (pool) {
         var c = pool && pool.get ? pool.get() : new DynamicObject();
         for (var key in this) {
             if (typeof this[key] === "number") {
@@ -2359,24 +2359,24 @@ Class(function DynamicObject(_properties) {
         }
         return c
     }
-    ;
-    prototype.copyFrom = function(obj) {
+        ;
+    prototype.copyFrom = function (obj) {
         for (var key in obj) {
             if (typeof obj[key] == "number") {
                 this[key] = obj[key]
             }
         }
     }
-    ;
-    prototype.copyTo = function(obj) {
+        ;
+    prototype.copyTo = function (obj) {
         for (var key in obj) {
             if (typeof this[key] == "number") {
                 obj[key] = this[key]
             }
         }
     }
-    ;
-    prototype.clear = function() {
+        ;
+    prototype.clear = function () {
         for (var key in this) {
             if (typeof this[key] !== "function") {
                 delete this[key]
@@ -2389,7 +2389,7 @@ Class(function ObjectPool(_type, _number) {
     Inherit(this, Component);
     var _this = this;
     var _pool = [];
-    (function() {
+    (function () {
         if (_type) {
             _number = _number || 10;
             _type = _type || Object;
@@ -2399,21 +2399,21 @@ Class(function ObjectPool(_type, _number) {
         }
     }
     )();
-    this.get = function() {
+    this.get = function () {
         return _pool.shift()
     }
-    ;
-    this.empty = function() {
+        ;
+    this.empty = function () {
         _pool.length = 0
     }
-    ;
-    this.put = function(obj) {
+        ;
+    this.put = function (obj) {
         if (obj) {
             _pool.push(obj)
         }
     }
-    ;
-    this.insert = function(array) {
+        ;
+    this.insert = function (array) {
         if (typeof array.push === "undefined") {
             array = [array]
         }
@@ -2421,8 +2421,8 @@ Class(function ObjectPool(_type, _number) {
             _pool.push(array[i])
         }
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         for (var i = 0; i < _pool.length; i++) {
             if (_pool[i].destroy) {
                 _pool[i].destroy()
@@ -2441,7 +2441,7 @@ Class(function LinkedList() {
     if (typeof prototype.push !== "undefined") {
         return
     }
-    prototype.push = function(obj) {
+    prototype.push = function (obj) {
         if (!this.first) {
             this.first = obj;
             this.last = obj;
@@ -2455,8 +2455,8 @@ Class(function LinkedList() {
         }
         this.length++
     }
-    ;
-    prototype.remove = function(obj) {
+        ;
+    prototype.remove = function (obj) {
         if (!obj || !obj.__next) {
             return
         }
@@ -2482,22 +2482,22 @@ Class(function LinkedList() {
         obj.__prev = null;
         obj.__next = null
     }
-    ;
-    prototype.empty = function() {
+        ;
+    prototype.empty = function () {
         this.first = null;
         this.last = null;
         this.current = null;
         this.prev = null;
         this.length = 0
     }
-    ;
-    prototype.start = function() {
+        ;
+    prototype.start = function () {
         this.current = this.first;
         this.prev = this.current;
         return this.current
     }
-    ;
-    prototype.next = function() {
+        ;
+    prototype.next = function () {
         if (!this.current) {
             return
         }
@@ -2508,8 +2508,8 @@ Class(function LinkedList() {
         this.prev = this.current;
         return this.current
     }
-    ;
-    prototype.destroy = function() {
+        ;
+    prototype.destroy = function () {
         Utils.nullObject(this);
         return null
     }
@@ -2517,13 +2517,13 @@ Class(function LinkedList() {
 Class(function Pact() {
     var _this = this;
     Namespace(this);
-    (function() {}
+    (function () { }
     )();
-    this.create = function() {
+    this.create = function () {
         return new _this.Broadcaster(arguments)
     }
-    ;
-    this.batch = function() {
+        ;
+    this.batch = function () {
         return new _this.Batch()
     }
 }, "Static");
@@ -2533,14 +2533,14 @@ Pact.Class(function Broadcaster(_arguments) {
     var _fired;
     var _callbacks = [];
     this.id = Utils.timestamp();
-    this._fire = this.fire = function() {
+    this._fire = this.fire = function () {
         if (_fired) {
             return
         }
         _fired = true;
         var args = arguments;
         var fired = false;
-        Render.nextFrame(function() {
+        Render.nextFrame(function () {
             if (_destroy) {
                 return
             }
@@ -2587,34 +2587,34 @@ Pact.Class(function Broadcaster(_arguments) {
             }
         })
     }
-    ;
-    this.exec = function() {
+        ;
+    this.exec = function () {
         if (_destroy) {
             return
         }
         exec(arguments);
         return this
     }
-    ;
-    this.then = function(callback) {
+        ;
+    this.then = function (callback) {
         _callbacks.push(callback);
         return this
     }
-    ;
-    this.error = function(error) {
+        ;
+    this.error = function (error) {
         _error = error;
         return this
     }
-    ;
-    this.success = function(success) {
+        ;
+    this.success = function (success) {
         _success = success;
         return this
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         _destroy = true
     }
-    ;
+        ;
     function exec(argz) {
         if (_destroy) {
             return
@@ -2639,19 +2639,19 @@ Pact.Class(function Batch() {
     var _success = [];
     var _error = [];
     var _emitters = [];
-    this.push = function(emitter) {
+    this.push = function (emitter) {
         emitter.then(thenHandler).error(errorHandler).success(successHandler);
         _emitters.push(emitter)
     }
-    ;
-    this.timeout = function() {
+        ;
+    this.timeout = function () {
         _this.events.fire(HydraEvents.COMPLETE, {
             complete: _complete,
             success: _success,
             error: _error
         })
     }
-    ;
+        ;
     function successHandler() {
         this.data = arguments;
         _success.push(this);
@@ -2707,7 +2707,7 @@ Class(function Mouse() {
         _this.moveY = _this.y - _this.lastY;
         defer(resetMove)
     }
-    this.capture = function(x, y) {
+    this.capture = function (x, y) {
         if (_capturing) {
             return false
         }
@@ -2721,8 +2721,8 @@ Class(function Mouse() {
             __window.bind("touchstart", moved)
         }
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         if (!_capturing) {
             return false
         }
@@ -2736,18 +2736,18 @@ Class(function Mouse() {
             __window.unbind("touchstart", moved)
         }
     }
-    ;
-    this.preventClicks = function() {
+        ;
+    this.preventClicks = function () {
         _this._preventClicks = true;
-        Timer.create(function() {
+        Timer.create(function () {
             _this._preventClicks = false
         }, 300)
     }
-    ;
-    this.preventFireAfterClick = function() {
+        ;
+    this.preventFireAfterClick = function () {
         _this._preventFire = true
     }
-    ;
+        ;
     function resetMove() {
         _this.moveX = 0;
         _this.moveY = 0
@@ -2764,7 +2764,7 @@ Class(function Render() {
     var _timeSinceRender = 0;
     this.TIME = Date.now();
     this.TARGET_FPS = 60;
-    (function() {
+    (function () {
         if (!THREAD) {
             requestAnimationFrame(render);
             Hydra.ready(addListeners)
@@ -2826,7 +2826,7 @@ Class(function Render() {
             _last = Date.now()
         }
     }
-    this.startRender = this.start = function(callback, fps) {
+    this.startRender = this.start = function (callback, fps) {
         var allowed = true;
         var count = _render.length - 1;
         if (this.TARGET_FPS < 60) {
@@ -2840,15 +2840,15 @@ Class(function Render() {
             _render.push(callback)
         }
     }
-    ;
-    this.stopRender = this.stop = function(callback) {
+        ;
+    this.stopRender = this.stop = function (callback) {
         var i = _render.indexOf(callback);
         if (i > -1) {
             _render.splice(i, 1)
         }
     }
-    ;
-    this.startTimer = function(name) {
+        ;
+    this.startTimer = function (name) {
         _timerName = name || "Timer";
         if (console.time && !window._NODE_) {
             console.time(_timerName)
@@ -2856,30 +2856,30 @@ Class(function Render() {
             _timer = Date.now()
         }
     }
-    ;
-    this.stopTimer = function() {
+        ;
+    this.stopTimer = function () {
         if (console.time && !window._NODE_) {
             console.timeEnd(_timerName)
         } else {
             console.log("Render " + _timerName + ": " + (Date.now() - _timer))
         }
     }
-    ;
-    this.nextFrame = function(callback) {
+        ;
+    this.nextFrame = function (callback) {
         _list.push(callback)
     }
-    ;
-    this.setupTween = function(callback) {
-        _this.nextFrame(function() {
+        ;
+    this.setupTween = function (callback) {
+        _this.nextFrame(function () {
             _this.nextFrame(callback)
         })
     }
-    ;
-    this.tick = function() {
+        ;
+    this.tick = function () {
         render()
     }
-    ;
-    this.onIdle = function(callback, max) {
+        ;
+    this.onIdle = function (callback, max) {
         if (window.requestIdleCallback && false) {
             if (max) {
                 max = {
@@ -2889,17 +2889,17 @@ Class(function Render() {
             return window.requestIdleCallback(callback, max)
         } else {
             var start = _this.TIME;
-            return defer(function() {
+            return defer(function () {
                 callback({
                     didTimeout: false,
-                    timeRemaining: function() {
+                    timeRemaining: function () {
                         return Math.max(0, 50 - (_this.TIME - start))
                     }
                 })
             })
         }
     }
-    ;
+        ;
     window.defer = this.nextFrame;
     window.nextFrame = this.setupTween;
     window.onIdle = this.onIdle
@@ -2929,13 +2929,13 @@ Class(function HydraEvents() {
     this.NEXT = "hydra_next";
     this.RELOAD = "hydra_reload";
     this.FULLSCREEN = "hydra_fullscreen";
-    this._checkDefinition = function(evt) {
+    this._checkDefinition = function (evt) {
         if (typeof evt == "undefined") {
             throw "Undefined event"
         }
     }
-    ;
-    this._addEvent = function(e, callback, object) {
+        ;
+    this._addEvent = function (e, callback, object) {
         if (this._checkDefinition) {
             this._checkDefinition(e)
         }
@@ -2945,12 +2945,12 @@ Class(function HydraEvents() {
         add.callback = callback;
         _events.push(add)
     }
-    ;
-    this._removeEvent = function(eventString, callback) {
+        ;
+    this._removeEvent = function (eventString, callback) {
         if (this._checkDefinition) {
             this._checkDefinition(eventString)
         }
-        defer(function() {
+        defer(function () {
             for (var i = _events.length - 1; i > -1; i--) {
                 if (_events[i].evt == eventString && _events[i].callback == callback) {
                     _events[i] = null;
@@ -2959,8 +2959,8 @@ Class(function HydraEvents() {
             }
         })
     }
-    ;
-    this._destroyEvents = function(object) {
+        ;
+    this._destroyEvents = function (object) {
         for (var i = _events.length - 1; i > -1; i--) {
             if (_events[i].object == object) {
                 _events[i] = null;
@@ -2968,17 +2968,17 @@ Class(function HydraEvents() {
             }
         }
     }
-    ;
-    this._fireEvent = function(eventString, obj) {
+        ;
+    this._fireEvent = function (eventString, obj) {
         if (this._checkDefinition) {
             this._checkDefinition(eventString)
         }
         var fire = true;
         obj = obj || _e;
-        obj.cancel = function() {
+        obj.cancel = function () {
             fire = false
         }
-        ;
+            ;
         for (var i = 0; i < _events.length; i++) {
             if (_events[i].evt == eventString) {
                 if (fire) {
@@ -2989,12 +2989,12 @@ Class(function HydraEvents() {
             }
         }
     }
-    ;
-    this._consoleEvents = function() {
+        ;
+    this._consoleEvents = function () {
         console.log(_events)
     }
-    ;
-    this.createLocalEmitter = function(child) {
+        ;
+    this.createLocalEmitter = function (child) {
         var events = new HydraEvents();
         child.on = events._addEvent;
         child.off = events._removeEvent;
@@ -3005,16 +3005,16 @@ Class(function Events(_this) {
     this.events = {};
     var _events = {};
     var _e = {};
-    this.events.subscribe = function(evt, callback) {
+    this.events.subscribe = function (evt, callback) {
         HydraEvents._addEvent(evt, !!callback._fire ? callback._fire : callback, _this);
         return callback
     }
-    ;
-    this.events.unsubscribe = function(evt, callback) {
+        ;
+    this.events.unsubscribe = function (evt, callback) {
         HydraEvents._removeEvent(evt, !!callback._fire ? callback._fire : callback)
     }
-    ;
-    this.events.fire = function(evt, obj, skip) {
+        ;
+    this.events.fire = function (evt, obj, skip) {
         obj = obj || _e;
         HydraEvents._checkDefinition(evt);
         if (_events[evt]) {
@@ -3027,33 +3027,33 @@ Class(function Events(_this) {
             }
         }
     }
-    ;
-    this.events.add = function(evt, callback) {
+        ;
+    this.events.add = function (evt, callback) {
         HydraEvents._checkDefinition(evt);
         _events[evt] = !!callback._fire ? callback._fire : callback;
         return callback
     }
-    ;
-    this.events.remove = function(evt) {
+        ;
+    this.events.remove = function (evt) {
         HydraEvents._checkDefinition(evt);
         if (_events[evt]) {
             delete _events[evt]
         }
     }
-    ;
-    this.events.bubble = function(object, evt) {
+        ;
+    this.events.bubble = function (object, evt) {
         HydraEvents._checkDefinition(evt);
         var _this = this;
-        object.events.add(evt, function(e) {
+        object.events.add(evt, function (e) {
             _this.fire(evt, e)
         })
     }
-    ;
-    this.events.scope = function(ref) {
+        ;
+    this.events.scope = function (ref) {
         _this = ref
     }
-    ;
-    this.events.destroy = function() {
+        ;
+    this.events.destroy = function () {
         HydraEvents._destroyEvents(_this);
         _events = null;
         _this = null;
@@ -3063,14 +3063,14 @@ Class(function Events(_this) {
 Class(function Dispatch() {
     var _this = this;
     var _callbacks = {};
-    function empty() {}
-    this.register = function(object, method) {
-        defer(function() {
+    function empty() { }
+    this.register = function (object, method) {
+        defer(function () {
             _callbacks[Hydra.getClassName(object) + "-" + method] = object[method]
         })
     }
-    ;
-    this.find = function(object, method, args) {
+        ;
+    this.find = function (object, method, args) {
         var path = object.toString().match(/function ([^\(]+)/)[1] + "-" + method;
         if (_callbacks[path]) {
             return _callbacks[path]
@@ -3099,7 +3099,7 @@ Class(function Mobile() {
         this.phone = Device.mobile.phone;
         this.tablet = Device.mobile.tablet;
         this.orientation = window.innerWidth > window.innerHeight ? "landscape" : "portrait";
-        this.os = (function() {
+        this.os = (function () {
             if (Device.detect("windows", "iemobile")) {
                 return "Windows"
             }
@@ -3115,7 +3115,7 @@ Class(function Mobile() {
             return "Unknown"
         }
         )();
-        this.version = (function() {
+        this.version = (function () {
             try {
                 if (_this.os == "iOS") {
                     var num = Device.agent.split("os ")[1].split("_");
@@ -3139,11 +3139,11 @@ Class(function Mobile() {
                     }
                     return Number(Device.agent.split("windows phone ")[1].split(";")[0])
                 }
-            } catch (e) {}
+            } catch (e) { }
             return -1
         }
         )();
-        this.browser = (function() {
+        this.browser = (function () {
             if (_this.os == "iOS") {
                 if (Device.detect(["twitter", "fbios"])) {
                     return "Social"
@@ -3174,7 +3174,7 @@ Class(function Mobile() {
             return "Unknown"
         }
         )();
-        Hydra.ready(function() {
+        Hydra.ready(function () {
             window.addEventListener("orientationchange", orientationChange);
             window.onresize = resizeHandler;
             if (_this.browser == "Safari" && (!_this.NativeCore || !_this.NativeCore.active)) {
@@ -3199,7 +3199,7 @@ Class(function Mobile() {
         });
         function determineType() {
             var isPhoneByUA = Device.detect(["iphone", "ipod"]) || (Device.detect("android") && !Device.detect("tablet"));
-            Device.mobile.tablet = !isPhoneByUA && (function() {
+            Device.mobile.tablet = !isPhoneByUA && (function () {
                 if (Stage.width > Stage.height) {
                     return document.body.clientWidth > 800
                 } else {
@@ -3224,7 +3224,7 @@ Class(function Mobile() {
             if (!_this.allowScroll) {
                 document.body.scrollTop = 0
             }
-            _this.fireResize = _this.delayedCall(function() {
+            _this.fireResize = _this.delayedCall(function () {
                 setHeight();
                 determineType();
                 var type = _this.phone ? "phone" : "tablet";
@@ -3247,7 +3247,7 @@ Class(function Mobile() {
                     document.body.scrollTop = 0;
                     checkHeight(true);
                     _orientationPrevent = true;
-                    _this.delayedCall(function() {
+                    _this.delayedCall(function () {
                         _orientationPrevent = false
                     }, 100)
                 }
@@ -3331,7 +3331,7 @@ Class(function Mobile() {
             }
             _iFull = true;
             clearTimeout(_this.changeHeight);
-            _this.changeHeight = _this.delayedCall(function() {
+            _this.changeHeight = _this.delayedCall(function () {
                 _iMax = Stage.height
             }, 100)
         }
@@ -3350,12 +3350,12 @@ Class(function Mobile() {
         }
     }
     this.Class = window.Class;
-    this.fullscreen = function() {
+    this.fullscreen = function () {
         if (_this.NativeCore && _this.NativeCore.active) {
             return
         }
         if (_this.os == "Android") {
-            __window.bind("touchend", function() {
+            __window.bind("touchend", function () {
                 Device.openFullscreen()
             });
             if (_this.orientationSet) {
@@ -3372,8 +3372,8 @@ Class(function Mobile() {
         }
         return false
     }
-    ;
-    this.overflowScroll = function($object, dir) {
+        ;
+    this.overflowScroll = function ($object, dir) {
         if (!Device.mobile) {
             return false
         }
@@ -3396,7 +3396,7 @@ Class(function Mobile() {
         $object.css(overflow);
         $object.div._scrollParent = true;
         _cancelScroll = false;
-        $object.div._preventEvent = function(e) {
+        $object.div._preventEvent = function (e) {
             if ($object.maxScroll) {
                 var touch = Utils.touchEvent(e);
                 var delta = touch.y - $object.__preventY < 0 ? 1 : -1;
@@ -3419,13 +3419,13 @@ Class(function Mobile() {
                 e.stopPropagation()
             }
         }
-        ;
+            ;
         if (!_this.isNative()) {
             $object.div.addEventListener("touchmove", $object.div._preventEvent)
         }
     }
-    ;
-    this.removeOverflowScroll = function($object) {
+        ;
+    this.removeOverflowScroll = function ($object) {
         $object.css({
             overflow: "hidden",
             overflowX: "",
@@ -3434,8 +3434,8 @@ Class(function Mobile() {
         });
         $object.div.removeEventListener("touchmove", $object.div._preventEvent)
     }
-    ;
-    this.setOrientation = function(type) {
+        ;
+    this.setOrientation = function (type) {
         if (_this.System && _this.NativeCore.active) {
             _this.System.orientation = _this.System[type.toUpperCase()];
             return
@@ -3445,19 +3445,19 @@ Class(function Mobile() {
         }
         _this.orientationSet = type
     }
-    ;
-    this.vibrate = function(time) {
+        ;
+    this.vibrate = function (time) {
         navigator.vibrate && navigator.vibrate(time)
     }
-    ;
-    this.isNative = function() {
+        ;
+    this.isNative = function () {
         return _this.NativeCore && _this.NativeCore.active
     }
 }, "Static");
 Class(function Modules() {
     var _this = this;
     var _modules = {};
-    (function() {
+    (function () {
         defer(exec)
     }
     )();
@@ -3485,9 +3485,9 @@ Class(function Modules() {
         }
         return module
     }
-    this.push = function(module) {}
-    ;
-    this.Module = function(module) {
+    this.push = function (module) { }
+        ;
+    this.Module = function (module) {
         var m = new module();
         var name = module.toString().slice(0, 100).match(/function ([^\(]+)/);
         if (name) {
@@ -3503,8 +3503,8 @@ Class(function Modules() {
             _modules[m.module][m.path] = m
         }
     }
-    ;
-    this.require = function(path) {
+        ;
+    this.require = function (path) {
         var root;
         if (!path.strpos("/")) {
             root = path;
@@ -3515,7 +3515,7 @@ Class(function Modules() {
         }
         return requireModule(root, path).exports
     }
-    ;
+        ;
     window.Module = this.Module;
     if (!window._NODE_) {
         window.requireNative = window.require;
@@ -3527,8 +3527,8 @@ Class(function Timer() {
     var _clearTimeout;
     var _callbacks = [];
     var _completed = [];
-    var _pool = new ObjectPool(Object,100);
-    (function() {
+    var _pool = new ObjectPool(Object, 100);
+    (function () {
         Render.start(loop)
     }
     )();
@@ -3577,7 +3577,7 @@ Class(function Timer() {
         }
     }
     _clearTimeout = window.clearTimeout;
-    window.clearTimeout = function(ref) {
+    window.clearTimeout = function (ref) {
         var c = find(ref);
         if (c) {
             _callbacks.findAndRemove(c)
@@ -3585,8 +3585,8 @@ Class(function Timer() {
             _clearTimeout(ref)
         }
     }
-    ;
-    this.create = function(callback, time) {
+        ;
+    this.create = function (callback, time) {
         if (window._NODE_) {
             return setTimeout(callback, time)
         }
@@ -3601,8 +3601,8 @@ Class(function Timer() {
         _callbacks.push(obj);
         return obj.ref
     }
-    ;
-    this.waitFrames = function(callback, frames) {
+        ;
+    this.waitFrames = function (callback, frames) {
         var obj = _pool.get() | {};
         obj.frames = frames;
         obj.current = 0;
@@ -3617,7 +3617,7 @@ Class(function Color(_value) {
     this.r = 1;
     this.g = 1;
     this.b = 1;
-    (function() {
+    (function () {
         set(_value)
     }
     )();
@@ -3670,19 +3670,19 @@ Class(function Color(_value) {
         }
         return p
     }
-    this.set = function(value) {
+    this.set = function (value) {
         set(value);
         return this
     }
-    ;
-    this.setRGB = function(r, g, b) {
+        ;
+    this.setRGB = function (r, g, b) {
         this.r = r;
         this.g = g;
         this.b = b;
         return this
     }
-    ;
-    this.setHSL = function(h, s, l) {
+        ;
+    this.setHSL = function (h, s, l) {
         if (s === 0) {
             this.r = this.g = this.b = l
         } else {
@@ -3694,8 +3694,8 @@ Class(function Color(_value) {
         }
         return this
     }
-    ;
-    this.offsetHSL = function(h, s, l) {
+        ;
+    this.offsetHSL = function (h, s, l) {
         var hsl = this.getHSL();
         hsl.h += h;
         hsl.s += s;
@@ -3703,20 +3703,20 @@ Class(function Color(_value) {
         this.setHSL(hsl.h, hsl.s, hsl.l);
         return this
     }
-    ;
-    this.getStyle = function() {
+        ;
+    this.getStyle = function () {
         return "rgb(" + ((this.r * 255) | 0) + "," + ((this.g * 255) | 0) + "," + ((this.b * 255) | 0) + ")"
     }
-    ;
-    this.getHex = function() {
+        ;
+    this.getHex = function () {
         return (this.r * 255) << 16 ^ (this.g * 255) << 8 ^ (this.b * 255) << 0
     }
-    ;
-    this.getHexString = function() {
+        ;
+    this.getHexString = function () {
         return "#" + ("000000" + this.getHex().toString(16)).slice(-6)
     }
-    ;
-    this.getHSL = function() {
+        ;
+    this.getHSL = function () {
         _hsl = _hsl || {
             h: 0,
             s: 0,
@@ -3724,8 +3724,8 @@ Class(function Color(_value) {
         };
         var hsl = _hsl;
         var r = this.r
-          , g = this.g
-          , b = this.b;
+            , g = this.g
+            , b = this.b;
         var max = Math.max(r, g, b);
         var min = Math.min(r, g, b);
         var hue, saturation;
@@ -3737,15 +3737,15 @@ Class(function Color(_value) {
             var delta = max - min;
             saturation = lightness <= 0.5 ? delta / (max + min) : delta / (2 - max - min);
             switch (max) {
-            case r:
-                hue = (g - b) / delta + (g < b ? 6 : 0);
-                break;
-            case g:
-                hue = (b - r) / delta + 2;
-                break;
-            case b:
-                hue = (r - g) / delta + 4;
-                break
+                case r:
+                    hue = (g - b) / delta + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    hue = (b - r) / delta + 2;
+                    break;
+                case b:
+                    hue = (r - g) / delta + 4;
+                    break
             }
             hue /= 6
         }
@@ -3754,42 +3754,42 @@ Class(function Color(_value) {
         hsl.l = lightness;
         return hsl
     }
-    ;
-    this.add = function(color) {
+        ;
+    this.add = function (color) {
         this.r += color.r;
         this.g += color.g;
         this.b += color.b
     }
-    ;
-    this.mix = function(color, percent) {
+        ;
+    this.mix = function (color, percent) {
         this.r = this.r * (1 - percent) + (color.r * percent);
         this.g = this.g * (1 - percent) + (color.g * percent);
         this.b = this.b * (1 - percent) + (color.b * percent)
     }
-    ;
-    this.addScalar = function(s) {
+        ;
+    this.addScalar = function (s) {
         this.r += s;
         this.g += s;
         this.b += s
     }
-    ;
-    this.multiply = function(color) {
+        ;
+    this.multiply = function (color) {
         this.r *= color.r;
         this.g *= color.g;
         this.b *= color.b
     }
-    ;
-    this.multiplyScalar = function(s) {
+        ;
+    this.multiplyScalar = function (s) {
         this.r *= s;
         this.g *= s;
         this.b *= s
     }
-    ;
-    this.clone = function() {
+        ;
+    this.clone = function () {
         return new Color([this.r, this.g, this.b])
     }
-    ;
-    this.toArray = function() {
+        ;
+    this.toArray = function () {
         if (!_array) {
             _array = []
         }
@@ -3806,19 +3806,19 @@ Class(function Noise() {
         this.y = y;
         this.z = z
     }
-    Grad.prototype.dot2 = function(x, y) {
+    Grad.prototype.dot2 = function (x, y) {
         return this.x * x + this.y * y
     }
-    ;
-    Grad.prototype.dot3 = function(x, y, z) {
+        ;
+    Grad.prototype.dot3 = function (x, y, z) {
         return this.x * x + this.y * y + this.z * z
     }
-    ;
-    var grad3 = [new Grad(1,1,0), new Grad(-1,1,0), new Grad(1,-1,0), new Grad(-1,-1,0), new Grad(1,0,1), new Grad(-1,0,1), new Grad(1,0,-1), new Grad(-1,0,-1), new Grad(0,1,1), new Grad(0,-1,1), new Grad(0,1,-1), new Grad(0,-1,-1)];
+        ;
+    var grad3 = [new Grad(1, 1, 0), new Grad(-1, 1, 0), new Grad(1, -1, 0), new Grad(-1, -1, 0), new Grad(1, 0, 1), new Grad(-1, 0, 1), new Grad(1, 0, -1), new Grad(-1, 0, -1), new Grad(0, 1, 1), new Grad(0, -1, 1), new Grad(0, 1, -1), new Grad(0, -1, -1)];
     var p = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213, 119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178, 185, 112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180];
     var perm = new Array(512);
     var gradP = new Array(512);
-    module.seed = function(seed) {
+    module.seed = function (seed) {
         if (seed > 0 && seed < 1) {
             seed *= 65536
         }
@@ -3837,13 +3837,13 @@ Class(function Noise() {
             gradP[i] = gradP[i + 256] = grad3[v % 12]
         }
     }
-    ;
+        ;
     module.seed(0);
     var F2 = 0.5 * (Math.sqrt(3) - 1);
     var G2 = (3 - Math.sqrt(3)) / 6;
     var F3 = 1 / 3;
     var G3 = 1 / 6;
-    module.simplex2 = function(xin, yin) {
+    module.simplex2 = function (xin, yin) {
         var n0, n1, n2;
         var s = (xin + yin) * F2;
         var i = Math.floor(xin + s);
@@ -3891,8 +3891,8 @@ Class(function Noise() {
         }
         return 70 * (n0 + n1 + n2)
     }
-    ;
-    module.simplex3 = function(xin, yin, zin) {
+        ;
+    module.simplex3 = function (xin, yin, zin) {
         var n0, n1, n2, n3;
         var s = (xin + yin + zin) * F3;
         var i = Math.floor(xin + s);
@@ -4001,20 +4001,20 @@ Class(function Noise() {
         }
         return 32 * (n0 + n1 + n2 + n3)
     }
-    ;
+        ;
     function fade(t) {
         return t * t * t * (t * (t * 6 - 15) + 10)
     }
     function lerp(a, b, t) {
         return (1 - t) * a + t * b
     }
-    module.perlin = function(x) {
+    module.perlin = function (x) {
         return module.perlin2(x, 0)
     }
-    ;
-    module.perlin2 = function(x, y) {
+        ;
+    module.perlin2 = function (x, y) {
         var X = Math.floor(x)
-          , Y = Math.floor(y);
+            , Y = Math.floor(y);
         x = x - X;
         y = y - Y;
         X = X & 255;
@@ -4026,11 +4026,11 @@ Class(function Noise() {
         var u = fade(x);
         return lerp(lerp(n00, n10, u), lerp(n01, n11, u), fade(y))
     }
-    ;
-    module.perlin3 = function(x, y, z) {
+        ;
+    module.perlin3 = function (x, y, z) {
         var X = Math.floor(x)
-          , Y = Math.floor(y)
-          , Z = Math.floor(z);
+            , Y = Math.floor(y)
+            , Z = Math.floor(z);
         x = x - X;
         y = y - Y;
         z = z - Z;
@@ -4058,21 +4058,21 @@ Class(function Matrix2() {
     var b11, b12, b13, b21, b22, b23, b31, b32, b33;
     this.type = "matrix2";
     this.data = new Float32Array(9);
-    (function() {
+    (function () {
         identity()
     }
     )();
     function identity(d) {
         d = d || _this.data;
         d[0] = 1,
-        d[1] = 0,
-        d[2] = 0;
+            d[1] = 0,
+            d[2] = 0;
         d[3] = 0,
-        d[4] = 1,
-        d[5] = 0;
+            d[4] = 1,
+            d[5] = 0;
         d[6] = 0,
-        d[7] = 0,
-        d[8] = 1
+            d[7] = 0,
+            d[8] = 1
     }
     function noE(n) {
         n = Math.abs(n) < 0.000001 ? 0 : n;
@@ -4081,12 +4081,12 @@ Class(function Matrix2() {
     if (typeof prototype.identity !== "undefined") {
         return
     }
-    prototype.identity = function(d) {
+    prototype.identity = function (d) {
         identity(d);
         return this
     }
-    ;
-    prototype.transformVector = function(v) {
+        ;
+    prototype.transformVector = function (v) {
         var d = this.data;
         var x = v.x;
         var y = v.y;
@@ -4094,134 +4094,134 @@ Class(function Matrix2() {
         v.y = d[3] * x + d[4] * y + d[5];
         return v
     }
-    ;
-    prototype.setTranslation = function(tx, ty, m) {
+        ;
+    prototype.setTranslation = function (tx, ty, m) {
         var d = m || this.data;
         d[0] = 1,
-        d[1] = 0,
-        d[2] = tx;
+            d[1] = 0,
+            d[2] = tx;
         d[3] = 0,
-        d[4] = 1,
-        d[5] = ty;
+            d[4] = 1,
+            d[5] = ty;
         d[6] = 0,
-        d[7] = 0,
-        d[8] = 1;
+            d[7] = 0,
+            d[8] = 1;
         return this
     }
-    ;
-    prototype.getTranslation = function(v) {
+        ;
+    prototype.getTranslation = function (v) {
         var d = this.data;
         v = v || new Vector2();
         v.x = d[2];
         v.y = d[5];
         return v
     }
-    ;
-    prototype.setScale = function(sx, sy, m) {
+        ;
+    prototype.setScale = function (sx, sy, m) {
         var d = m || this.data;
         d[0] = sx,
-        d[1] = 0,
-        d[2] = 0;
+            d[1] = 0,
+            d[2] = 0;
         d[3] = 0,
-        d[4] = sy,
-        d[5] = 0;
+            d[4] = sy,
+            d[5] = 0;
         d[6] = 0,
-        d[7] = 0,
-        d[8] = 1;
+            d[7] = 0,
+            d[8] = 1;
         return this
     }
-    ;
-    prototype.setShear = function(sx, sy, m) {
+        ;
+    prototype.setShear = function (sx, sy, m) {
         var d = m || this.data;
         d[0] = 1,
-        d[1] = sx,
-        d[2] = 0;
+            d[1] = sx,
+            d[2] = 0;
         d[3] = sy,
-        d[4] = 1,
-        d[5] = 0;
+            d[4] = 1,
+            d[5] = 0;
         d[6] = 0,
-        d[7] = 0,
-        d[8] = 1;
+            d[7] = 0,
+            d[8] = 1;
         return this
     }
-    ;
-    prototype.setRotation = function(a, m) {
+        ;
+    prototype.setRotation = function (a, m) {
         var d = m || this.data;
         var r0 = Math.cos(a);
         var r1 = Math.sin(a);
         d[0] = r0,
-        d[1] = -r1,
-        d[2] = 0;
+            d[1] = -r1,
+            d[2] = 0;
         d[3] = r1,
-        d[4] = r0,
-        d[5] = 0;
+            d[4] = r0,
+            d[5] = 0;
         d[6] = 0,
-        d[7] = 0,
-        d[8] = 1;
+            d[7] = 0,
+            d[8] = 1;
         return this
     }
-    ;
-    prototype.setTRS = function(tx, ty, a, sx, sy) {
+        ;
+    prototype.setTRS = function (tx, ty, a, sx, sy) {
         var d = this.data;
         var r0 = Math.cos(a);
         var r1 = Math.sin(a);
         d[0] = r0 * sx,
-        d[1] = -r1 * sy,
-        d[2] = tx;
+            d[1] = -r1 * sy,
+            d[2] = tx;
         d[3] = r1 * sx,
-        d[4] = r0 * sy,
-        d[5] = ty;
+            d[4] = r0 * sy,
+            d[5] = ty;
         d[6] = 0,
-        d[7] = 0,
-        d[8] = 1;
+            d[7] = 0,
+            d[8] = 1;
         return this
     }
-    ;
-    prototype.translate = function(tx, ty) {
+        ;
+    prototype.translate = function (tx, ty) {
         this.identity(Matrix2.__TEMP__);
         this.setTranslation(tx, ty, Matrix2.__TEMP__);
         return this.multiply(Matrix2.__TEMP__)
     }
-    ;
-    prototype.rotate = function(a) {
+        ;
+    prototype.rotate = function (a) {
         this.identity(Matrix2.__TEMP__);
         this.setTranslation(a, Matrix2.__TEMP__);
         return this.multiply(Matrix2.__TEMP__)
     }
-    ;
-    prototype.scale = function(sx, sy) {
+        ;
+    prototype.scale = function (sx, sy) {
         this.identity(Matrix2.__TEMP__);
         this.setScale(sx, sy, Matrix2.__TEMP__);
         return this.multiply(Matrix2.__TEMP__)
     }
-    ;
-    prototype.shear = function(sx, sy) {
+        ;
+    prototype.shear = function (sx, sy) {
         this.identity(Matrix2.__TEMP__);
         this.setRotation(sx, sy, Matrix2.__TEMP__);
         return this.multiply(Matrix2.__TEMP__)
     }
-    ;
-    prototype.multiply = function(m) {
+        ;
+    prototype.multiply = function (m) {
         var a = this.data;
         var b = m.data || m;
         a11 = a[0],
-        a12 = a[1],
-        a13 = a[2];
+            a12 = a[1],
+            a13 = a[2];
         a21 = a[3],
-        a22 = a[4],
-        a23 = a[5];
+            a22 = a[4],
+            a23 = a[5];
         a31 = a[6],
-        a32 = a[7],
-        a33 = a[8];
+            a32 = a[7],
+            a33 = a[8];
         b11 = b[0],
-        b12 = b[1],
-        b13 = b[2];
+            b12 = b[1],
+            b13 = b[2];
         b21 = b[3],
-        b22 = b[4],
-        b23 = b[5];
+            b22 = b[4],
+            b23 = b[5];
         b31 = b[6],
-        b32 = b[7],
-        b33 = b[8];
+            b32 = b[7],
+            b33 = b[8];
         a[0] = a11 * b11 + a12 * b21 + a13 * b31;
         a[1] = a11 * b12 + a12 * b22 + a13 * b32;
         a[2] = a11 * b13 + a12 * b23 + a13 * b33;
@@ -4230,22 +4230,22 @@ Class(function Matrix2() {
         a[5] = a21 * b13 + a22 * b23 + a23 * b33;
         return this
     }
-    ;
-    prototype.inverse = function(m) {
+        ;
+    prototype.inverse = function (m) {
         m = m || this;
         var a = m.data;
         var b = this.data;
         a11 = a[0],
-        a12 = a[1],
-        a13 = a[2];
+            a12 = a[1],
+            a13 = a[2];
         a21 = a[3],
-        a22 = a[4],
-        a23 = a[5];
+            a22 = a[4],
+            a23 = a[5];
         a31 = a[6],
-        a32 = a[7],
-        a33 = a[8];
+            a32 = a[7],
+            a33 = a[8];
         var det = m.determinant();
-        if (Math.abs(det) < 1e-7) {}
+        if (Math.abs(det) < 1e-7) { }
         var invdet = 1 / det;
         b[0] = (a22 * a33 - a32 * a23) * invdet;
         b[1] = (a13 * a32 - a12 * a33) * invdet;
@@ -4258,52 +4258,52 @@ Class(function Matrix2() {
         b[8] = (a11 * a22 - a21 * a12) * invdet;
         return m
     }
-    ;
-    prototype.determinant = function() {
+        ;
+    prototype.determinant = function () {
         var a = this.data;
         a11 = a[0],
-        a12 = a[1],
-        a13 = a[2];
+            a12 = a[1],
+            a13 = a[2];
         a21 = a[3],
-        a22 = a[4],
-        a23 = a[5];
+            a22 = a[4],
+            a23 = a[5];
         a31 = a[6],
-        a32 = a[7],
-        a33 = a[8];
+            a32 = a[7],
+            a33 = a[8];
         return a11 * (a22 * a33 - a32 * a23) - a12 * (a21 * a33 - a23 * a31) + a13 * (a21 * a32 * a22 * a31)
     }
-    ;
-    prototype.copyTo = function(m) {
+        ;
+    prototype.copyTo = function (m) {
         var a = this.data;
         var b = m.data || m;
         b[0] = a[0],
-        b[1] = a[1],
-        b[2] = a[2];
+            b[1] = a[1],
+            b[2] = a[2];
         b[3] = a[3],
-        b[4] = a[4],
-        b[5] = a[5];
+            b[4] = a[4],
+            b[5] = a[5];
         b[6] = a[6],
-        b[7] = a[7],
-        b[8] = a[8];
+            b[7] = a[7],
+            b[8] = a[8];
         return m
     }
-    ;
-    prototype.copyFrom = function(m) {
+        ;
+    prototype.copyFrom = function (m) {
         var a = this.data;
         var b = m.data || m;
         b[0] = a[0],
-        b[1] = a[1],
-        b[2] = a[2];
+            b[1] = a[1],
+            b[2] = a[2];
         b[3] = a[3],
-        b[4] = a[4],
-        b[5] = a[5];
+            b[4] = a[4],
+            b[5] = a[5];
         b[6] = a[6],
-        b[7] = a[7],
-        b[8] = a[8];
+            b[7] = a[7],
+            b[8] = a[8];
         return this
     }
-    ;
-    prototype.getCSS = function(force2D) {
+        ;
+    prototype.getCSS = function (force2D) {
         var d = this.data;
         if (Device.tween.css3d && !force2D) {
             return "matrix3d(" + noE(d[0]) + ", " + noE(d[3]) + ", 0, 0, " + noE(d[1]) + ", " + noE(d[4]) + ", 0, 0, 0, 0, 1, 0, " + noE(d[2]) + ", " + noE(d[5]) + ", 0, 1)"
@@ -4311,7 +4311,7 @@ Class(function Matrix2() {
             return "matrix(" + noE(d[0]) + ", " + noE(d[3]) + ", " + noE(d[1]) + ", " + noE(d[4]) + ", " + noE(d[2]) + ", " + noE(d[5]) + ")"
         }
     }
-}, function() {
+}, function () {
     Matrix2.__TEMP__ = new Matrix2().data
 });
 Class(function Matrix4() {
@@ -4319,28 +4319,28 @@ Class(function Matrix4() {
     var prototype = Matrix4.prototype;
     this.type = "matrix4";
     this.data = new Float32Array(16);
-    (function() {
+    (function () {
         identity()
     }
     )();
     function identity(m) {
         var d = m || _this.data;
         d[0] = 1,
-        d[4] = 0,
-        d[8] = 0,
-        d[12] = 0;
+            d[4] = 0,
+            d[8] = 0,
+            d[12] = 0;
         d[1] = 0,
-        d[5] = 1,
-        d[9] = 0,
-        d[13] = 0;
+            d[5] = 1,
+            d[9] = 0,
+            d[13] = 0;
         d[2] = 0,
-        d[6] = 0,
-        d[10] = 1,
-        d[14] = 0;
+            d[6] = 0,
+            d[10] = 1,
+            d[14] = 0;
         d[3] = 0,
-        d[7] = 0,
-        d[11] = 0,
-        d[15] = 1
+            d[7] = 0,
+            d[11] = 0,
+            d[15] = 1
     }
     function noE(n) {
         return Math.abs(n) < 0.000001 ? 0 : n
@@ -4348,61 +4348,61 @@ Class(function Matrix4() {
     if (typeof prototype.identity !== "undefined") {
         return
     }
-    prototype.identity = function() {
+    prototype.identity = function () {
         identity();
         return this
     }
-    ;
-    prototype.transformVector = function(v, pv) {
+        ;
+    prototype.transformVector = function (v, pv) {
         var d = this.data;
         var x = v.x
-          , y = v.y
-          , z = v.z
-          , w = v.w;
+            , y = v.y
+            , z = v.z
+            , w = v.w;
         pv = pv || v;
         pv.x = d[0] * x + d[4] * y + d[8] * z + d[12] * w;
         pv.y = d[1] * x + d[5] * y + d[9] * z + d[13] * w;
         pv.z = d[2] * x + d[6] * y + d[10] * z + d[14] * w;
         return pv
     }
-    ;
-    prototype.multiply = function(m, d) {
+        ;
+    prototype.multiply = function (m, d) {
         var a = this.data;
         var b = m.data || m;
         var a00, a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12, a13, a14, a15;
         var b00, b01, b02, b03, b04, b05, b06, b07, b08, b09, b10, b11, b12, b13, b14, b15;
         a00 = a[0],
-        a01 = a[1],
-        a02 = a[2],
-        a03 = a[3];
+            a01 = a[1],
+            a02 = a[2],
+            a03 = a[3];
         a04 = a[4],
-        a05 = a[5],
-        a06 = a[6],
-        a07 = a[7];
+            a05 = a[5],
+            a06 = a[6],
+            a07 = a[7];
         a08 = a[8],
-        a09 = a[9],
-        a10 = a[10],
-        a11 = a[11];
+            a09 = a[9],
+            a10 = a[10],
+            a11 = a[11];
         a12 = a[12],
-        a13 = a[13],
-        a14 = a[14],
-        a15 = a[15];
+            a13 = a[13],
+            a14 = a[14],
+            a15 = a[15];
         b00 = b[0],
-        b01 = b[1],
-        b02 = b[2],
-        b03 = b[3];
+            b01 = b[1],
+            b02 = b[2],
+            b03 = b[3];
         b04 = b[4],
-        b05 = b[5],
-        b06 = b[6],
-        b07 = b[7];
+            b05 = b[5],
+            b06 = b[6],
+            b07 = b[7];
         b08 = b[8],
-        b09 = b[9],
-        b10 = b[10],
-        b11 = b[11];
+            b09 = b[9],
+            b10 = b[10],
+            b11 = b[11];
         b12 = b[12],
-        b13 = b[13],
-        b14 = b[14],
-        b15 = b[15];
+            b13 = b[13],
+            b14 = b[14],
+            b15 = b[15];
         a[0] = a00 * b00 + a04 * b01 + a08 * b02 + a12 * b03;
         a[1] = a01 * b00 + a05 * b01 + a09 * b02 + a13 * b03;
         a[2] = a02 * b00 + a06 * b01 + a10 * b02 + a14 * b03;
@@ -4421,8 +4421,8 @@ Class(function Matrix4() {
         a[15] = a03 * b12 + a07 * b13 + a11 * b14 + a15 * b15;
         return this
     }
-    ;
-    prototype.setTRS = function(tx, ty, tz, rx, ry, rz, sx, sy, sz, m) {
+        ;
+    prototype.setTRS = function (tx, ty, tz, rx, ry, rz, sx, sy, sz, m) {
         m = m || this;
         var d = m.data;
         identity(m);
@@ -4446,28 +4446,28 @@ Class(function Matrix4() {
         d[14] = tz;
         return m
     }
-    ;
-    prototype.setScale = function(sx, sy, sz, m) {
+        ;
+    prototype.setScale = function (sx, sy, sz, m) {
         m = m || this;
         var d = m.data || m;
         identity(m);
         d[0] = sx,
-        d[5] = sy,
-        d[10] = sz;
+            d[5] = sy,
+            d[10] = sz;
         return m
     }
-    ;
-    prototype.setTranslation = function(tx, ty, tz, m) {
+        ;
+    prototype.setTranslation = function (tx, ty, tz, m) {
         m = m || this;
         var d = m.data || m;
         identity(m);
         d[12] = tx,
-        d[13] = ty,
-        d[14] = tz;
+            d[13] = ty,
+            d[14] = tz;
         return m
     }
-    ;
-    prototype.setRotation = function(rx, ry, rz, m) {
+        ;
+    prototype.setRotation = function (rx, ry, rz, m) {
         m = m || this;
         var d = m.data || m;
         identity(m);
@@ -4488,8 +4488,8 @@ Class(function Matrix4() {
         d[10] = cy * cx;
         return m
     }
-    ;
-    prototype.setLookAt = function(eye, center, up, m) {
+        ;
+    prototype.setLookAt = function (eye, center, up, m) {
         m = m || this;
         var d = m.data || m;
         var f = D3.m4v31;
@@ -4517,8 +4517,8 @@ Class(function Matrix4() {
         this.translate(-eye.x, -eye.y, -eye.z);
         return this
     }
-    ;
-    prototype.setPerspective = function(fovy, aspect, near, far, m) {
+        ;
+    prototype.setPerspective = function (fovy, aspect, near, far, m) {
         var e, rd, s, ct;
         if (near === far || aspect === 0) {
             throw "null frustum"
@@ -4554,25 +4554,25 @@ Class(function Matrix4() {
         e[14] = -2 * near * far * rd;
         e[15] = 0
     }
-    ;
-    prototype.setRotationFromQuaternion = function(q) {
+        ;
+    prototype.setRotationFromQuaternion = function (q) {
         var d = this.data;
         var x = q.x
-          , y = q.y
-          , z = q.z
-          , w = q.w;
+            , y = q.y
+            , z = q.z
+            , w = q.w;
         var x2 = x + x
-          , y2 = y + y
-          , z2 = z + z;
+            , y2 = y + y
+            , z2 = z + z;
         var xx = x * x2
-          , xy = x * y2
-          , xz = x * z2;
+            , xy = x * y2
+            , xz = x * z2;
         var yy = y * y2
-          , yz = y * z2
-          , zz = z * z2;
+            , yz = y * z2
+            , zz = z * z2;
         var wx = w * x2
-          , wy = w * y2
-          , wz = w * z2;
+            , wy = w * y2
+            , wz = w * z2;
         d[0] = 1 - (yy + zz);
         d[4] = xy - wz;
         d[8] = xz + wy;
@@ -4591,41 +4591,41 @@ Class(function Matrix4() {
         d[15] = 1;
         return this
     }
-    ,
-    prototype.perspective = function(fov, aspect, near, far) {
-        this.setPerspective(fov, aspect, near, far, Matrix4.__TEMP__);
-        return this.multiply(Matrix4.__TEMP__)
-    }
-    ;
-    prototype.lookAt = function(eye, center, up) {
+        ,
+        prototype.perspective = function (fov, aspect, near, far) {
+            this.setPerspective(fov, aspect, near, far, Matrix4.__TEMP__);
+            return this.multiply(Matrix4.__TEMP__)
+        }
+        ;
+    prototype.lookAt = function (eye, center, up) {
         this.setLookAt(eye, center, up, Matrix4.__TEMP__);
         return this.multiply(Matrix4.__TEMP__)
     }
-    ;
-    prototype.translate = function(tx, ty, tz) {
+        ;
+    prototype.translate = function (tx, ty, tz) {
         this.setTranslation(tx, ty, tz, Matrix4.__TEMP__);
         return this.multiply(Matrix4.__TEMP__)
     }
-    ;
-    prototype.rotate = function(rx, ry, rz) {
+        ;
+    prototype.rotate = function (rx, ry, rz) {
         this.setRotation(rx, ry, rz, Matrix4.__TEMP__);
         return this.multiply(Matrix4.__TEMP__)
     }
-    ;
-    prototype.scale = function(sx, sy, sz) {
+        ;
+    prototype.scale = function (sx, sy, sz) {
         this.setScale(sx, sy, sz, Matrix4.__TEMP__);
         return this.multiply(Matrix4.__TEMP__)
     }
-    ;
-    prototype.copyTo = function(m) {
+        ;
+    prototype.copyTo = function (m) {
         var a = this.data;
         var b = m.data || m;
         for (var i = 0; i < 16; i++) {
             b[i] = a[i]
         }
     }
-    ;
-    prototype.copyFrom = function(m) {
+        ;
+    prototype.copyFrom = function (m) {
         var a = this.data;
         var b = m.data || m;
         for (var i = 0; i < 16; i++) {
@@ -4633,8 +4633,8 @@ Class(function Matrix4() {
         }
         return this
     }
-    ;
-    prototype.copyRotationTo = function(m) {
+        ;
+    prototype.copyRotationTo = function (m) {
         var a = this.data;
         var b = m.data || m;
         b[0] = a[0];
@@ -4648,8 +4648,8 @@ Class(function Matrix4() {
         b[8] = a[10];
         return m
     }
-    ;
-    prototype.copyPosition = function(m) {
+        ;
+    prototype.copyPosition = function (m) {
         var to = this.data;
         var from = m.data || m;
         to[12] = from[12];
@@ -4657,25 +4657,25 @@ Class(function Matrix4() {
         to[14] = from[14];
         return this
     }
-    ;
-    prototype.getCSS = function() {
+        ;
+    prototype.getCSS = function () {
         var d = this.data;
         return "matrix3d(" + noE(d[0]) + "," + noE(d[1]) + "," + noE(d[2]) + "," + noE(d[3]) + "," + noE(d[4]) + "," + noE(d[5]) + "," + noE(d[6]) + "," + noE(d[7]) + "," + noE(d[8]) + "," + noE(d[9]) + "," + noE(d[10]) + "," + noE(d[11]) + "," + noE(d[12]) + "," + noE(d[13]) + "," + noE(d[14]) + "," + noE(d[15]) + ")"
     }
-    ;
-    prototype.extractPosition = function(v) {
+        ;
+    prototype.extractPosition = function (v) {
         v = v || new Vector3();
         var d = this.data;
         v.set(d[12], d[13], d[14]);
         return v
     }
-    ;
-    prototype.determinant = function() {
+        ;
+    prototype.determinant = function () {
         var d = this.data;
         return d[0] * (d[5] * d[10] - d[9] * d[6]) + d[4] * (d[9] * d[2] - d[1] * d[10]) + d[8] * (d[1] * d[6] - d[5] * d[2])
     }
-    ;
-    prototype.inverse = function(m) {
+        ;
+    prototype.inverse = function (m) {
         var d = this.data;
         var a = (m) ? m.data || m : this.data;
         var det = this.determinant();
@@ -4685,17 +4685,17 @@ Class(function Matrix4() {
             return m
         }
         var d0 = d[0]
-          , d4 = d[4]
-          , d8 = d[8]
-          , d12 = d[12]
-          , d1 = d[1]
-          , d5 = d[5]
-          , d9 = d[9]
-          , d13 = d[13]
-          , d2 = d[2]
-          , d6 = d[6]
-          , d10 = d[10]
-          , d14 = d[14];
+            , d4 = d[4]
+            , d8 = d[8]
+            , d12 = d[12]
+            , d1 = d[1]
+            , d5 = d[5]
+            , d9 = d[9]
+            , d13 = d[13]
+            , d2 = d[2]
+            , d6 = d[6]
+            , d10 = d[10]
+            , d14 = d[14];
         det = 1 / det;
         a[0] = (d5 * d10 - d9 * d6) * det;
         a[1] = (d8 * d6 - d4 * d10) * det;
@@ -4711,19 +4711,19 @@ Class(function Matrix4() {
         a[14] = -(d12 * a[2] + d13 * a[6] + d14 * a[10]);
         return m
     }
-    ;
-    prototype.transpose = function(m) {
+        ;
+    prototype.transpose = function (m) {
         var d = this.data;
         var a = m ? m.data || m : this.data;
         var d0 = d[0]
-          , d4 = d[4]
-          , d8 = d[8]
-          , d1 = d[1]
-          , d5 = d[5]
-          , d9 = d[9]
-          , d2 = d[2]
-          , d6 = d[6]
-          , d10 = d[10];
+            , d4 = d[4]
+            , d8 = d[8]
+            , d1 = d[1]
+            , d5 = d[5]
+            , d9 = d[9]
+            , d2 = d[2]
+            , d6 = d[6]
+            , d10 = d[10];
         a[0] = d0;
         a[1] = d4;
         a[2] = d8;
@@ -4734,7 +4734,7 @@ Class(function Matrix4() {
         a[9] = d6;
         a[10] = d10
     }
-}, function() {
+}, function () {
     Matrix4.__TEMP__ = new Matrix4().data
 });
 Class(function Vector2(_x, _y) {
@@ -4746,107 +4746,107 @@ Class(function Vector2(_x, _y) {
     if (typeof prototype.set !== "undefined") {
         return
     }
-    prototype.set = function(x, y) {
+    prototype.set = function (x, y) {
         this.x = x;
         this.y = y;
         return this
     }
-    ;
-    prototype.clear = function() {
+        ;
+    prototype.clear = function () {
         this.x = 0;
         this.y = 0;
         return this
     }
-    ;
-    prototype.copyTo = function(v) {
+        ;
+    prototype.copyTo = function (v) {
         v.x = this.x;
         v.y = this.y;
         return this
     }
-    ;
-    prototype.copyFrom = prototype.copy = function(v) {
+        ;
+    prototype.copyFrom = prototype.copy = function (v) {
         this.x = v.x;
         this.y = v.y;
         return this
     }
-    ;
-    prototype.addVectors = function(a, b) {
+        ;
+    prototype.addVectors = function (a, b) {
         this.x = a.x + b.x;
         this.y = a.y + b.y;
         return this
     }
-    ;
-    prototype.subVectors = function(a, b) {
+        ;
+    prototype.subVectors = function (a, b) {
         this.x = a.x - b.x;
         this.y = a.y - b.y;
         return this
     }
-    ;
-    prototype.multiplyVectors = function(a, b) {
+        ;
+    prototype.multiplyVectors = function (a, b) {
         this.x = a.x * b.x;
         this.y = a.y * b.y;
         return this
     }
-    ;
-    prototype.add = function(v) {
+        ;
+    prototype.add = function (v) {
         this.x += v.x;
         this.y += v.y;
         return this
     }
-    ;
-    prototype.sub = function(v) {
+        ;
+    prototype.sub = function (v) {
         this.x -= v.x;
         this.y -= v.y;
         return this
     }
-    ;
-    prototype.multiply = function(v) {
+        ;
+    prototype.multiply = function (v) {
         this.x *= v;
         this.y *= v;
         return this
     }
-    ;
-    prototype.divide = function(v) {
+        ;
+    prototype.divide = function (v) {
         this.x /= v;
         this.y /= v;
         return this
     }
-    ;
-    prototype.lengthSq = function() {
+        ;
+    prototype.lengthSq = function () {
         return (this.x * this.x + this.y * this.y) || 0.00001
     }
-    ;
-    prototype.length = function() {
+        ;
+    prototype.length = function () {
         return Math.sqrt(this.lengthSq())
     }
-    ;
-    prototype.setLength = function(length) {
+        ;
+    prototype.setLength = function (length) {
         this.normalize().multiply(length);
         return this
     }
-    ;
-    prototype.normalize = function() {
+        ;
+    prototype.normalize = function () {
         var length = this.length();
         this.x /= length;
         this.y /= length;
         return this
     }
-    ;
-    prototype.perpendicular = function(a, b) {
+        ;
+    prototype.perpendicular = function (a, b) {
         var tx = this.x;
         var ty = this.y;
         this.x = -ty;
         this.y = tx;
         return this
     }
-    ;
-    prototype.lerp = function(v, alpha) {
+        ;
+    prototype.lerp = function (v, alpha) {
         this.x += (v.x - this.x) * alpha;
         this.y += (v.y - this.y) * alpha;
         return this
     }
-    ;
-    prototype.interp = function(v, alpha, ease) {
+        ;
+    prototype.interp = function (v, alpha, ease) {
         var a = 0;
         var f = TweenManager.Interpolation.convertEase(ease);
         var calc = Vector2.__TEMP__;
@@ -4860,29 +4860,29 @@ Class(function Vector2(_x, _y) {
         this.x += (v.x - this.x) * a;
         this.y += (v.y - this.y) * a
     }
-    ;
-    prototype.setAngleRadius = function(a, r) {
+        ;
+    prototype.setAngleRadius = function (a, r) {
         this.x = Math.cos(a) * r;
         this.y = Math.sin(a) * r;
         return this
     }
-    ;
-    prototype.addAngleRadius = function(a, r) {
+        ;
+    prototype.addAngleRadius = function (a, r) {
         this.x += Math.cos(a) * r;
         this.y += Math.sin(a) * r;
         return this
     }
-    ;
-    prototype.clone = function() {
-        return new Vector2(this.x,this.y)
+        ;
+    prototype.clone = function () {
+        return new Vector2(this.x, this.y)
     }
-    ;
-    prototype.dot = function(a, b) {
+        ;
+    prototype.dot = function (a, b) {
         b = b || this;
         return (a.x * b.x + a.y * b.y)
     }
-    ;
-    prototype.distanceTo = function(v, noSq) {
+        ;
+    prototype.distanceTo = function (v, noSq) {
         var dx = this.x - v.x;
         var dy = this.y - v.y;
         if (!noSq) {
@@ -4890,27 +4890,27 @@ Class(function Vector2(_x, _y) {
         }
         return dx * dx + dy * dy
     }
-    ;
-    prototype.solveAngle = function(a, b) {
+        ;
+    prototype.solveAngle = function (a, b) {
         if (!b) {
             b = this
         }
         return Math.atan2(a.y - b.y, a.x - b.x)
     }
-    ;
-    prototype.equals = function(v) {
+        ;
+    prototype.equals = function (v) {
         return this.x == v.x && this.y == v.y
     }
-    ;
-    prototype.console = function() {
+        ;
+    prototype.console = function () {
         console.log(this.x, this.y)
     }
-    ;
-    prototype.toString = function(split) {
+        ;
+    prototype.toString = function (split) {
         split = split || " ";
         return this.x + split + this.y
     }
-}, function() {
+}, function () {
     Vector2.__TEMP__ = new Vector2()
 });
 Class(function Vector3(_x, _y, _z, _w) {
@@ -4924,126 +4924,126 @@ Class(function Vector3(_x, _y, _z, _w) {
     if (typeof prototype.set !== "undefined") {
         return
     }
-    prototype.set = function(x, y, z, w) {
+    prototype.set = function (x, y, z, w) {
         this.x = x || 0;
         this.y = y || 0;
         this.z = z || 0;
         this.w = w || 1;
         return this
     }
-    ;
-    prototype.clear = function() {
+        ;
+    prototype.clear = function () {
         this.x = 0;
         this.y = 0;
         this.z = 0;
         this.w = 1;
         return this
     }
-    ;
-    prototype.copyTo = function(p) {
+        ;
+    prototype.copyTo = function (p) {
         p.x = this.x;
         p.y = this.y;
         p.z = this.z;
         p.w = this.w;
         return p
     }
-    ;
-    prototype.copyFrom = prototype.copy = function(p) {
+        ;
+    prototype.copyFrom = prototype.copy = function (p) {
         this.x = p.x || 0;
         this.y = p.y || 0;
         this.z = p.z || 0;
         this.w = p.w || 1;
         return this
     }
-    ;
-    prototype.lengthSq = function() {
+        ;
+    prototype.lengthSq = function () {
         return this.x * this.x + this.y * this.y + this.z * this.z
     }
-    ;
-    prototype.length = function() {
+        ;
+    prototype.length = function () {
         return Math.sqrt(this.lengthSq())
     }
-    ;
-    prototype.normalize = function() {
+        ;
+    prototype.normalize = function () {
         var m = 1 / this.length();
         this.set(this.x * m, this.y * m, this.z * m);
         return this
     }
-    ;
-    prototype.setLength = function(length) {
+        ;
+    prototype.setLength = function (length) {
         this.normalize().multiply(length);
         return this
     }
-    ;
-    prototype.addVectors = function(a, b) {
+        ;
+    prototype.addVectors = function (a, b) {
         this.x = a.x + b.x;
         this.y = a.y + b.y;
         this.z = a.z + b.z;
         return this
     }
-    ;
-    prototype.subVectors = function(a, b) {
+        ;
+    prototype.subVectors = function (a, b) {
         this.x = a.x - b.x;
         this.y = a.y - b.y;
         this.z = a.z - b.z;
         return this
     }
-    ;
-    prototype.multiplyVectors = function(a, b) {
+        ;
+    prototype.multiplyVectors = function (a, b) {
         this.x = a.x * b.x;
         this.y = a.y * b.y;
         this.z = a.z * b.z;
         return this
     }
-    ;
-    prototype.add = function(v) {
+        ;
+    prototype.add = function (v) {
         this.x += v.x;
         this.y += v.y;
         this.z += v.z;
         return this
     }
-    ;
-    prototype.sub = function(v) {
+        ;
+    prototype.sub = function (v) {
         this.x -= v.x;
         this.y -= v.y;
         this.z -= v.z;
         return this
     }
-    ;
-    prototype.multiply = function(v) {
+        ;
+    prototype.multiply = function (v) {
         this.x *= v;
         this.y *= v;
         this.z *= v;
         return this
     }
-    ;
-    prototype.divide = function(v) {
+        ;
+    prototype.divide = function (v) {
         this.x /= v;
         this.y /= v;
         this.z /= v;
         return this
     }
-    ;
-    prototype.limit = function(max) {
+        ;
+    prototype.limit = function (max) {
         if (this.length() > max) {
             this.normalize();
             this.multiply(max)
         }
     }
-    ;
-    prototype.heading2D = function() {
+        ;
+    prototype.heading2D = function () {
         var angle = Math.atan2(-this.y, this.x);
         return -angle
     }
-    ;
-    prototype.lerp = function(v, alpha) {
+        ;
+    prototype.lerp = function (v, alpha) {
         this.x += (v.x - this.x) * alpha;
         this.y += (v.y - this.y) * alpha;
         this.z += (v.z - this.z) * alpha;
         return this
     }
-    ;
-    prototype.deltaLerp = function(v, alpha, delta) {
+        ;
+    prototype.deltaLerp = function (v, alpha, delta) {
         delta = delta || 1;
         for (var i = 0; i < delta; i++) {
             var f = alpha;
@@ -5053,8 +5053,8 @@ Class(function Vector3(_x, _y, _z, _w) {
         }
         return this
     }
-    ;
-    prototype.interp = function(v, alpha, ease, dist) {
+        ;
+    prototype.interp = function (v, alpha, ease, dist) {
         if (!Vector3.__TEMP__) {
             Vector3.__TEMP__ = new Vector3()
         }
@@ -5073,31 +5073,31 @@ Class(function Vector3(_x, _y, _z, _w) {
         this.y += (v.y - this.y) * a;
         this.z += (v.z - this.z) * a
     }
-    ;
-    prototype.setAngleRadius = function(a, r) {
+        ;
+    prototype.setAngleRadius = function (a, r) {
         this.x = Math.cos(a) * r;
         this.y = Math.sin(a) * r;
         this.z = Math.sin(a) * r;
         return this
     }
-    ;
-    prototype.addAngleRadius = function(a, r) {
+        ;
+    prototype.addAngleRadius = function (a, r) {
         this.x += Math.cos(a) * r;
         this.y += Math.sin(a) * r;
         this.z += Math.sin(a) * r;
         return this
     }
-    ;
-    prototype.dot = function(a, b) {
+        ;
+    prototype.dot = function (a, b) {
         b = b || this;
         return a.x * b.x + a.y * b.y + a.z * b.z
     }
-    ;
-    prototype.clone = function() {
-        return new Vector3(this.x,this.y,this.z)
+        ;
+    prototype.clone = function () {
+        return new Vector3(this.x, this.y, this.z)
     }
-    ;
-    prototype.cross = function(a, b) {
+        ;
+    prototype.cross = function (a, b) {
         if (!b) {
             b = this
         }
@@ -5107,8 +5107,8 @@ Class(function Vector3(_x, _y, _z, _w) {
         this.set(x, y, z, this.w);
         return this
     }
-    ;
-    prototype.distanceTo = function(v, noSq) {
+        ;
+    prototype.distanceTo = function (v, noSq) {
         var dx = this.x - v.x;
         var dy = this.y - v.y;
         var dz = this.z - v.z;
@@ -5117,27 +5117,27 @@ Class(function Vector3(_x, _y, _z, _w) {
         }
         return dx * dx + dy * dy + dz * dz
     }
-    ;
-    prototype.solveAngle = function(a, b) {
+        ;
+    prototype.solveAngle = function (a, b) {
         if (!b) {
             b = this
         }
         return Math.acos(a.dot(b) / ((a.length() * b.length()) || 0.00001))
     }
-    ;
-    prototype.equals = function(v) {
+        ;
+    prototype.equals = function (v) {
         return this.x == v.x && this.y == v.y && this.z == v.z
     }
-    ;
-    prototype.console = function() {
+        ;
+    prototype.console = function () {
         console.log(this.x, this.y, this.z)
     }
-    ;
-    prototype.toString = function(split) {
+        ;
+    prototype.toString = function (split) {
         split = split || " ";
         return this.x + split + this.y + split + this.z
     }
-}, function() {
+}, function () {
     Vector3.__TEMP__ = new Vector3()
 });
 Mobile.Class(function Accelerometer() {
@@ -5177,40 +5177,40 @@ Mobile.Class(function Accelerometer() {
 
         var orient = getScreenOrientation();
         switch (orient) {
-        case 180:
-            _this.x = ax;
-            _this.y = -ay;
-            _this.z = az;
-            _this.rotationRate.alpha = -rBeta * _this.toRadians;
-            _this.rotationRate.beta = rAlpha * _this.toRadians;
-            _this.rotationRate.gamma = rGamma * _this.toRadians;
-            break;
-        case 90:
-            _this.x = ay;
-            _this.y = ax;
-            _this.z = az;
-            _this.rotationRate.alpha = rAlpha * _this.toRadians;
-            _this.rotationRate.beta = rBeta * _this.toRadians;
-            _this.rotationRate.gamma = rGamma * _this.toRadians;
-            break;
-        case -90:
-        case 270:
-            _this.x = -ay;
-            _this.y = -ax;
-            _this.z = az;
-            _this.rotationRate.alpha = -rAlpha * _this.toRadians;
-            _this.rotationRate.beta = -rBeta * _this.toRadians;
-            _this.rotationRate.gamma = rGamma * _this.toRadians;
-            break;
-        case 0:
-        default:
-            _this.x = -ax;
-            _this.y = ay;
-            _this.z = az;
-            _this.rotationRate.alpha = rBeta * _this.toRadians;
-            _this.rotationRate.beta = -rAlpha * _this.toRadians;
-            _this.rotationRate.gamma = rGamma * _this.toRadians;
-            break;
+            case 180:
+                _this.x = ax;
+                _this.y = -ay;
+                _this.z = az;
+                _this.rotationRate.alpha = -rBeta * _this.toRadians;
+                _this.rotationRate.beta = rAlpha * _this.toRadians;
+                _this.rotationRate.gamma = rGamma * _this.toRadians;
+                break;
+            case 90:
+                _this.x = ay;
+                _this.y = ax;
+                _this.z = az;
+                _this.rotationRate.alpha = rAlpha * _this.toRadians;
+                _this.rotationRate.beta = rBeta * _this.toRadians;
+                _this.rotationRate.gamma = rGamma * _this.toRadians;
+                break;
+            case -90:
+            case 270:
+                _this.x = -ay;
+                _this.y = -ax;
+                _this.z = az;
+                _this.rotationRate.alpha = -rAlpha * _this.toRadians;
+                _this.rotationRate.beta = -rBeta * _this.toRadians;
+                _this.rotationRate.gamma = rGamma * _this.toRadians;
+                break;
+            case 0:
+            default:
+                _this.x = -ax;
+                _this.y = ay;
+                _this.z = az;
+                _this.rotationRate.alpha = rBeta * _this.toRadians;
+                _this.rotationRate.beta = -rAlpha * _this.toRadians;
+                _this.rotationRate.gamma = rGamma * _this.toRadians;
+                break;
         }
         _this.fire("motion", null)
     }
@@ -5229,28 +5229,28 @@ Mobile.Class(function Accelerometer() {
 
         var orient = getScreenOrientation();
         switch (orient) {
-        case 180:
-            _this.alpha = -beta * _this.toRadians;
-            _this.beta = alpha * _this.toRadians;
-            _this.gamma = gamma * _this.toRadians;
-            break;
-        case 90:
-            _this.alpha = alpha * _this.toRadians;
-            _this.beta = beta * _this.toRadians;
-            _this.gamma = gamma * _this.toRadians;
-            break;
-        case -90:
-        case 270:
-            _this.alpha = -alpha * _this.toRadians;
-            _this.beta = -beta * _this.toRadians;
-            _this.gamma = gamma * _this.toRadians;
-            break;
-        case 0:
-        default:
-            _this.alpha = beta * _this.toRadians;
-            _this.beta = -alpha * _this.toRadians;
-            _this.gamma = gamma * _this.toRadians;
-            break;
+            case 180:
+                _this.alpha = -beta * _this.toRadians;
+                _this.beta = alpha * _this.toRadians;
+                _this.gamma = gamma * _this.toRadians;
+                break;
+            case 90:
+                _this.alpha = alpha * _this.toRadians;
+                _this.beta = beta * _this.toRadians;
+                _this.gamma = gamma * _this.toRadians;
+                break;
+            case -90:
+            case 270:
+                _this.alpha = -alpha * _this.toRadians;
+                _this.beta = -beta * _this.toRadians;
+                _this.gamma = gamma * _this.toRadians;
+                break;
+            case 0:
+            default:
+                _this.alpha = beta * _this.toRadians;
+                _this.beta = -alpha * _this.toRadians;
+                _this.gamma = gamma * _this.toRadians;
+                break;
         }
         _this.tilt = beta * _this.toRadians;
         _this.yaw = alpha * _this.toRadians;
@@ -5283,35 +5283,35 @@ Mobile.Class(function Accelerometer() {
         }
         return compassHeading * (180 / Math.PI)
     }
-    this.capture = function() {
+    this.capture = function () {
         if (!this.active) {
             this.active = true;
             window.ondevicemotion = updateAccel;
             window.addEventListener("deviceorientation", updateOrientation)
         }
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         this.active = false;
         window.ondevicemotion = null;
         _this.x = _this.y = _this.z = 0;
         window.removeEventListener("deviceorientation", updateOrientation)
     }
-    ;
-    this.requestPermission = function() {
+        ;
+    this.requestPermission = function () {
         if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
-            DeviceMotionEvent.requestPermission().then(function(state) {
+            DeviceMotionEvent.requestPermission().then(function (state) {
                 if (state === "granted") {
                     _this.capture();
                 }
-            }).catch(function() {});
+            }).catch(function () { });
         }
         if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
-            DeviceOrientationEvent.requestPermission().catch(function() {});
+            DeviceOrientationEvent.requestPermission().catch(function () { });
         }
     };
     if (typeof window !== "undefined") {
-        var onFirstTouch = function() {
+        var onFirstTouch = function () {
             window.removeEventListener("touchstart", onFirstTouch);
             window.removeEventListener("touchend", onFirstTouch);
             window.removeEventListener("click", onFirstTouch);
@@ -5326,7 +5326,7 @@ Mobile.Class(function ScreenLock() {
     Inherit(this, Component);
     var _this = this;
     var _lockedNodes = [];
-    (function() {
+    (function () {
         addListeners()
     }
     )();
@@ -5336,14 +5336,14 @@ Mobile.Class(function ScreenLock() {
     function orientationChange() {
         var width = document.body.clientWidth;
         var height = document.body.clientHeight;
-        _lockedNodes.forEach(function(e) {
+        _lockedNodes.forEach(function (e) {
             if (Device.getFullscreen() && window.screen && window.screen.orientation && window.screen.orientation.lock) {
                 try {
                     var lock = window.screen.orientation.lock("portrait");
                     if (lock && lock.catch) {
-                        lock.catch(function() {})
+                        lock.catch(function () { })
                     }
-                } catch (error) {}
+                } catch (error) { }
                 e.object.size(width, height);
                 e.object.div.style.transformOrigin = "";
                 e.object.div.style.transform = "";
@@ -5368,17 +5368,17 @@ Mobile.Class(function ScreenLock() {
             }
         })
     }
-    this.lock = function(orientation) {
+    this.lock = function (orientation) {
         _lockedNodes.push({
             object: Stage,
             orientation: orientation
         });
         orientationChange()
     }
-    ;
-    this.unlock = function() {
+        ;
+    this.unlock = function () {
         var obj = Stage;
-        _lockedNodes.every(function(o, i) {
+        _lockedNodes.every(function (o, i) {
             if (o.object == obj) {
                 _lockedNodes.splice(i, 1);
                 return false
@@ -5386,7 +5386,7 @@ Mobile.Class(function ScreenLock() {
             return true
         })
     }
-    ;
+        ;
     this.forceOrientationChange = orientationChange
 }, "static");
 Class(function Interaction() {
@@ -5401,7 +5401,7 @@ Interaction.Class(function Input(_object) {
     var _delta = Render.TIME;
     var _lastTime = Render.TIME;
     this.velocity = new Vector2();
-    (function() {
+    (function () {
         if (_object instanceof HydraObject) {
             addListeners()
         }
@@ -5421,7 +5421,7 @@ Interaction.Class(function Input(_object) {
         _this.velocity.clear();
         _hold.copyFrom(e);
         if (_this.onStart) {
-            defer(function() {
+            defer(function () {
                 if (_this.onStart) {
                     _this.onStart(e)
                 }
@@ -5441,7 +5441,7 @@ Interaction.Class(function Input(_object) {
             _lastMove.copyFrom(e)
         }
         if (_this.onUpdate) {
-            defer(function() {
+            defer(function () {
                 if (_this.onUpdate) {
                     _this.onUpdate(_diff, e)
                 }
@@ -5454,40 +5454,40 @@ Interaction.Class(function Input(_object) {
         }
         _this.touching = false;
         if (_this.onEnd) {
-            defer(function() {
+            defer(function () {
                 if (_this.onEnd) {
                     _this.onEnd(e)
                 }
             })
         }
     }
-    this.attach = function(object) {
+    this.attach = function (object) {
         if (_object instanceof HydraObject) {
             _object.unbind("touchstart", touchStart)
         }
         _object = object;
         addListeners()
     }
-    ;
-    this.touchStart = function(e) {
+        ;
+    this.touchStart = function (e) {
         touchStart({
             x: Mouse.x,
             y: Mouse.y
         })
     }
-    ;
-    this.end = this.touchEnd = function() {
+        ;
+    this.end = this.touchEnd = function () {
         touchEnd()
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         Interaction.Input.unbind("touchmove", touchMove);
         Interaction.Input.unbind("touchstart", touchStart);
         Interaction.Input.unbind("touchend", touchEnd);
         _object && _object.unbind && _object.unbind("touchstart", touchStart);
         return this._destroy()
     }
-}, function() {
+}, function () {
     var _events = {
         touchstart: [],
         touchmove: [],
@@ -5503,28 +5503,28 @@ Interaction.Class(function Input(_object) {
         __window.bind("contextmenu", touchEnd)
     }
     function touchMove(e) {
-        _events.touchmove.forEach(function(callback) {
+        _events.touchmove.forEach(function (callback) {
             callback(e)
         })
     }
     function touchStart(e) {
-        _events.touchstart.forEach(function(callback) {
+        _events.touchstart.forEach(function (callback) {
             callback(e)
         })
     }
     function touchEnd(e) {
-        _events.touchend.forEach(function(callback) {
+        _events.touchend.forEach(function (callback) {
             callback(e)
         })
     }
-    Interaction.Input.bind = function(evt, callback) {
+    Interaction.Input.bind = function (evt, callback) {
         _events[evt].push(callback);
         if (!_bound) {
             bind()
         }
     }
-    ;
-    Interaction.Input.unbind = function(evt, callback) {
+        ;
+    Interaction.Input.unbind = function (evt, callback) {
         _events[evt].findAndRemove(callback)
     }
 });
@@ -5594,43 +5594,43 @@ Class(function ParticlePhysics(_integrator) {
             _integrator.integrate(_this.particles, dt, _this.friction)
         }
     }
-    this.addEmitter = function(emitter) {
+    this.addEmitter = function (emitter) {
         if (!(emitter instanceof Emitter)) {
             throw "Emitter must be Emitter"
         }
         this.emitters.push(emitter);
         emitter.parent = emitter.system = this
     }
-    ;
-    this.removeEmitter = function(emitter) {
+        ;
+    this.removeEmitter = function (emitter) {
         if (!(emitter instanceof Emitter)) {
             throw "Emitter must be Emitter"
         }
         this.emitters.remove(emitter);
         emitter.parent = emitter.system = null
     }
-    ;
-    this.addInitializer = function(init) {
+        ;
+    this.addInitializer = function (init) {
         if (typeof init !== "function") {
             throw "Initializer must be a function"
         }
         this.initializers.push(init)
     }
-    ;
-    this.removeInitializer = function(init) {
+        ;
+    this.removeInitializer = function (init) {
         this.initializers.remove(init)
     }
-    ;
-    this.addBehavior = function(b) {
+        ;
+    this.addBehavior = function (b) {
         this.behaviors.push(b);
         b.system = this
     }
-    ;
-    this.removeBehavior = function(b) {
+        ;
+    this.removeBehavior = function (b) {
         this.behaviors.remove(b)
     }
-    ;
-    this.addParticle = function(p) {
+        ;
+    this.addParticle = function (p) {
         if (!_integrator.type) {
             if (typeof p.pos.z === "number") {
                 _integrator.type = "3D"
@@ -5644,23 +5644,23 @@ Class(function ParticlePhysics(_integrator) {
             init(p)
         }
     }
-    ;
-    this.removeParticle = function(p) {
+        ;
+    this.removeParticle = function (p) {
         p.system = null;
         _toDelete.push(p)
     }
-    ;
-    this.addSpring = function(s) {
+        ;
+    this.addSpring = function (s) {
         s.system = this;
         this.springs.push(s)
     }
-    ;
-    this.removeSpring = function(s) {
+        ;
+    this.removeSpring = function (s) {
         s.system = null;
         this.springs.remove(s)
     }
-    ;
-    this.update = function(force) {
+        ;
+    this.update = function (force) {
         if (!_clock) {
             _clock = THREAD ? Date.now() : Render.TIME
         }
@@ -5698,7 +5698,7 @@ Class(function Particle(_pos, _mass, _radius) {
     this.radiusSq = this.radius * this.radius;
     this.behaviors = new LinkedList();
     this.fixed = false;
-    (function() {
+    (function () {
         initVectors()
     }
     )();
@@ -5717,27 +5717,27 @@ Class(function Particle(_pos, _mass, _radius) {
         _this.acc = _this.acceleration = _acc;
         _this.old = _old
     }
-    this.moveTo = function(pos) {
+    this.moveTo = function (pos) {
         _pos.copyFrom(pos);
         _old.pos.copyFrom(_pos);
         _acc.clear();
         _vel.clear()
     }
-    ;
+        ;
     if (typeof prototype.setMass !== "undefined") {
         return
     }
-    prototype.setMass = function(mass) {
+    prototype.setMass = function (mass) {
         this.mass = mass || 1;
         this.massInv = 1 / this.mass
     }
-    ;
-    prototype.setRadius = function(radius) {
+        ;
+    prototype.setRadius = function (radius) {
         this.radius = radius;
         this.radiusSq = radius * radius
     }
-    ;
-    prototype.update = function(dt) {
+        ;
+    prototype.update = function (dt) {
         if (!this.behaviors.length) {
             return
         }
@@ -5747,19 +5747,19 @@ Class(function Particle(_pos, _mass, _radius) {
             b = this.behaviors.next()
         }
     }
-    ;
-    prototype.applyForce = function(force) {
+        ;
+    prototype.applyForce = function (force) {
         this.acc.add(force)
     }
-    ;
-    prototype.addBehavior = function(behavior) {
+        ;
+    prototype.addBehavior = function (behavior) {
         if (!behavior || typeof behavior.applyBehavior === "undefined") {
             throw "Behavior must have applyBehavior method"
         }
         this.behaviors.push(behavior)
     }
-    ;
-    prototype.removeBehavior = function(behavior) {
+        ;
+    prototype.removeBehavior = function (behavior) {
         if (!behavior || typeof behavior.applyBehavior === "undefined") {
             throw "Behavior must have applyBehavior method"
         }
@@ -5771,14 +5771,14 @@ Class(function EulerIntegrator() {
     var _this = this;
     var _vel, _accel;
     this.useDeltaTime = false;
-    (function() {}
+    (function () { }
     )();
     function createVectors() {
         var Vector = _this.type == "3D" ? Vector3 : Vector2;
         _vel = new Vector();
         _accel = new Vector()
     }
-    this.integrate = function(particles, dt, drag) {
+    this.integrate = function (particles, dt, drag) {
         if (!_vel) {
             createVectors()
         }
@@ -5816,7 +5816,7 @@ Class(function Force(_force) {
     if (!_force) {
         throw "Force requires parameter Vector"
     }
-    this.applyBehavior = function(p, dt) {
+    this.applyBehavior = function (p, dt) {
         p.acc.add(_force)
     }
 });
@@ -5829,7 +5829,7 @@ Class(function Emitter(_position, _startNumber) {
     this.initializers = [];
     this.position = _position;
     this.autoEmit = 1;
-    (function() {
+    (function () {
         initObjectPool();
         if (_startNumber != 0) {
             addParticles(_startNumber || 100)
@@ -5847,21 +5847,21 @@ Class(function Emitter(_position, _startNumber) {
         }
         _pool.insert(particles)
     }
-    this.addInitializer = function(callback) {
+    this.addInitializer = function (callback) {
         if (typeof callback !== "function") {
             throw "Initializer must be a function"
         }
         this.initializers.push(callback)
     }
-    ;
-    this.removeInitializer = function(callback) {
+        ;
+    this.removeInitializer = function (callback) {
         var index = this.initializers.indexOf(callback);
         if (index > -1) {
             this.initializers.splice(index, 1)
         }
     }
-    ;
-    this.emit = function(num) {
+        ;
+    this.emit = function (num) {
         if (!this.parent) {
             throw "Emitter needs to be added to a System"
         }
@@ -5881,13 +5881,13 @@ Class(function Emitter(_position, _startNumber) {
             }
         }
     }
-    ;
-    this.remove = function(particle) {
+        ;
+    this.remove = function (particle) {
         _pool.put(particle);
         _this.parent.removeParticle(particle)
     }
-    ;
-    this.addToPool = function(particle) {
+        ;
+    this.addToPool = function (particle) {
         _pool.put(particle)
     }
 });
@@ -5935,7 +5935,7 @@ Class(function SplitTextfield() {
         }
         return _array
     }
-    this.split = function($obj, by) {
+    this.split = function ($obj, by) {
         if (by == "word") {
             return splitWord($obj)
         } else {
@@ -5955,7 +5955,7 @@ Class(function CSSAnimation() {
     var _count = 1;
     var _steps = null;
     var _applyTo = [];
-    (function() {}
+    (function () { }
     )();
     function complete() {
         _this.playing = false;
@@ -6023,76 +6023,76 @@ Class(function CSSAnimation() {
             callback(_applyTo[i])
         }
     }
-    this.set("frames", function(frames) {
+    this.set("frames", function (frames) {
         _frames = frames;
         updateCSS()
     });
-    this.set("steps", function(steps) {
+    this.set("steps", function (steps) {
         _steps = steps;
         if (_this.playing) {
-            applyTo(function($obj) {
+            applyTo(function ($obj) {
                 $obj.div.style[CSS.prefix("AnimationTimingFunction")] = "steps(" + steps + ")"
             })
         }
     });
-    this.set("duration", function(duration) {
+    this.set("duration", function (duration) {
         _duration = Math.round(duration);
         if (_this.playing) {
-            applyTo(function($obj) {
+            applyTo(function ($obj) {
                 $obj.div.style[CSS.prefix("AnimationDuration")] = _this.duration + "ms"
             })
         }
     });
-    this.get("duration", function() {
+    this.get("duration", function () {
         return _duration
     });
-    this.set("ease", function(ease) {
+    this.set("ease", function (ease) {
         _ease = ease;
         if (_this.playing) {
-            applyTo(function($obj) {
+            applyTo(function ($obj) {
                 $obj.div.style[CSS.prefix("AnimationTimingFunction")] = TweenManager.getEase(_ease)
             })
         }
     });
-    this.get("ease", function() {
+    this.get("ease", function () {
         return _ease
     });
-    this.set("loop", function(loop) {
+    this.set("loop", function (loop) {
         _loop = loop;
         if (_this.playing) {
-            applyTo(function($obj) {
+            applyTo(function ($obj) {
                 $obj.div.style[CSS.prefix("AnimationIterationCount")] = _loop ? "infinite" : _count
             })
         }
     });
-    this.get("loop", function() {
+    this.get("loop", function () {
         return _loop
     });
-    this.set("count", function(count) {
+    this.set("count", function (count) {
         _count = count;
         if (_this.playing) {
-            applyTo(function($obj) {
+            applyTo(function ($obj) {
                 $obj.div.style[CSS.prefix("AnimationIterationCount")] = _loop ? "infinite" : _count
             })
         }
     });
-    this.get("count", function() {
+    this.get("count", function () {
         return _count
     });
-    this.set("delay", function(delay) {
+    this.set("delay", function (delay) {
         _delay = delay;
         if (_this.playing) {
-            applyTo(function($obj) {
+            applyTo(function ($obj) {
                 $obj.div.style[CSS.prefix("AnimationDelay")] = _delay + "ms"
             })
         }
     });
-    this.get("delay", function() {
+    this.get("delay", function () {
         return _delay
     });
-    this.play = function() {
-        applyTo(function($obj) {
-            defer(function() {
+    this.play = function () {
+        applyTo(function ($obj) {
+            defer(function () {
                 $obj.div.style[CSS.prefix("Animation")] = _name + " " + _this.duration + "ms " + (_steps ? "steps(" + _steps + ")" : TweenManager.getEase(_ease)) + " " + (_loop ? "infinite" : _count);
                 $obj.div.style[CSS.prefix("AnimationPlayState")] = "running"
             })
@@ -6104,42 +6104,42 @@ Class(function CSSAnimation() {
             _timer = _this.delayedCall(complete, _count * _duration)
         }
     }
-    ;
-    this.pause = function() {
+        ;
+    this.pause = function () {
         _this.playing = false;
         clearTimeout(_timer);
-        applyTo(function($obj) {
+        applyTo(function ($obj) {
             $obj.div.style[CSS.prefix("AnimationPlayState")] = "paused"
         })
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         _this.playing = false;
         clearTimeout(_timer);
-        applyTo(function($obj) {
+        applyTo(function ($obj) {
             $obj.div.style[CSS.prefix("AnimationName")] = ""
         })
     }
-    ;
-    this.applyTo = function($obj) {
+        ;
+    this.applyTo = function ($obj) {
         _applyTo.push($obj);
         if (_this.playing) {
-            defer(function() {
+            defer(function () {
                 $obj.div.style[CSS.prefix("Animation")] = _name + " " + _this.duration + "ms " + (_steps ? "steps(" + _steps + ")" : TweenManager.getEase(_ease)) + " " + (_loop ? "infinite" : _count);
                 $obj.div.style[CSS.prefix("AnimationPlayState")] = "running"
             })
         }
     }
-    ;
-    this.remove = function($obj) {
+        ;
+    this.remove = function ($obj) {
         $obj.div.style[CSS.prefix("AnimationName")] = "";
         var i = _applyTo.indexOf($obj);
         if (i > -1) {
             _applyTo.splice(i, 1)
         }
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         this.stop();
         _frames = null;
         destroy();
@@ -6156,7 +6156,7 @@ Class(function Canvas(_width, _height, _retina) {
         y: 0
     };
     this.retina = _retina;
-    (function() {
+    (function () {
         if (_retina instanceof HydraObject) {
             initAsBackground(_retina)
         } else {
@@ -6297,7 +6297,7 @@ Class(function Canvas(_width, _height, _retina) {
         }
         _down = null
     }
-    this.set("interactive", function(val) {
+    this.set("interactive", function (val) {
         if (!_interactive && val) {
             Stage.bind("touchstart", touchStart);
             Stage.bind("touchmove", touchMove);
@@ -6311,20 +6311,20 @@ Class(function Canvas(_width, _height, _retina) {
         }
         _interactive = val
     });
-    this.get("interactive", function() {
+    this.get("interactive", function () {
         return _interactive
     });
-    this.toDataURL = function(type, quality) {
+    this.toDataURL = function (type, quality) {
         return _this.div.toDataURL(type, quality)
     }
-    ;
-    this.sort = function() {
-        _objects.sort(function(a, b) {
+        ;
+    this.sort = function () {
+        _objects.sort(function (a, b) {
             return a.z - b.z
         })
     }
-    ;
-    this.render = function(noClear) {
+        ;
+    this.render = function (noClear) {
         if (!(typeof noClear === "boolean" && noClear)) {
             _this.clear()
         }
@@ -6333,19 +6333,19 @@ Class(function Canvas(_width, _height, _retina) {
             _this.children[i].render()
         }
     }
-    ;
-    this.clear = function() {
+        ;
+    this.clear = function () {
         _this.context.clearRect(0, 0, _this.div.width, _this.div.height)
     }
-    ;
-    this.add = function(display) {
+        ;
+    this.add = function (display) {
         display.setCanvas(this);
         display._parent = this;
         this.children.push(display);
         display._z = this.children.length
     }
-    ;
-    this.remove = function(display) {
+        ;
+    this.remove = function (display) {
         display._canvas = null;
         display._parent = null;
         var i = this.children.indexOf(display);
@@ -6353,8 +6353,8 @@ Class(function Canvas(_width, _height, _retina) {
             this.children.splice(i, 1)
         }
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         if (_interactive) {
             Stage.unbind("touchstart", touchStart);
             Stage.unbind("touchmove", touchMove);
@@ -6368,21 +6368,21 @@ Class(function Canvas(_width, _height, _retina) {
         }
         return this._destroy()
     }
-    ;
-    this.startRender = function() {
+        ;
+    this.startRender = function () {
         Render.startRender(_this.render)
     }
-    ;
-    this.stopRender = function() {
+        ;
+    this.stopRender = function () {
         Render.stopRender(_this.render)
     }
-    ;
-    this.getImageData = function(x, y, w, h) {
+        ;
+    this.getImageData = function (x, y, w, h) {
         this.imageData = this.context.getImageData(x || 0, y || 0, w || this.width, h || this.height);
         return this.imageData
     }
-    ;
-    this.getPixel = function(x, y, dirty) {
+        ;
+    this.getPixel = function (x, y, dirty) {
         if (!this.imageData || dirty) {
             _this.getImageData(0, 0, _this.width, _this.height)
         }
@@ -6397,20 +6397,20 @@ Class(function Canvas(_width, _height, _retina) {
         _imgData.a = pixels[index + 3];
         return _imgData
     }
-    ;
-    this.texture = function(src) {
+        ;
+    this.texture = function (src) {
         var img = new Image();
         img.src = src;
         return img
     }
-    ;
-    this.localizeMouse = function() {
+        ;
+    this.localizeMouse = function () {
         _local = _local || {};
         _local.x = Mouse.x - _this.offset.x;
         _local.y = Mouse.y - _this.offset.y;
         return _local
     }
-    ;
+        ;
     this.size = resize
 });
 Class(function CanvasTexture(_texture, _w, _h, _force) {
@@ -6419,7 +6419,7 @@ Class(function CanvasTexture(_texture, _w, _h, _force) {
     var _mask;
     this.width = _w || 0;
     this.height = _h || 0;
-    (function() {
+    (function () {
         initTexture()
     }
     )();
@@ -6445,10 +6445,10 @@ Class(function CanvasTexture(_texture, _w, _h, _force) {
             _this.height = _texture.height / (_this._canvas && _this._canvas.retina ? 2 : 1)
         }
     }
-    this.set("texture", function(img) {
+    this.set("texture", function (img) {
         _texture = img
     });
-    this.draw = function(override) {
+    this.draw = function (override) {
         var context = this._canvas.context;
         if (this.isMask() && !override) {
             return false
@@ -6464,8 +6464,8 @@ Class(function CanvasTexture(_texture, _w, _h, _force) {
             context.globalCompositeOperation = "source-over"
         }
     }
-    ;
-    this.mask = function(object) {
+        ;
+    this.mask = function (object) {
         if (!object) {
             return _mask = null
         }
@@ -6486,9 +6486,9 @@ Class(function CanvasTexture(_texture, _w, _h, _force) {
             throw "CanvasGraphics :: Can only mask a sibling"
         }
     }
-}, function() {
+}, function () {
     var _images = {};
-    CanvasTexture.createImage = function(src, force) {
+    CanvasTexture.createImage = function (src, force) {
         if (!_images[src] || force) {
             var img = Images.createImg(src);
             if (force) {
@@ -6507,7 +6507,7 @@ Class(function CanvasGraphics(_w, _h) {
     var _pool, _mask;
     this.width = _w || 0;
     this.height = _h || 0;
-    (function() {
+    (function () {
         initArrayPool()
     }
     )();
@@ -6522,7 +6522,7 @@ Class(function CanvasGraphics(_w, _h) {
         }
     }
     function initArrayPool() {
-        _pool = new ObjectPool(Array,25)
+        _pool = new ObjectPool(Array, 25)
     }
     function draw() {
         var array = _pool.get() || [];
@@ -6531,85 +6531,85 @@ Class(function CanvasGraphics(_w, _h) {
         }
         _draw.push(array)
     }
-    this.set("strokeStyle", function(val) {
+    this.set("strokeStyle", function (val) {
         _props.strokeStyle = val
     });
-    this.get("strokeStyle", function() {
+    this.get("strokeStyle", function () {
         return _props.strokeStyle
     });
-    this.set("fillStyle", function(val) {
+    this.set("fillStyle", function (val) {
         _props.fillStyle = val
     });
-    this.get("fillStyle", function() {
+    this.get("fillStyle", function () {
         return _props.fillStyle
     });
-    this.set("lineWidth", function(val) {
+    this.set("lineWidth", function (val) {
         _props.lineWidth = val
     });
-    this.get("lineWidth", function() {
+    this.get("lineWidth", function () {
         return _props.lineWidth
     });
-    this.set("lineWidth", function(val) {
+    this.set("lineWidth", function (val) {
         _props.lineWidth = val
     });
-    this.get("lineWidth", function() {
+    this.get("lineWidth", function () {
         return _props.lineWidth
     });
-    this.set("lineCap", function(val) {
+    this.set("lineCap", function (val) {
         _props.lineCap = val
     });
-    this.get("lineCap", function() {
+    this.get("lineCap", function () {
         return _props.lineCap
     });
-    this.set("lineDashOffset", function(val) {
+    this.set("lineDashOffset", function (val) {
         _props.lineDashOffset = val
     });
-    this.get("lineDashOffset", function() {
+    this.get("lineDashOffset", function () {
         return _props.lineDashOffset
     });
-    this.set("lineJoin", function(val) {
+    this.set("lineJoin", function (val) {
         _props.lineJoin = val
     });
-    this.get("lineJoin", function() {
+    this.get("lineJoin", function () {
         return _props.lineJoin
     });
-    this.set("lineJoin", function(val) {
+    this.set("lineJoin", function (val) {
         _props.lineJoin = val
     });
-    this.get("lineJoin", function() {
+    this.get("lineJoin", function () {
         return _props.lineJoin
     });
-    this.set("lineJoin", function(val) {
+    this.set("lineJoin", function (val) {
         _props.lineJoin = val
     });
-    this.get("lineJoin", function() {
+    this.get("lineJoin", function () {
         return _props.lineJoin
     });
-    this.set("miterLimit", function(val) {
+    this.set("miterLimit", function (val) {
         _props.miterLimit = val
     });
-    this.get("miterLimit", function() {
+    this.get("miterLimit", function () {
         return _props.miterLimit
     });
-    this.set("font", function(val) {
+    this.set("font", function (val) {
         _props.font = val
     });
-    this.get("font", function(val) {
+    this.get("font", function (val) {
         return _props.font
     });
-    this.set("textAlign", function(val) {
+    this.set("textAlign", function (val) {
         _props.textAlign = val
     });
-    this.get("textAlign", function(val) {
+    this.get("textAlign", function (val) {
         return _props.textAlign
     });
-    this.set("textBaseline", function(val) {
+    this.set("textBaseline", function (val) {
         _props.textBaseline = val
     });
-    this.get("textBaseline", function(val) {
+    this.get("textBaseline", function (val) {
         return _props.textBaseline
     });
-    this.draw = function(override) {
+    this.draw = function (override) {
         if (this.isMask() && !override) {
             return false
         }
@@ -6633,16 +6633,16 @@ Class(function CanvasGraphics(_w, _h) {
             context.restore()
         }
     }
-    ;
-    this.clear = function() {
+        ;
+    this.clear = function () {
         for (var i = 0; i < _draw.length; i++) {
             _draw[i].length = 0;
             _pool.put(_draw[i])
         }
         _draw.length = 0
     }
-    ;
-    this.arc = function(x, y, endAngle, radius, startAngle, anti) {
+        ;
+    this.arc = function (x, y, endAngle, radius, startAngle, anti) {
         if (x && !y) {
             endAngle = x;
             x = 0;
@@ -6659,66 +6659,66 @@ Class(function CanvasGraphics(_w, _h) {
         draw("beginPath");
         draw("arc", x, y, radius, Utils.toRadians(startAngle), Utils.toRadians(endAngle), anti)
     }
-    ;
-    this.quadraticCurveTo = function(cpx, cpy, x, y) {
+        ;
+    this.quadraticCurveTo = function (cpx, cpy, x, y) {
         draw("quadraticCurveTo", cpx, cpy, x, y)
     }
-    ;
-    this.bezierCurveTo = function(cp1x, cp1y, cp2x, cp2y, x, y) {
+        ;
+    this.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
         draw("bezierCurveTo", cp1x, cp1y, cp2x, cp2y, x, y)
     }
-    ;
-    this.fillRect = function(x, y, w, h) {
+        ;
+    this.fillRect = function (x, y, w, h) {
         draw("fillRect", x, y, w, h)
     }
-    ;
-    this.clearRect = function(x, y, w, h) {
+        ;
+    this.clearRect = function (x, y, w, h) {
         draw("clearRect", x, y, w, h)
     }
-    ;
-    this.strokeRect = function(x, y, w, h) {
+        ;
+    this.strokeRect = function (x, y, w, h) {
         draw("strokeRect", x, y, w, h)
     }
-    ;
-    this.moveTo = function(x, y) {
+        ;
+    this.moveTo = function (x, y) {
         draw("moveTo", x, y)
     }
-    ;
-    this.lineTo = function(x, y) {
+        ;
+    this.lineTo = function (x, y) {
         draw("lineTo", x, y)
     }
-    ;
-    this.stroke = function() {
+        ;
+    this.stroke = function () {
         draw("stroke")
     }
-    ;
-    this.fill = function() {
+        ;
+    this.fill = function () {
         if (!_mask) {
             draw("fill")
         }
     }
-    ;
-    this.beginPath = function() {
+        ;
+    this.beginPath = function () {
         draw("beginPath")
     }
-    ;
-    this.closePath = function() {
+        ;
+    this.closePath = function () {
         draw("closePath")
     }
-    ;
-    this.fillText = function(text, x, y) {
+        ;
+    this.fillText = function (text, x, y) {
         draw("fillText", text, x, y)
     }
-    ;
-    this.strokeText = function(text, x, y) {
+        ;
+    this.strokeText = function (text, x, y) {
         draw("strokeText", text, x, y)
     }
-    ;
-    this.setLineDash = function(value) {
+        ;
+    this.setLineDash = function (value) {
         draw("setLineDash", value)
     }
-    ;
-    this.mask = function(object) {
+        ;
+    this.mask = function (object) {
         if (!object) {
             return _mask = null
         }
@@ -6766,7 +6766,7 @@ Class(function CanvasObject() {
     this.styles = new CanvasValues(true);
     this.children = [];
     this.blendMode = "normal";
-    this.updateValues = function() {
+    this.updateValues = function () {
         this.anchor.tx = this.anchor.x <= 1 && !this.anchor.full ? this.anchor.x * this.width : this.anchor.x;
         this.anchor.ty = this.anchor.y <= 1 && !this.anchor.full ? this.anchor.y * this.height : this.anchor.y;
         this.values.setTRSA(this.x, this.y, Utils.toRadians(this.rotation), this.scaleX || this.scale, this.scaleY || this.scale, this.alpha);
@@ -6777,8 +6777,8 @@ Class(function CanvasObject() {
             this.styles.calculateStyle(this._parent.styles)
         }
     }
-    ;
-    this.render = function(override) {
+        ;
+    this.render = function (override) {
         if (!this.visible) {
             return false
         }
@@ -6791,8 +6791,8 @@ Class(function CanvasObject() {
             this.children[i].render(override)
         }
     }
-    ;
-    this.startDraw = function(ox, oy, override) {
+        ;
+    this.startDraw = function (ox, oy, override) {
         var context = this._canvas.context;
         var v = this.values.data;
         var x = v[0] + (ox || 0);
@@ -6819,8 +6819,8 @@ Class(function CanvasObject() {
             }
         }
     }
-    ;
-    this.endDraw = function() {
+        ;
+    this.endDraw = function () {
         var context = this._canvas.context;
         context._matrix.inverse();
         var m = context._matrix.data;
@@ -6830,23 +6830,23 @@ Class(function CanvasObject() {
             context.transform(m[0], m[3], m[1], m[4], m[2], m[5])
         }
     }
-    ;
-    this.add = function(display) {
+        ;
+    this.add = function (display) {
         display._canvas = this._canvas;
         display._parent = this;
         this.children.push(display);
         display._z = this.children.length
     }
-    ;
-    this.setCanvas = function(canvas) {
+        ;
+    this.setCanvas = function (canvas) {
         this._canvas = canvas;
         for (var i = this.children.length - 1; i > -1; i--) {
             var child = this.children[i];
             child.setCanvas(canvas)
         }
     }
-    ;
-    this.remove = function(display) {
+        ;
+    this.remove = function (display) {
         display._canvas = null;
         display._parent = null;
         var i = this.children.indexOf(display);
@@ -6854,8 +6854,8 @@ Class(function CanvasObject() {
             this.children.splice(i, 1)
         }
     }
-    ;
-    this.isMask = function() {
+        ;
+    this.isMask = function () {
         var obj = this;
         while (obj) {
             if (obj.masked) {
@@ -6865,23 +6865,23 @@ Class(function CanvasObject() {
         }
         return false
     }
-    ;
-    this.unmask = function() {
+        ;
+    this.unmask = function () {
         this.masked.mask(null);
         this.masked = null
     }
-    ;
-    this.setZ = function(z) {
+        ;
+    this.setZ = function (z) {
         if (!this._parent) {
             throw "CanvasObject :: Must add to parent before setZ"
         }
         this._z = z;
-        this._parent.children.sort(function(a, b) {
+        this._parent.children.sort(function (a, b) {
             return a._z - b._z
         })
     }
-    ;
-    this.hit = function(e) {
+        ;
+    this.hit = function (e) {
         if (!this.ignoreHit) {
             var hit = Utils.hitTestObject(e, this.values.hit(this));
             if (hit) {
@@ -6897,8 +6897,8 @@ Class(function CanvasObject() {
         }
         return false
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         for (var i = 0; i < this.children.length; i++) {
             if (this.children[i].destroy) {
                 this.children[i].destroy()
@@ -6922,39 +6922,39 @@ Class(function CanvasValues(_style) {
     } else {
         this.styled = false
     }
-    this.set("shadowOffsetX", function(val) {
+    this.set("shadowOffsetX", function (val) {
         _this.styled = true;
         _styles.shadowOffsetX = val
     });
-    this.get("shadowOffsetX", function() {
+    this.get("shadowOffsetX", function () {
         return _styles.shadowOffsetX
     });
-    this.set("shadowOffsetY", function(val) {
+    this.set("shadowOffsetY", function (val) {
         _this.styled = true;
         _styles.shadowOffsetY = val
     });
-    this.get("shadowOffsetY", function() {
+    this.get("shadowOffsetY", function () {
         return _styles.shadowOffsetY
     });
-    this.set("shadowBlur", function(val) {
+    this.set("shadowBlur", function (val) {
         _this.styled = true;
         _styles.shadowBlur = val
     });
-    this.get("shadowBlur", function() {
+    this.get("shadowBlur", function () {
         return _styles.shadowBlur
     });
-    this.set("shadowColor", function(val) {
+    this.set("shadowColor", function (val) {
         _this.styled = true;
         _styles.shadowColor = val
     });
-    this.get("shadowColor", function() {
+    this.get("shadowColor", function () {
         _this.styled = true;
         return _styles.shadowColor
     });
-    this.get("values", function() {
+    this.get("values", function () {
         return _styles
     });
-    this.setTRSA = function(x, y, r, sx, sy, a) {
+    this.setTRSA = function (x, y, r, sx, sy, a) {
         var m = this.data;
         m[0] = x;
         m[1] = y;
@@ -6963,8 +6963,8 @@ Class(function CanvasValues(_style) {
         m[4] = sy;
         m[5] = a
     }
-    ;
-    this.calculate = function(values) {
+        ;
+    this.calculate = function (values) {
         var v = values.data;
         var m = this.data;
         m[0] = m[0] + v[0];
@@ -6974,8 +6974,8 @@ Class(function CanvasValues(_style) {
         m[4] = m[4] * v[4];
         m[5] = m[5] * v[5]
     }
-    ;
-    this.calculateStyle = function(parent) {
+        ;
+    this.calculateStyle = function (parent) {
         if (!parent.styled) {
             return false
         }
@@ -6987,8 +6987,8 @@ Class(function CanvasValues(_style) {
             }
         }
     }
-    ;
-    this.hit = function(object) {
+        ;
+    this.hit = function (object) {
         _hit.x = this.data[0];
         _hit.y = this.data[1];
         _hit.width = object.width;
@@ -7000,7 +7000,7 @@ Class(function TweenManager() {
     Namespace(this);
     var _this = this;
     var _tweens = [];
-    (function() {
+    (function () {
         if (window.Hydra) {
             Hydra.ready(initPools)
         }
@@ -7010,8 +7010,8 @@ Class(function TweenManager() {
     }
     )();
     function initPools() {
-        _this._dynamicPool = new ObjectPool(DynamicObject,100);
-        _this._arrayPool = new ObjectPool(Array,100);
+        _this._dynamicPool = new ObjectPool(DynamicObject, 100);
+        _this._arrayPool = new ObjectPool(Array, 100);
         _this._dynamicPool.debug = true
     }
     function updateTweens(time) {
@@ -7035,43 +7035,43 @@ Class(function TweenManager() {
         }
         return false
     }
-    this._addMathTween = function(tween) {
+    this._addMathTween = function (tween) {
         _tweens.push(tween)
     }
-    ;
-    this._removeMathTween = function(tween) {
+        ;
+    this._removeMathTween = function (tween) {
         _tweens.findAndRemove(tween)
     }
-    ;
-    this._detectTween = function(object, props, time, ease, delay, callback) {
+        ;
+    this._detectTween = function (object, props, time, ease, delay, callback) {
         if (ease === "spring") {
-            return new SpringTween(object,props,time,ease,delay,callback)
+            return new SpringTween(object, props, time, ease, delay, callback)
         }
         if (!_this.useCSSTrans(props, ease, object)) {
-            return new FrameTween(object,props,time,ease,delay,callback)
+            return new FrameTween(object, props, time, ease, delay, callback)
         } else {
             if (Device.tween.webAnimation) {
-                return new CSSWebAnimation(object,props,time,ease,delay,callback)
+                return new CSSWebAnimation(object, props, time, ease, delay, callback)
             } else {
-                return new CSSTransition(object,props,time,ease,delay,callback)
+                return new CSSTransition(object, props, time, ease, delay, callback)
             }
         }
     }
-    ;
-    this.tween = function(obj, props, time, ease, delay, complete, update, manual) {
+        ;
+    this.tween = function (obj, props, time, ease, delay, complete, update, manual) {
         if (typeof delay !== "number") {
             update = complete;
             complete = delay;
             delay = 0
         }
         if (ease === "spring") {
-            return new SpringTween(obj,props,time,ease,delay,update,complete)
+            return new SpringTween(obj, props, time, ease, delay, update, complete)
         } else {
-            return new MathTween(obj,props,time,ease,delay,update,complete,manual)
+            return new MathTween(obj, props, time, ease, delay, update, complete, manual)
         }
     }
-    ;
-    this.iterate = function(array, props, time, ease, offset, delay, callback) {
+        ;
+    this.iterate = function (array, props, time, ease, offset, delay, callback) {
         if (typeof delay !== "number") {
             callback = delay;
             delay = 0
@@ -7087,8 +7087,8 @@ Class(function TweenManager() {
             obj.tween(props.copy(), time, ease, delay + (offset * i), complete)
         }
     }
-    ;
-    this.clearTween = function(obj) {
+        ;
+    this.clearTween = function (obj) {
         if (obj._mathTween && obj._mathTween.stop) {
             obj._mathTween.stop()
         }
@@ -7103,21 +7103,21 @@ Class(function TweenManager() {
             obj._mathTweens = null
         }
     }
-    ;
-    this.clearCSSTween = function(obj) {
+        ;
+    this.clearCSSTween = function (obj) {
         if (obj && !obj._cssTween && obj.div._transition && !obj.persistTween) {
             obj.div.style[Device.styles.vendorTransition] = "";
             obj.div._transition = false;
             obj._cssTween = null
         }
     }
-    ;
-    this.checkTransform = function(key) {
+        ;
+    this.checkTransform = function (key) {
         var index = _this.Transforms.indexOf(key);
         return index > -1
     }
-    ;
-    this.addCustomEase = function(ease) {
+        ;
+    this.addCustomEase = function (ease) {
         var add = true;
         if (typeof ease !== "object" || !ease.name || !ease.curve) {
             throw "TweenManager :: addCustomEase requires {name, curve}"
@@ -7137,8 +7137,8 @@ Class(function TweenManager() {
         }
         return ease
     }
-    ;
-    this.getEase = function(name, values) {
+        ;
+    this.getEase = function (name, values) {
         if (Array.isArray(name)) {
             var c1 = findEase(name[0]);
             var c2 = findEase(name[1]);
@@ -7167,12 +7167,12 @@ Class(function TweenManager() {
             }
         }
     }
-    ;
-    this.inspectEase = function(name) {
+        ;
+    this.inspectEase = function (name) {
         return findEase(name)
     }
-    ;
-    this.getAllTransforms = function(object) {
+        ;
+    this.getAllTransforms = function (object) {
         var obj = {};
         for (var i = _this.Transforms.length - 1; i > -1; i--) {
             var tf = _this.Transforms[i];
@@ -7183,8 +7183,8 @@ Class(function TweenManager() {
         }
         return obj
     }
-    ;
-    this.parseTransform = function(props) {
+        ;
+    this.parseTransform = function (props) {
         var transforms = "";
         var translate = "";
         if (props.perspective > 0) {
@@ -7233,19 +7233,19 @@ Class(function TweenManager() {
         }
         return transforms
     }
-    ;
-    this.interpolate = function(num, alpha, ease) {
+        ;
+    this.interpolate = function (num, alpha, ease) {
         var fn = _this.Interpolation.convertEase(ease);
         return num * (typeof fn == "function" ? fn(alpha) : _this.Interpolation.solve(fn, alpha))
     }
-    ;
-    this.interpolateValues = function(start, end, alpha, ease) {
+        ;
+    this.interpolateValues = function (start, end, alpha, ease) {
         var fn = _this.Interpolation.convertEase(ease);
         return start + (end - start) * (typeof fn == "function" ? fn(alpha) : _this.Interpolation.solve(fn, alpha))
     }
 }, "Static");
-(function() {
-    TweenManager.Transforms = ["scale", "scaleX", "scaleY", "x", "y", "z", "rotation", "rotationX", "rotationY", "rotationZ", "skewX", "skewY", "perspective", ];
+(function () {
+    TweenManager.Transforms = ["scale", "scaleX", "scaleY", "x", "y", "z", "rotation", "rotationX", "rotationY", "rotationZ", "skewX", "skewY", "perspective",];
     TweenManager.CSSEases = [{
         name: "easeOutCubic",
         curve: "cubic-bezier(0.215, 0.610, 0.355, 1.000)"
@@ -7322,7 +7322,7 @@ Class(function TweenManager() {
         name: "linear",
         curve: "linear"
     }];
-    TweenManager.useCSSTrans = function(props, ease, object) {
+    TweenManager.useCSSTrans = function (props, ease, object) {
         if (props.math) {
             return false
         }
@@ -7344,7 +7344,7 @@ Class(function CSSTransition(_object, _props, _time, _ease, _delay, _callback) {
     var _transformProps, _transitionProps, _stack, _totalStacks;
     var _startTransform, _startProps;
     this.playing = true;
-    (function() {
+    (function () {
         if (typeof _time !== "number") {
             throw "CSSTween Requires object, props, time, ease"
         }
@@ -7383,7 +7383,7 @@ Class(function CSSTransition(_object, _props, _time, _ease, _delay, _callback) {
     function initStack() {
         initStart();
         var prevTime = 0;
-        var interpolate = function(start, end, alpha, ease, prev, ke) {
+        var interpolate = function (start, end, alpha, ease, prev, ke) {
             var last = prev[key];
             if (last) {
                 start += last
@@ -7455,7 +7455,7 @@ Class(function CSSTransition(_object, _props, _time, _ease, _delay, _callback) {
         }
         _object._cssTween = _this;
         _object.div._transition = true;
-        var strings = (function() {
+        var strings = (function () {
             if (!values) {
                 return buildStrings(_time, _ease, _delay)
             } else {
@@ -7468,20 +7468,20 @@ Class(function CSSTransition(_object, _props, _time, _ease, _delay, _callback) {
         var delay = values ? values.delay : _delay;
         var props = values ? values.props : _props;
         var transformProps = values ? values.transform : _transformProps;
-        Timer.create(function() {
+        Timer.create(function () {
             if (killed()) {
                 return
             }
             _object.div.style[Device.styles.vendorTransition] = strings.transition;
             _this.playing = true;
-            Timer.create(function() {
+            Timer.create(function () {
                 if (killed()) {
                     return
                 }
                 _object.css(props);
                 _object.transform(transformProps)
             }, 16);
-            Timer.create(function() {
+            Timer.create(function () {
                 if (killed()) {
                     return
                 }
@@ -7544,7 +7544,7 @@ Class(function CSSTransition(_object, _props, _time, _ease, _delay, _callback) {
             clearCSSTween()
         }
     }
-    this.stop = function() {
+    this.stop = function () {
         if (!this.playing) {
             return
         }
@@ -7564,7 +7564,7 @@ Class(function FrameTween(_object, _props, _time, _ease, _delay, _callback, _man
     var _isTransform, _isCSS, _transformProps;
     var _cssTween, _transformTween;
     this.playing = true;
-    (function() {
+    (function () {
         if (typeof _ease === "object") {
             _ease = "easeOutCubic"
         }
@@ -7679,7 +7679,7 @@ Class(function FrameTween(_object, _props, _time, _ease, _delay, _callback, _man
             }
         }
     }
-    this.stop = function() {
+    this.stop = function () {
         if (!this.playing) {
             return
         }
@@ -7691,8 +7691,8 @@ Class(function FrameTween(_object, _props, _time, _ease, _delay, _callback, _man
         }
         clear()
     }
-    ;
-    this.interpolate = function(elapsed) {
+        ;
+    this.interpolate = function (elapsed) {
         if (_cssTween) {
             _cssTween.interpolate(elapsed)
         }
@@ -7701,8 +7701,8 @@ Class(function FrameTween(_object, _props, _time, _ease, _delay, _callback, _man
         }
         update()
     }
-    ;
-    this.getValues = function() {
+        ;
+    this.getValues = function () {
         return {
             start: _startValues,
             transformStart: _transformStart,
@@ -7710,8 +7710,8 @@ Class(function FrameTween(_object, _props, _time, _ease, _delay, _callback, _man
             transformEnd: _transformEnd,
         }
     }
-    ;
-    this.setEase = function(ease) {
+        ;
+    this.setEase = function (ease) {
         if (_cssTween) {
             _cssTween.setEase(ease)
         }
@@ -7724,7 +7724,7 @@ Class(function CSSWebAnimation(_object, _props, _time, _ease, _delay, _callback)
     var _this = this;
     var _transform, _start, _end, _tween;
     var _properties, _killed, _transformValues, _startTransform;
-    (function() {
+    (function () {
         if (_object._cssTween) {
             _object._cssTween.stop()
         }
@@ -7849,7 +7849,7 @@ Class(function CSSWebAnimation(_object, _props, _time, _ease, _delay, _callback)
         }
         clear()
     }
-    this.stop = function() {
+    this.stop = function () {
         if (!_this || !_this.playing) {
             return
         }
@@ -7889,102 +7889,102 @@ TweenManager.Class(function Interpolation() {
     function C(aA1) {
         return 3 * aA1
     }
-    this.convertEase = function(ease) {
-        var fn = (function() {
+    this.convertEase = function (ease) {
+        var fn = (function () {
             switch (ease) {
-            case "easeInQuad":
-                return TweenManager.Interpolation.Quad.In;
-                break;
-            case "easeInCubic":
-                return TweenManager.Interpolation.Cubic.In;
-                break;
-            case "easeInQuart":
-                return TweenManager.Interpolation.Quart.In;
-                break;
-            case "easeInQuint":
-                return TweenManager.Interpolation.Quint.In;
-                break;
-            case "easeInSine":
-                return TweenManager.Interpolation.Sine.In;
-                break;
-            case "easeInExpo":
-                return TweenManager.Interpolation.Expo.In;
-                break;
-            case "easeInCirc":
-                return TweenManager.Interpolation.Circ.In;
-                break;
-            case "easeInElastic":
-                return TweenManager.Interpolation.Elastic.In;
-                break;
-            case "easeInBack":
-                return TweenManager.Interpolation.Back.In;
-                break;
-            case "easeInBounce":
-                return TweenManager.Interpolation.Bounce.In;
-                break;
-            case "easeOutQuad":
-                return TweenManager.Interpolation.Quad.Out;
-                break;
-            case "easeOutCubic":
-                return TweenManager.Interpolation.Cubic.Out;
-                break;
-            case "easeOutQuart":
-                return TweenManager.Interpolation.Quart.Out;
-                break;
-            case "easeOutQuint":
-                return TweenManager.Interpolation.Quint.Out;
-                break;
-            case "easeOutSine":
-                return TweenManager.Interpolation.Sine.Out;
-                break;
-            case "easeOutExpo":
-                return TweenManager.Interpolation.Expo.Out;
-                break;
-            case "easeOutCirc":
-                return TweenManager.Interpolation.Circ.Out;
-                break;
-            case "easeOutElastic":
-                return TweenManager.Interpolation.Elastic.Out;
-                break;
-            case "easeOutBack":
-                return TweenManager.Interpolation.Back.Out;
-                break;
-            case "easeOutBounce":
-                return TweenManager.Interpolation.Bounce.Out;
-                break;
-            case "easeInOutQuad":
-                return TweenManager.Interpolation.Quad.InOut;
-                break;
-            case "easeInOutCubic":
-                return TweenManager.Interpolation.Cubic.InOut;
-                break;
-            case "easeInOutQuart":
-                return TweenManager.Interpolation.Quart.InOut;
-                break;
-            case "easeInOutQuint":
-                return TweenManager.Interpolation.Quint.InOut;
-                break;
-            case "easeInOutSine":
-                return TweenManager.Interpolation.Sine.InOut;
-                break;
-            case "easeInOutExpo":
-                return TweenManager.Interpolation.Expo.InOut;
-                break;
-            case "easeInOutCirc":
-                return TweenManager.Interpolation.Circ.InOut;
-                break;
-            case "easeInOutElastic":
-                return TweenManager.Interpolation.Elastic.InOut;
-                break;
-            case "easeInOutBack":
-                return TweenManager.Interpolation.Back.InOut;
-                break;
-            case "easeInOutBounce":
-                return TweenManager.Interpolation.Bounce.InOut;
-                break;
-            case "linear":
-                return TweenManager.Interpolation.Linear.None;
-                break
+                case "easeInQuad":
+                    return TweenManager.Interpolation.Quad.In;
+                    break;
+                case "easeInCubic":
+                    return TweenManager.Interpolation.Cubic.In;
+                    break;
+                case "easeInQuart":
+                    return TweenManager.Interpolation.Quart.In;
+                    break;
+                case "easeInQuint":
+                    return TweenManager.Interpolation.Quint.In;
+                    break;
+                case "easeInSine":
+                    return TweenManager.Interpolation.Sine.In;
+                    break;
+                case "easeInExpo":
+                    return TweenManager.Interpolation.Expo.In;
+                    break;
+                case "easeInCirc":
+                    return TweenManager.Interpolation.Circ.In;
+                    break;
+                case "easeInElastic":
+                    return TweenManager.Interpolation.Elastic.In;
+                    break;
+                case "easeInBack":
+                    return TweenManager.Interpolation.Back.In;
+                    break;
+                case "easeInBounce":
+                    return TweenManager.Interpolation.Bounce.In;
+                    break;
+                case "easeOutQuad":
+                    return TweenManager.Interpolation.Quad.Out;
+                    break;
+                case "easeOutCubic":
+                    return TweenManager.Interpolation.Cubic.Out;
+                    break;
+                case "easeOutQuart":
+                    return TweenManager.Interpolation.Quart.Out;
+                    break;
+                case "easeOutQuint":
+                    return TweenManager.Interpolation.Quint.Out;
+                    break;
+                case "easeOutSine":
+                    return TweenManager.Interpolation.Sine.Out;
+                    break;
+                case "easeOutExpo":
+                    return TweenManager.Interpolation.Expo.Out;
+                    break;
+                case "easeOutCirc":
+                    return TweenManager.Interpolation.Circ.Out;
+                    break;
+                case "easeOutElastic":
+                    return TweenManager.Interpolation.Elastic.Out;
+                    break;
+                case "easeOutBack":
+                    return TweenManager.Interpolation.Back.Out;
+                    break;
+                case "easeOutBounce":
+                    return TweenManager.Interpolation.Bounce.Out;
+                    break;
+                case "easeInOutQuad":
+                    return TweenManager.Interpolation.Quad.InOut;
+                    break;
+                case "easeInOutCubic":
+                    return TweenManager.Interpolation.Cubic.InOut;
+                    break;
+                case "easeInOutQuart":
+                    return TweenManager.Interpolation.Quart.InOut;
+                    break;
+                case "easeInOutQuint":
+                    return TweenManager.Interpolation.Quint.InOut;
+                    break;
+                case "easeInOutSine":
+                    return TweenManager.Interpolation.Sine.InOut;
+                    break;
+                case "easeInOutExpo":
+                    return TweenManager.Interpolation.Expo.InOut;
+                    break;
+                case "easeInOutCirc":
+                    return TweenManager.Interpolation.Circ.InOut;
+                    break;
+                case "easeInOutElastic":
+                    return TweenManager.Interpolation.Elastic.InOut;
+                    break;
+                case "easeInOutBack":
+                    return TweenManager.Interpolation.Back.InOut;
+                    break;
+                case "easeInOutBounce":
+                    return TweenManager.Interpolation.Bounce.InOut;
+                    break;
+                case "linear":
+                    return TweenManager.Interpolation.Linear.None;
+                    break
             }
         }
         )();
@@ -7998,27 +7998,27 @@ TweenManager.Class(function Interpolation() {
         }
         return fn
     }
-    ;
-    this.solve = function(values, elapsed) {
+        ;
+    this.solve = function (values, elapsed) {
         if (values[0] == values[1] && values[2] == values[3]) {
             return elapsed
         }
         return calculateBezier(getTForX(elapsed, values[0], values[2]), values[1], values[3])
     }
-    ;
+        ;
     this.Linear = {
-        None: function(k) {
+        None: function (k) {
             return k
         }
     };
     this.Quad = {
-        In: function(k) {
+        In: function (k) {
             return k * k
         },
-        Out: function(k) {
+        Out: function (k) {
             return k * (2 - k)
         },
-        InOut: function(k) {
+        InOut: function (k) {
             if ((k *= 2) < 1) {
                 return 0.5 * k * k
             }
@@ -8026,13 +8026,13 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Cubic = {
-        In: function(k) {
+        In: function (k) {
             return k * k * k
         },
-        Out: function(k) {
+        Out: function (k) {
             return --k * k * k + 1
         },
-        InOut: function(k) {
+        InOut: function (k) {
             if ((k *= 2) < 1) {
                 return 0.5 * k * k * k
             }
@@ -8040,13 +8040,13 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Quart = {
-        In: function(k) {
+        In: function (k) {
             return k * k * k * k
         },
-        Out: function(k) {
+        Out: function (k) {
             return 1 - --k * k * k * k
         },
-        InOut: function(k) {
+        InOut: function (k) {
             if ((k *= 2) < 1) {
                 return 0.5 * k * k * k * k
             }
@@ -8054,13 +8054,13 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Quint = {
-        In: function(k) {
+        In: function (k) {
             return k * k * k * k * k
         },
-        Out: function(k) {
+        Out: function (k) {
             return --k * k * k * k * k + 1
         },
-        InOut: function(k) {
+        InOut: function (k) {
             if ((k *= 2) < 1) {
                 return 0.5 * k * k * k * k * k
             }
@@ -8068,24 +8068,24 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Sine = {
-        In: function(k) {
+        In: function (k) {
             return 1 - Math.cos(k * Math.PI / 2)
         },
-        Out: function(k) {
+        Out: function (k) {
             return Math.sin(k * Math.PI / 2)
         },
-        InOut: function(k) {
+        InOut: function (k) {
             return 0.5 * (1 - Math.cos(Math.PI * k))
         }
     };
     this.Expo = {
-        In: function(k) {
+        In: function (k) {
             return k === 0 ? 0 : Math.pow(1024, k - 1)
         },
-        Out: function(k) {
+        Out: function (k) {
             return k === 1 ? 1 : 1 - Math.pow(2, -10 * k)
         },
-        InOut: function(k) {
+        InOut: function (k) {
             if (k === 0) {
                 return 0
             }
@@ -8099,13 +8099,13 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Circ = {
-        In: function(k) {
+        In: function (k) {
             return 1 - Math.sqrt(1 - k * k)
         },
-        Out: function(k) {
+        Out: function (k) {
             return Math.sqrt(1 - --k * k)
         },
-        InOut: function(k) {
+        InOut: function (k) {
             if ((k *= 2) < 1) {
                 return -0.5 * (Math.sqrt(1 - k * k) - 1)
             }
@@ -8113,7 +8113,7 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Elastic = {
-        In: function(k) {
+        In: function (k) {
             var s, a = 0.1, p = 0.4;
             if (k === 0) {
                 return 0
@@ -8129,7 +8129,7 @@ TweenManager.Class(function Interpolation() {
             }
             return -(a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p))
         },
-        Out: function(k) {
+        Out: function (k) {
             var s, a = 0.1, p = 0.4;
             if (k === 0) {
                 return 0
@@ -8145,7 +8145,7 @@ TweenManager.Class(function Interpolation() {
             }
             return (a * Math.pow(2, -10 * k) * Math.sin((k - s) * (2 * Math.PI) / p) + 1)
         },
-        InOut: function(k) {
+        InOut: function (k) {
             var s, a = 0.1, p = 0.4;
             if (k === 0) {
                 return 0
@@ -8166,15 +8166,15 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Back = {
-        In: function(k) {
+        In: function (k) {
             var s = 1.70158;
             return k * k * ((s + 1) * k - s)
         },
-        Out: function(k) {
+        Out: function (k) {
             var s = 1.70158;
             return --k * k * ((s + 1) * k + s) + 1
         },
-        InOut: function(k) {
+        InOut: function (k) {
             var s = 1.70158 * 1.525;
             if ((k *= 2) < 1) {
                 return 0.5 * (k * k * ((s + 1) * k - s))
@@ -8183,10 +8183,10 @@ TweenManager.Class(function Interpolation() {
         }
     };
     this.Bounce = {
-        In: function(k) {
+        In: function (k) {
             return 1 - this.Bounce.Out(1 - k)
         },
-        Out: function(k) {
+        Out: function (k) {
             if (k < (1 / 2.75)) {
                 return 7.5625 * k * k
             } else {
@@ -8201,7 +8201,7 @@ TweenManager.Class(function Interpolation() {
                 }
             }
         },
-        InOut: function(k) {
+        InOut: function (k) {
             if (k < 0.5) {
                 return this.Bounce.In(k * 2) * 0.5
             }
@@ -8223,7 +8223,7 @@ Class(function EasingPath(_curve) {
     var _newPoint = {};
     var _samples = [];
     var _using = [];
-    (function() {
+    (function () {
         initPool();
         initPath();
         preSample()
@@ -8240,7 +8240,7 @@ Class(function EasingPath(_curve) {
     function preSample() {
         var i, j, length, point, progress, ref;
         for (i = j = 0,
-        ref = _precompute; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+            ref = _precompute; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
             progress = i * _step;
             length = _pathLength * progress;
             point = _path.getPointAtLength(length);
@@ -8327,7 +8327,7 @@ Class(function EasingPath(_curve) {
         }
         var i, j, ref, ref1, buffer;
         for (i = j = ref = _boundsStartIndex,
-        ref1 = loopEnd; ref <= ref1 ? j < ref1 : j > ref1; i = ref <= ref1 ? ++j : --j) {
+            ref1 = loopEnd; ref <= ref1 ? j < ref1 : j > ref1; i = ref <= ref1 ? ++j : --j) {
             var value = array[i];
             var pointX = value.point.x / _rect;
             var pointP = p;
@@ -8401,7 +8401,7 @@ Class(function EasingPath(_curve) {
         }
         _using.length = 0
     }
-    this.solve = function(p) {
+    this.solve = function (p) {
         p = Utils.clamp(p, 0, 1);
         var bounds = findBounds(_samples, p);
         var res = checkIfBoundsCloseEnough(p, bounds);
@@ -8418,7 +8418,7 @@ Class(function MathTween(_object, _props, _time, _ease, _delay, _update, _callba
     var _startTime, _startValues, _endValues, _currentValues;
     var _easeFunction, _paused, _newEase, _stack, _current;
     var _elapsed = 0;
-    (function() {
+    (function () {
         if (_object && _props) {
             if (typeof _time !== "number") {
                 throw "MathTween Requires object, props, time, ease"
@@ -8466,7 +8466,7 @@ Class(function MathTween(_object, _props, _time, _ease, _delay, _update, _callba
     }
     function initStack() {
         var prevTime = 0;
-        var interpolate = function(start, end, alpha, ease, prev, key) {
+        var interpolate = function (start, end, alpha, ease, prev, key) {
             var last = prev[key];
             if (last) {
                 start += last
@@ -8559,7 +8559,7 @@ Class(function MathTween(_object, _props, _time, _ease, _delay, _update, _callba
             }
         }
     }
-    this.update = function(time) {
+    this.update = function (time) {
         if (_paused || time < _startTime) {
             return
         }
@@ -8569,38 +8569,38 @@ Class(function MathTween(_object, _props, _time, _ease, _delay, _update, _callba
             updateSingle(time)
         }
     }
-    ;
-    this.pause = function() {
+        ;
+    this.pause = function () {
         _paused = true
     }
-    ;
-    this.resume = function() {
+        ;
+    this.resume = function () {
         _paused = false;
         _startTime = Date.now() - (_elapsed * _time)
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         _this.stopped = true;
         clear();
         return null
     }
-    ;
-    this.setEase = function(ease) {
+        ;
+    this.setEase = function (ease) {
         if (_newEase != ease) {
             _newEase = ease;
             _ease = TweenManager.Interpolation.convertEase(ease);
             _easeFunction = typeof _ease === "function"
         }
     }
-    ;
-    this.getValues = function() {
+        ;
+    this.getValues = function () {
         return {
             start: _startValues,
             end: _endValues,
         }
     }
-    ;
-    this.interpolate = function(elapsed) {
+        ;
+    this.interpolate = function (elapsed) {
         var delta = _easeFunction ? _ease(elapsed) : TweenManager.Interpolation.solve(_ease, elapsed);
         for (var prop in _startValues) {
             if (typeof _startValues[prop] === "number" && typeof _endValues[prop] === "number") {
@@ -8615,7 +8615,7 @@ Class(function SpringTween(_object, _props, _friction, _ease, _delay, _update, _
     var _this = this;
     var _startTime, _velocityValues, _endValues, _startValues;
     var _damping, _friction, _count, _paused;
-    (function() {
+    (function () {
         if (_object && _props) {
             if (typeof _friction !== "number") {
                 throw "SpringTween Requires object, props, time, ease"
@@ -8676,7 +8676,7 @@ Class(function SpringTween(_object, _props, _friction, _ease, _delay, _update, _
         }
         TweenManager._removeMathTween(_this)
     }
-    this.update = function(time) {
+    this.update = function (time) {
         if (time < _startTime || _paused) {
             return
         }
@@ -8711,12 +8711,12 @@ Class(function SpringTween(_object, _props, _friction, _ease, _delay, _update, _
             _object.transform()
         }
     }
-    ;
-    this.pause = function() {
+        ;
+    this.pause = function () {
         _paused = true
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         clear(true);
         return null
     }
@@ -8729,10 +8729,10 @@ Class(function TweenTimeline() {
     var _tweens = [];
     var _fallbacks = [];
     this.elapsed = 0;
-    (function() {}
+    (function () { }
     )();
     function calculate() {
-        _tweens.sort(function(a, b) {
+        _tweens.sort(function (a, b) {
             var ta = a.time + a.delay;
             var tb = b.time + b.delay;
             return tb - ta
@@ -8752,12 +8752,12 @@ Class(function TweenTimeline() {
             _this.onUpdate(_this.elapsed)
         }
     }
-    this.add = function(object, props, time, ease, delay) {
+    this.add = function (object, props, time, ease, delay) {
         var tween;
         if (object instanceof HydraObject) {
-            tween = new FrameTween(object,props,time,ease,delay,null,true)
+            tween = new FrameTween(object, props, time, ease, delay, null, true)
         } else {
-            tween = new MathTween(object,props,time,ease,delay,null,null,true)
+            tween = new MathTween(object, props, time, ease, delay, null, null, true)
         }
         _tweens.push(tween);
         _fallbacks.push({
@@ -8772,38 +8772,38 @@ Class(function TweenTimeline() {
         calculate();
         return tween
     }
-    ;
-    this.tween = function(to, time, ease, delay, callback) {
+        ;
+    this.tween = function (to, time, ease, delay, callback) {
         this.stopTween();
         _tween = TweenManager.tween(_this, {
             elapsed: to
         }, time, ease, delay, callback, loop)
     }
-    ;
-    this.stopTween = function() {
+        ;
+    this.stopTween = function () {
         if (_tween && _tween.stop) {
             _tween.stop()
         }
     }
-    ;
-    this.startRender = function() {
+        ;
+    this.startRender = function () {
         Render.startRender(loop)
     }
-    ;
-    this.stopRender = function() {
+        ;
+    this.stopRender = function () {
         Render.stopRender(loop)
     }
-    ;
-    this.update = function() {
+        ;
+    this.update = function () {
         loop()
     }
-    ;
-    this.calculateRemainingTime = function() {
+        ;
+    this.calculateRemainingTime = function () {
         return _total - (_this.elapsed * _total)
     }
-    ;
-    this.fallback = function(dir) {
-        _fallbacks.forEach(function(config, index) {
+        ;
+    this.fallback = function (dir) {
+        _fallbacks.forEach(function (config, index) {
             var fTween = _tweens[index].getValues();
             var props = null;
             if (config.object instanceof HydraObject) {
@@ -8833,8 +8833,8 @@ Class(function TweenTimeline() {
             }
         })
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         Render.stopRender(loop);
         for (var i = 0; i < _tweens.length; i++) {
             _tweens[i].stop()
@@ -8844,7 +8844,7 @@ Class(function TweenTimeline() {
 });
 Class(function Shaders() {
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function parseCompiled(shaders) {
         var split = shaders.split("{@}");
@@ -8879,7 +8879,7 @@ Class(function Shaders() {
         }
         return shader
     }
-    this.parse = function(code, file) {
+    this.parse = function (code, file) {
         if (!code.strpos("{@}")) {
             file = file.split("/");
             file = file[file.length - 1];
@@ -8889,8 +8889,8 @@ Class(function Shaders() {
             parseRequirements()
         }
     }
-    ;
-    this.getShader = function(string) {
+        ;
+    this.getShader = function (string) {
         if (_this.FALLBACKS) {
             if (_this.FALLBACKS[string]) {
                 string = _this.FALLBACKS[string]
@@ -8915,7 +8915,7 @@ Class(function AssetLoader(_assets, _complete) {
         _queueLength = _complete;
         _complete = null
     }
-    (function() {
+    (function () {
         _queue = {};
         _loadedFiles = [];
         prepareAssets();
@@ -9001,52 +9001,52 @@ Class(function AssetLoader(_assets, _complete) {
         var split = name.split(".");
         var ext = split[split.length - 1].split("?")[0];
         switch (ext) {
-        case "html":
-            XHR.get(asset, function(contents) {
-                Hydra.HTML[split[0]] = contents;
-                assetLoaded(asset)
-            }, "text");
-            break;
-        case "js":
-        case "php":
-        case undefined:
-            XHR.get(asset, function(script) {
-                script = script.replace("use strict", "");
-                eval.call(window, script);
-                assetLoaded(asset)
-            }, "text");
-            break;
-        case "csv":
-        case "json":
-            XHR.get(asset, function(contents) {
-                Hydra.JSON[split[0]] = contents;
-                assetLoaded(asset)
-            }, ext == "csv" ? "text" : null);
-            break;
-        case "svg":
-            XHR.get(asset, function(contents) {
-                Hydra.SVG[split[0]] = contents;
-                assetLoaded(asset)
-            }, "text");
-            break;
-        case "fs":
-        case "vs":
-            XHR.get(asset, function(contents) {
-                Shaders.parse(contents, asset);
-                assetLoaded(asset)
-            }, "text");
-            break;
-        default:
-            var image = Images.createImg(asset);
-            if (image.complete) {
-                assetLoaded(asset);
-                return
-            }
-            image.onload = function() {
-                assetLoaded(asset)
-            }
-            ;
-            break
+            case "html":
+                XHR.get(asset, function (contents) {
+                    Hydra.HTML[split[0]] = contents;
+                    assetLoaded(asset)
+                }, "text");
+                break;
+            case "js":
+            case "php":
+            case undefined:
+                XHR.get(asset, function (script) {
+                    script = script.replace("use strict", "");
+                    eval.call(window, script);
+                    assetLoaded(asset)
+                }, "text");
+                break;
+            case "csv":
+            case "json":
+                XHR.get(asset, function (contents) {
+                    Hydra.JSON[split[0]] = contents;
+                    assetLoaded(asset)
+                }, ext == "csv" ? "text" : null);
+                break;
+            case "svg":
+                XHR.get(asset, function (contents) {
+                    Hydra.SVG[split[0]] = contents;
+                    assetLoaded(asset)
+                }, "text");
+                break;
+            case "fs":
+            case "vs":
+                XHR.get(asset, function (contents) {
+                    Shaders.parse(contents, asset);
+                    assetLoaded(asset)
+                }, "text");
+                break;
+            default:
+                var image = Images.createImg(asset);
+                if (image.complete) {
+                    assetLoaded(asset);
+                    return
+                }
+                image.onload = function () {
+                    assetLoaded(asset)
+                }
+                    ;
+                break
         }
     }
     function assetLoaded(asset) {
@@ -9061,7 +9061,7 @@ Class(function AssetLoader(_assets, _complete) {
         checkQ();
         if (_loaded == _total) {
             _this.complete = true;
-            Render.nextFrame(function() {
+            Render.nextFrame(function () {
                 if (_this.events) {
                     _this.events.fire(HydraEvents.COMPLETE, null, true)
                 }
@@ -9073,19 +9073,19 @@ Class(function AssetLoader(_assets, _complete) {
             _output = _this.delayedCall(missingFiles, 5000)
         }
     }
-    this.add = function(num) {
+    this.add = function (num) {
         _total += num;
         _added += num
     }
-    ;
-    this.trigger = function(num) {
+        ;
+    this.trigger = function (num) {
         num = num || 1;
         for (var i = 0; i < num; i++) {
             assetLoaded("trigger")
         }
     }
-    ;
-    this.triggerPercent = function(percent, num) {
+        ;
+    this.triggerPercent = function (percent, num) {
         num = num || _added;
         var trigger = Math.ceil(num * percent);
         if (trigger > _lastTriggered) {
@@ -9093,22 +9093,22 @@ Class(function AssetLoader(_assets, _complete) {
         }
         _lastTriggered = trigger
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         _assets = null;
         _loaded = null;
         _queue = null;
         _qLoad = null;
         return this._destroy()
     }
-}, function() {
-    AssetLoader.loadAllAssets = function(callback, cdn) {
+}, function () {
+    AssetLoader.loadAllAssets = function (callback, cdn) {
         cdn = cdn || "";
         var list = [];
         for (var i = 0; i < ASSETS.length; i++) {
             list.push(cdn + ASSETS[i])
         }
-        var assets = new AssetLoader(list,function() {
+        var assets = new AssetLoader(list, function () {
             if (callback) {
                 callback()
             }
@@ -9116,9 +9116,9 @@ Class(function AssetLoader(_assets, _complete) {
         }
         )
     }
-    ;
-    AssetLoader.loadAssets = function(list, callback) {
-        var assets = new AssetLoader(list,function() {
+        ;
+    AssetLoader.loadAssets = function (list, callback) {
+        var assets = new AssetLoader(list, function () {
             if (callback) {
                 callback()
             }
@@ -9150,15 +9150,15 @@ Class(function Images() {
             return path
         }
     }
-    this.getPath = function(path) {
+    this.getPath = function (path) {
         if (path.strpos("http")) {
             return path
         }
         path = parseResolution(path);
         return (Hydra.CDN || "") + path
     }
-    ;
-    this.createImg = function(path, cors) {
+        ;
+    this.createImg = function (path, cors) {
         if (!path.strpos("http")) {
             path = parseResolution(path);
             path = (Hydra.CDN || "") + path
@@ -9173,14 +9173,14 @@ Class(function Images() {
         }
         return img
     }
-    ;
-    this.storeImg = function(img) {
+        ;
+    this.storeImg = function (img) {
         if (this.inMemory) {
             this.store[img.src] = img
         }
     }
-    ;
-    this.releaseImg = function(path) {
+        ;
+    this.releaseImg = function (path) {
         path = path.src ? path.src : path;
         delete this.store[path]
     }
@@ -9204,7 +9204,7 @@ Class(function XHR() {
             _serial.push(key + "=" + data)
         }
     }
-    this.get = function(url, data, callback, type) {
+    this.get = function (url, data, callback, type) {
         if (typeof data === "function") {
             type = callback;
             callback = data;
@@ -9230,7 +9230,7 @@ Class(function XHR() {
         }
         xhr.onerror = xhrObject._error;
         xhr.send();
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (_android || xhr.status == 200)) {
                 if (typeof callback === "function") {
                     var data = xhr.responseText;
@@ -9245,11 +9245,11 @@ Class(function XHR() {
                 xhrObject._error(xhr.status + " " + xhr.responseText)
             }
         }
-        ;
+            ;
         return xhrObject
     }
-    ;
-    this.post = function(url, data, callback, type, header) {
+        ;
+    this.post = function (url, data, callback, type, header) {
         if (typeof data === "function") {
             header = type;
             type = callback;
@@ -9279,21 +9279,21 @@ Class(function XHR() {
         }
         var xhrObject = new XHRObject();
         switch (header) {
-        case "upload":
-            header = "application/upload";
-            break;
-        case "json":
-            header = "application/json";
-            break;
-        default:
-            header = "application/x-www-form-urlencoded";
-            break
+            case "upload":
+                header = "application/upload";
+                break;
+            case "json":
+                header = "application/json";
+                break;
+            default:
+                header = "application/x-www-form-urlencoded";
+                break
         }
         xhr.setRequestHeader("Content-type", header);
         for (var key in _this.headers) {
             xhr.setRequestHeader(key, _this.headers)
         }
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (_android || xhr.status == 200)) {
                 if (typeof callback === "function") {
                     var data = xhr.responseText;
@@ -9308,15 +9308,15 @@ Class(function XHR() {
                 xhrObject._error(xhr.status + " " + xhr.responseText)
             }
         }
-        ;
+            ;
         xhr.onerror = xhrObject._error;
         xhr.send(data);
         return xhrObject
     }
-    ;
+        ;
     function XHRObject() {
         var _this = this;
-        this._error = function(msg) {
+        this._error = function (msg) {
             _this.onError && _this.onError(msg);
             _this.onError = null
         }
@@ -9325,7 +9325,7 @@ Class(function XHR() {
 Class(function Storage() {
     var _this = this;
     var _storage;
-    (function() {
+    (function () {
         testStorage()
     }
     )();
@@ -9357,27 +9357,27 @@ Class(function Storage() {
             }
             if (typeof options.expires === "number") {
                 var days = options.expires
-                  , t = options.expires = new Date();
+                    , t = options.expires = new Date();
                 t.setDate(t.getDate() + days)
             }
             return (document.cookie = [encodeURIComponent(key), "=", options.raw ? String(value) : encodeURIComponent(String(value)), options.expires ? "; expires=" + options.expires.toUTCString() : "", options.path ? "; path=" + options.path : "", options.domain ? "; domain=" + options.domain : "", options.secure ? "; secure" : ""].join(""))
         }
         options = value || {};
-        var result, decode = options.raw ? function(s) {
+        var result, decode = options.raw ? function (s) {
             return s
         }
-        : decodeURIComponent;
+            : decodeURIComponent;
         return (result = new RegExp("(?:^|; )" + encodeURIComponent(key) + "=([^;]*)").exec(document.cookie)) ? decode(result[1]) : null
     }
-    this.setCookie = function(key, value, expires) {
+    this.setCookie = function (key, value, expires) {
         cookie(key, value, expires)
     }
-    ;
-    this.getCookie = function(key) {
+        ;
+    this.getCookie = function (key) {
         return cookie(key)
     }
-    ;
-    this.set = function(key, value) {
+        ;
+    this.set = function (key, value) {
         if (value != null && typeof value === "object") {
             value = JSON.stringify(value)
         }
@@ -9391,8 +9391,8 @@ Class(function Storage() {
             cookie(key, value, 365)
         }
     }
-    ;
-    this.get = function(key) {
+        ;
+    this.get = function (key) {
         var val;
         if (_storage) {
             val = window.localStorage[key]
@@ -9419,7 +9419,7 @@ Class(function DistributedWorker(_time) {
     var _this = this;
     var _callback, _total;
     _time = _time || 4;
-    (function() {}
+    (function () { }
     )();
     function loop() {
         while (_total < _time) {
@@ -9433,35 +9433,35 @@ Class(function DistributedWorker(_time) {
         }
         _total = 0
     }
-    this.start = function(callback) {
+    this.start = function (callback) {
         Render.startRender(loop);
         _callback = callback;
         _total = 0
     }
-    ;
-    this.pause = function() {
+        ;
+    this.pause = function () {
         Render.stop(loop)
     }
-    ;
-    this.resume = function() {
+        ;
+    this.resume = function () {
         _total = 0;
         Render.start(loop)
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         Render.stopRender(loop);
         _callback = null
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         this.stop();
         return this._destroy()
     }
-    ;
-    this.set("time", function(t) {
+        ;
+    this.set("time", function (t) {
         _time = t
     });
-    this.get("time", function() {
+    this.get("time", function () {
         return _time
     })
 });
@@ -9469,7 +9469,7 @@ Class(function Thread(_class) {
     Inherit(this, Component);
     var _this = this;
     var _worker, _callbacks, _path, _mvc;
-    (function() {
+    (function () {
         init();
         importClasses();
         addListeners()
@@ -9521,7 +9521,7 @@ Class(function Thread(_class) {
         })
     }
     function createMethod(name) {
-        _this[name] = function(message, callback) {
+        _this[name] = function (message, callback) {
             _this.send(name, message, callback)
         }
     }
@@ -9553,21 +9553,21 @@ Class(function Thread(_class) {
             }
         }
     }
-    this.on = function(evt, callback) {
+    this.on = function (evt, callback) {
         _callbacks[evt] = callback
     }
-    ;
-    this.off = function(evt) {
+        ;
+    this.off = function (evt) {
         delete _callbacks[evt]
     }
-    ;
-    this.loadFunctions = function() {
+        ;
+    this.loadFunctions = function () {
         for (var i = 0; i < arguments.length; i++) {
             this.loadFunction(arguments[i])
         }
     }
-    ;
-    this.loadFunction = function(code) {
+        ;
+    this.loadFunction = function (code) {
         code = code.toString();
         code = code.replace("(", "!!!");
         var split = code.split("!!!");
@@ -9578,8 +9578,8 @@ Class(function Thread(_class) {
         });
         createMethod(name)
     }
-    ;
-    this.importScript = function(path) {
+        ;
+    this.importScript = function (path) {
         if (location.protocol.strpos("file")) {
             _worker.postMessage({
                 path: "file:///android_asset/" + path,
@@ -9592,15 +9592,15 @@ Class(function Thread(_class) {
             })
         }
     }
-    ;
-    this.importClass = function() {
+        ;
+    this.importClass = function () {
         for (var i = 0; i < arguments.length; i++) {
             var code = arguments[i];
             importClass(code)
         }
     }
-    ;
-    this.send = function(name, message, callback) {
+        ;
+    this.send = function (name, message, callback) {
         if (typeof name === "string") {
             var fn = name;
             message = message || {};
@@ -9625,8 +9625,8 @@ Class(function Thread(_class) {
             })
         }
     }
-    ;
-    this.destroy = function() {
+        ;
+    this.destroy = function () {
         if (_worker.terminate) {
             _worker.terminate()
         }
@@ -9635,21 +9635,21 @@ Class(function Thread(_class) {
         }
         return this
     }
-}, function() {
+}, function () {
     Thread.PATH = ""
 });
 Class(function Dev() {
     var _this = this;
     var _post, _alert;
     var _id = Utils.timestamp();
-    (function() {
+    (function () {
         if (Hydra.LOCAL) {
             Hydra.development(true)
         }
     }
     )();
     function catchErrors() {
-        window.onerror = function(message, file, line) {
+        window.onerror = function (message, file, line) {
             var string = message + " ::: " + file + " : " + line;
             if (_alert) {
                 alert(string)
@@ -9674,7 +9674,7 @@ Class(function Dev() {
         obj.screenHeight = screen.height;
         return obj
     }
-    this.alertErrors = function(url) {
+    this.alertErrors = function (url) {
         _alert = true;
         if (typeof url === "string") {
             url = [url]
@@ -9685,8 +9685,8 @@ Class(function Dev() {
             }
         }
     }
-    ;
-    this.postErrors = function(url, post) {
+        ;
+    this.postErrors = function (url, post) {
         _post = post;
         if (typeof url === "string") {
             url = [url]
@@ -9697,14 +9697,14 @@ Class(function Dev() {
             }
         }
     }
-    ;
-    this.expose = function(name, val, force) {
+        ;
+    this.expose = function (name, val, force) {
         if (Hydra.LOCAL || force) {
             window[name] = val
         }
     }
-    ;
-    this.logServer = function(msg) {
+        ;
+    this.logServer = function (msg) {
         if (_post) {
             XHR.post(_post + "/api/data/debug", getDebugInfo(msg))
         }
@@ -9715,9 +9715,9 @@ Mobile.Class(function BaseModule(name) {
     var _this = this;
     var _name;
     var _callbacks = {};
-    (function() {}
+    (function () { }
     )();
-    this.init = function(data) {
+    this.init = function (data) {
         _this = this;
         _name = name.constructor.toString().match(/function ([^\(]+)/)[1];
         Mobile.NativeCore.register(_name, this);
@@ -9726,8 +9726,8 @@ Mobile.Class(function BaseModule(name) {
             data: data
         })
     }
-    ;
-    this.send = function(data, callback) {
+        ;
+    this.send = function (data, callback) {
         if (!data || !data.fn) {
             throw "Do not call send directly"
         }
@@ -9742,8 +9742,8 @@ Mobile.Class(function BaseModule(name) {
         }
         Mobile.NativeCore.send(data)
     }
-    ;
-    this.receive = function(data) {
+        ;
+    this.receive = function (data) {
         var id = data._id;
         var callback = _callbacks[id];
         if (callback) {
@@ -9753,8 +9753,8 @@ Mobile.Class(function BaseModule(name) {
             _this.incoming(data)
         }
     }
-    ;
-    this.incoming = function() {}
+        ;
+    this.incoming = function () { }
 });
 Mobile.Class(function NativeCore() {
     Inherit(this, Component);
@@ -9762,7 +9762,7 @@ Mobile.Class(function NativeCore() {
     var _api;
     var _references = {};
     this.active = false;
-    (function() {
+    (function () {
         initAPI()
     }
     )();
@@ -9781,7 +9781,7 @@ Mobile.Class(function NativeCore() {
             }
         }
     }
-    this.send = function(data) {
+    this.send = function (data) {
         if (!this.active) {
             return
         }
@@ -9792,14 +9792,14 @@ Mobile.Class(function NativeCore() {
             window.location.hash = "nativeHydra:" + data
         }
     }
-    ;
-    this.receive = function(data) {
+        ;
+    this.receive = function (data) {
         if (data.jsModule) {
             _references[data.jsModule].receive(data)
         }
     }
-    ;
-    this.register = function(name, ref) {
+        ;
+    this.register = function (name, ref) {
         _references[name] = ref
     }
 }, "Static");
@@ -9819,7 +9819,7 @@ Mobile.Class(function Files() {
     Inherit(this, Mobile.BaseModule);
     var _this = this;
     var _get = XHR.get;
-    (function() {
+    (function () {
         _this.init();
         if (_this.storeLocally) {
             updateXHR()
@@ -9830,7 +9830,7 @@ Mobile.Class(function Files() {
         if (!Mobile.NativeCore.active) {
             return
         }
-        XHR.get = function(url, data, callback, type) {
+        XHR.get = function (url, data, callback, type) {
             if (typeof data === "function") {
                 type = callback;
                 callback = data;
@@ -9848,7 +9848,7 @@ Mobile.Class(function Files() {
             var fileSplit = url.split("/");
             var path = fileSplit[fileSplit.length - 1];
             if (Mobile.System.CONNECTIVIY) {
-                _get(url, data, function(d) {
+                _get(url, data, function (d) {
                     if (callback) {
                         _this.write(path, d);
                         callback(d)
@@ -9859,7 +9859,7 @@ Mobile.Class(function Files() {
             }
         }
     }
-    this.write = function(file, content, callback) {
+    this.write = function (file, content, callback) {
         if (typeof content !== "string") {
             content = JSON.stringify(content)
         }
@@ -9867,56 +9867,56 @@ Mobile.Class(function Files() {
             fn: "writeFile",
             file: file,
             content: content
-        }, function(data) {
+        }, function (data) {
             if (callback) {
                 callback(data.success)
             }
         })
     }
-    ;
-    this.read = function(file, callback) {
+        ;
+    this.read = function (file, callback) {
         if (!callback) {
             throw "Mobile.Files.read requires callback"
         }
         this.send({
             fn: "readFile",
             file: file
-        }, function(data) {
+        }, function (data) {
             if (data.content && file.strpos("json")) {
                 data.content = JSON.parse(data.content)
             }
             callback(data.content)
         })
     }
-    ;
-    this.unlink = function(file, callback) {
+        ;
+    this.unlink = function (file, callback) {
         this.send({
             fn: "deleteFile",
             file: file
-        }, function(data) {
+        }, function (data) {
             if (callback) {
                 callback(data.success)
             }
         })
     }
-    ;
-    this.getPath = function(file, callback) {
+        ;
+    this.getPath = function (file, callback) {
         this.send({
             fn: "getPath",
             file: file
-        }, function(data) {
+        }, function (data) {
             callback(data.path)
         })
     }
-    ;
-    this.download = function(url, callback) {
+        ;
+    this.download = function (url, callback) {
         var fileName = url.split("/");
         fileName = fileName[fileName.length - 1];
         this.send({
             fn: "downloadFile",
             url: url,
             fileName: fileName
-        }, function(data) {
+        }, function (data) {
             callback(data.success)
         })
     }
@@ -9932,7 +9932,7 @@ Mobile.Class(function Geolocation() {
     this.HUNDRED = "ACCURACY_HUNDRED";
     this.KILOMETER = "ACCURACY_KILOMETER";
     this.THREE_KILOMETER = "ACCURACY_THREE_KILOMETER";
-    (function() {
+    (function () {
         _this.init()
     }
     )();
@@ -9963,7 +9963,7 @@ Mobile.Class(function Geolocation() {
         _this.HEADING.trueHeading = e.trueHeading;
         _this.events.fire(Mobile.Events.GEOLOCATION_HEADING, _this.HEADING)
     }
-    this.set("accuracy", function(val) {
+    this.set("accuracy", function (val) {
         if (!val) {
             throw "Accuracy not defined!"
         }
@@ -9972,48 +9972,48 @@ Mobile.Class(function Geolocation() {
             accuracy: val || "ACCURACY_BEST"
         })
     });
-    this.activate = function(always) {
+    this.activate = function (always) {
         this.send({
             fn: "activate",
             always: !!always
         })
     }
-    ;
-    this.requestPermission = function(always) {
+        ;
+    this.requestPermission = function (always) {
         this.send({
             fn: "requestPermission",
             always: !!always
         })
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         this.send({
             fn: "stop"
         })
     }
-    ;
-    this.activateHeading = function() {
+        ;
+    this.activateHeading = function () {
         this.send({
             fn: "activateHeading"
         })
     }
-    ;
-    this.stopHeading = function() {
+        ;
+    this.stopHeading = function () {
         this.send({
             fn: "stopHeading"
         })
     }
-    ;
-    this.requestLocation = function() {
+        ;
+    this.requestLocation = function () {
         this.send({
             fn: "requestLocation"
         })
     }
-    ;
-    this.checkPermission = function(callback) {
+        ;
+    this.checkPermission = function (callback) {
         this.send({
             fn: "permission"
-        }, function(data) {
+        }, function (data) {
             handlePermission(data);
             callback && callback({
                 type: data.type,
@@ -10021,27 +10021,27 @@ Mobile.Class(function Geolocation() {
             })
         })
     }
-    ;
-    this.incoming = function(e) {
+        ;
+    this.incoming = function (e) {
         switch (e.fn) {
-        case "status":
-            handleStatus(e);
-            break;
-        case "authorization":
-            handleAuth(e);
-            break;
-        case "failError":
-            handleError(e);
-            break;
-        case "permission":
-            handlePermission(e);
-            break;
-        case "update":
-            handleUpdate(e);
-            break;
-        case "updateHeading":
-            handleUpdateHeading(e);
-            break
+            case "status":
+                handleStatus(e);
+                break;
+            case "authorization":
+                handleAuth(e);
+                break;
+            case "failError":
+                handleError(e);
+                break;
+            case "permission":
+                handlePermission(e);
+                break;
+            case "update":
+                handleUpdate(e);
+                break;
+            case "updateHeading":
+                handleUpdateHeading(e);
+                break
         }
     }
 }, "static");
@@ -10049,7 +10049,7 @@ Mobile.Class(function Notifications() {
     Inherit(this, Mobile.BaseModule);
     var _this = this;
     this.FIRED = "mobile_notification_fired";
-    (function() {
+    (function () {
         _this.init()
     }
     )();
@@ -10077,13 +10077,13 @@ Mobile.Class(function Notifications() {
         });
         _this.DEEPLINK = data.path
     }
-    this.enable = function() {
+    this.enable = function () {
         this.send({
             fn: "enable"
         })
     }
-    ;
-    this.localNotification = function(action, body, data, time) {
+        ;
+    this.localNotification = function (action, body, data, time) {
         time = time || 0;
         data = data || {};
         data._time = Date.now();
@@ -10096,8 +10096,8 @@ Mobile.Class(function Notifications() {
             localData: data
         })
     }
-    ;
-    this.alert = function(title, message, actions, config, callback) {
+        ;
+    this.alert = function (title, message, actions, config, callback) {
         if (actions && !Array.isArray(actions)) {
             config = actions;
             actions = null
@@ -10127,37 +10127,37 @@ Mobile.Class(function Notifications() {
             message: message || "EMPTY MESSAGE",
             config: config,
             actions: actions
-        }, function(e) {
+        }, function (e) {
             callback && callback(e.title)
         })
     }
-    ;
-    this.incoming = function(data) {
+        ;
+    this.incoming = function (data) {
         switch (data.fn) {
-        case "fired":
-            firedNotification(data);
-            break;
-        case "deeplink":
-            handleDeeplink(data);
-            break
+            case "fired":
+                firedNotification(data);
+                break;
+            case "deeplink":
+                handleDeeplink(data);
+                break
         }
     }
 }, "static");
 Mobile.Class(function Social() {
     Inherit(this, Mobile.BaseModule);
     var _this = this;
-    (function() {
+    (function () {
         _this.init()
     }
     )();
-    this.shareTwitter = function(text, callback) {
+    this.shareTwitter = function (text, callback) {
         this.send({
             fn: "twitter",
             params: text
         }, callback)
     }
-    ;
-    this.shareFacebook = function(params, callback) {
+        ;
+    this.shareFacebook = function (params, callback) {
         params = params || {};
         if (!params.text) {
             params.text = ""
@@ -10173,8 +10173,8 @@ Mobile.Class(function Social() {
             params: params
         }, callback)
     }
-    ;
-    this.shareMail = function(params, callback) {
+        ;
+    this.shareMail = function (params, callback) {
         params = params || {};
         if (!params.subject) {
             params.subject = ""
@@ -10187,8 +10187,8 @@ Mobile.Class(function Social() {
             params: params
         }, callback)
     }
-    ;
-    this.shareImage = function(params, callback) {
+        ;
+    this.shareImage = function (params, callback) {
         params = params || {};
         if (!params.image) {
             params.image = ""
@@ -10212,7 +10212,7 @@ Mobile.Class(function System() {
     this.LIGHT_STATUS = 1;
     this.CONNECTIVITY = typeof navigator.onLine === "boolean" ? navigator.onLine : true;
     this.background = false;
-    (function() {
+    (function () {
         _this.init();
         updateNative();
         checkConnection();
@@ -10230,7 +10230,7 @@ Mobile.Class(function System() {
     }
     function updateNative() {
         if (Mobile.NativeCore.active) {
-            window.getURL = function(url, target) {
+            window.getURL = function (url, target) {
                 _this.send({
                     fn: "openURL",
                     params: url
@@ -10290,20 +10290,20 @@ Mobile.Class(function System() {
         }
         _this.CONNECTIVITY = reachable
     }
-    this.set("hideStatusBar", function(bool) {
+    this.set("hideStatusBar", function (bool) {
         this.send({
             fn: "toggleStatusBar",
             params: !bool
         })
     });
-    this.set("statusBarColor", function(c) {
+    this.set("statusBarColor", function (c) {
         var color = new Color(c);
         this.send({
             fn: "statusBarColor",
             params: Mobile.os == "iOS" ? color.getHex() : c
         })
     });
-    this.set("statusBarText", function(val) {
+    this.set("statusBarText", function (val) {
         if (typeof val !== "number") {
             throw "Mobile.System.statusBarText must be a number"
         }
@@ -10312,46 +10312,46 @@ Mobile.Class(function System() {
             params: val
         })
     });
-    this.set("orientation", function(val) {
+    this.set("orientation", function (val) {
         this.send({
             fn: "orientation",
             params: val
         })
     });
-    this.incoming = function(data) {
+    this.incoming = function (data) {
         switch (data.fn) {
-        case "deviceInfo":
-            deviceInfo(data);
-            break;
-        case "appActive":
-            activate();
-            break;
-        case "appInBackground":
-            deactivate();
-            break;
-        case "appTerminating":
-            deactivate();
-            break;
-        case "_error":
-            throw data.message;
-            break
+            case "deviceInfo":
+                deviceInfo(data);
+                break;
+            case "appActive":
+                activate();
+                break;
+            case "appInBackground":
+                deactivate();
+                break;
+            case "appTerminating":
+                deactivate();
+                break;
+            case "_error":
+                throw data.message;
+                break
         }
     }
-    ;
-    this.vibrate = function(time) {
+        ;
+    this.vibrate = function (time) {
         this.send({
             fn: "vibrate",
             params: time
         })
     }
-    ;
-    this.hideKeyboard = function() {
+        ;
+    this.hideKeyboard = function () {
         this.send({
             fn: "hideKeyboard"
         })
     }
-    ;
-    this.detectDevice = function(str) {
+        ;
+    this.detectDevice = function (str) {
         if (!_this.model) {
             return false
         }
@@ -10364,15 +10364,15 @@ Class(function Config() {
     this.BUTTERFLY_COUNT = 50;
     this.BUTTERFLY_THREAD_COUNT = 1;
     this.BEAST = Device.graphics.webgl.gpu && Device.graphics.webgl.gpu.strpos("titan");
-    this.CDN = (function() {
+    this.CDN = (function () {
         return ""
     }
     )();
-    this.PROXY = (function() {
+    this.PROXY = (function () {
         return ""
     }
     )();
-    this.APP_ENGINE = (function() {
+    this.APP_ENGINE = (function () {
         var hostname = location.hostname || "";
         var localHost = hostname == "localhost" || hostname == "127.0.0.1" || hostname == "[::1]" || hostname.indexOf("local") > -1 || hostname.indexOf(".local") > -1 || hostname.indexOf("github.io") == -1 && (hostname.indexOf("10.") == 0 || hostname.indexOf("192.168.") == 0 || hostname.indexOf("172.") == 0);
         return localHost ? location.protocol + "//" + hostname + ":3001" : "https://at-socketnetwork.appspot.com"
@@ -10391,61 +10391,75 @@ Class(function Config() {
         },
         priority: 6,
         realtime: true,
-        country: "CA"
+        region: "NS",
+        country: "CA",
+        country_name: "Canada"
     }, {
-        location: "Alberta, Canada",
+        location: "Nova Scotia, Canada",
         coords: {
-            lat: 56.35,
-            lng: -115.20
+            lat: 44.65,
+            lng: -63.59
         },
         priority: 4,
         realtime: true,
-        country: "CA"
+        region: "NS",
+        country: "CA",
+        country_name: "Canada"
     }, {
-        location: "Texas, USA",
+        location: "Nova Scotia, Canada",
         coords: {
-            lat: 31.50,
-            lng: -99.05
+            lat: 45.36,
+            lng: -63.27
         },
         priority: 4,
         realtime: true,
-        country: "US"
+        region: "NS",
+        country: "CA",
+        country_name: "Canada"
     }, {
-        location: "California, USA",
+        location: "Nova Scotia, Canada",
         coords: {
-            lat: 36.55,
-            lng: -118.99
+            lat: 45.09,
+            lng: -64.36
         },
         priority: 4,
         realtime: true,
-        country: "US"
+        region: "NS",
+        country: "CA",
+        country_name: "Canada"
     }, {
-        location: "Kyoto, Japan",
+        location: "Ontario, Canada",
         coords: {
-            lat: 35.29,
-            lng: 135.57
+            lat: 45.42,
+            lng: -75.70
         },
         priority: 4,
         realtime: false,
-        country: "JP"
+        region: "ON",
+        country: "CA",
+        country_name: "Canada"
     }, {
-        location: "Wales, UK",
+        location: "Newfoundland and Labrador, Canada",
         coords: {
-            lat: 51.99,
-            lng: -4.33
+            lat: 47.56,
+            lng: -52.73
         },
         priority: 4,
         realtime: true,
-        country: "UK"
+        region: "NL",
+        country: "CA",
+        country_name: "Canada"
     }, {
-        location: "Scotland, UK",
+        location: "British Columbia, Canada",
         coords: {
-            lat: 57.11,
-            lng: -4.28
+            lat: 49.19,
+            lng: -122.85
         },
         priority: 4,
         realtime: true,
-        country: "UK"
+        region: "BC",
+        country: "CA",
+        country_name: "Canada"
     }, {
         location: "Iowa, USA",
         coords: {
@@ -10454,7 +10468,9 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        country: "US"
+        region: "IA",
+        country: "US",
+        country_name: "USA"
     }, {
         location: "Colorado, USA",
         coords: {
@@ -10463,7 +10479,9 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        country: "US"
+        region: "CO",
+        country: "US",
+        country_name: "USA"
     }, {
         location: "Quebec, Canada",
         coords: {
@@ -10472,7 +10490,9 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        country: "CA"
+        region: "QC",
+        country: "CA",
+        country_name: "Canada"
     }, {
         location: "Washington, USA",
         coords: {
@@ -10481,7 +10501,9 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        country: "US"
+        region: "WA",
+        country: "US",
+        country_name: "USA"
     }, {
         location: "England, UK",
         coords: {
@@ -10490,7 +10512,9 @@ Class(function Config() {
         },
         priority: 4,
         realtime: false,
-        country: "GB"
+        region: "England",
+        country: "GB",
+        country_name: "UK"
     }, {
         location: "Texas, USA",
         coords: {
@@ -10499,29 +10523,66 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        country: "US"
-    },  {
-        location: "Firenze, Italy",
+        region: "TX",
+        country: "US",
+        country_name: "USA"
+    }, {
+        location: "Scotland, UK",
+        coords: {
+            lat: 55.86,
+            lng: -4.25
+        },
+        priority: 4,
+        realtime: true,
+        region: "Scotland",
+        country: "GB",
+        country_name: "UK"
+    }, {
+        location: "Tuscany, Italy",
         coords: {
             lat: 43.77,
             lng: 11.25
         },
         priority: 4,
         realtime: true,
-        country: "IT"
+        region: "Tuscany",
+        country: "IT",
+        country_name: "Italy"
+    }, {
+        location: "Nova Scotia, Canada",
+        coords: {
+            lat: 44.37,
+            lng: -64.30
+        },
+        priority: 4,
+        realtime: true,
+        region: "NS",
+        country: "CA",
+        country_name: "Canada"
+    }, {
+        location: "Alberta, Canada",
+        coords: {
+            lat: -52.27,
+            lng: -113.80
+        },
+        priority: 4,
+        realtime: false,
+        region: "AB",
+        country: "CA",
+        country_name: "Canada"
     }]
 }, "static");
 Class(function Copy() {
     Inherit(this, Component);
     var _this = this;
-    this.get("CATCH", function() {
-        var msgs = ["Nice catch!", "Got one!", ];
+    this.get("CATCH", function () {
+        var msgs = ["Nice catch!", "Got one!",];
         return msgs[Math.floor(Math.random() * msgs.length)]
     });
     this.INTRO = "Throw and catch<br />paper planes with people<br />around the world";
     this.INTRO_DESKTOP = "Use your phone to throw and catch<br />paper planes with people around the world";
     this.BLOCK_SUB = "This experience requires location data.<br/>You'll need to <strong>Enable Location Services.</strong>";
-    this.DESKTOP_SUB = "Join on your phone at<br/> <strong>planes.damvan.ca</strong>";
+    this.DESKTOP_SUB = "Join on your phone at<br/> <strong>cmoneon.github.io/planes</strong>";
     this.AFTER = "Thanks for flying with us!";
     this.AFTER_DESKTOP = "Thanks for flying with us!<br />We hope you enjoyed the experience.";
     this.AFTER_DESKTOP_SUB = "But don't worry, we're working hard<br />to bring this to everyone soon";
@@ -10542,13 +10603,13 @@ Class(function Copy() {
     this.CONFIRM_TEXT = "Your plane is now<br />flying around the world<br />with ## others";
     this.CONFIRM_TEXT_BACK = "The plane is back<br />flying around the world<br />with ## others";
     this.MADE = "You’ve made<br />## planes";
-    this.SIDESCREEN = "Join on<br />your phone at<br /><strong>planes.damvan.ca</strong>";
-    this.INFO_TEXT = ["This experience allows people to throw and catch virtual paper planes with one another<br/><br/>Visit <strong>planes.damvan.ca</strong> on your computer to throw planes<br/>into your screen", 'Made by some friends at <a href="http://damvan.ca/" target="_blank">Damvan</a>'];
+    this.SIDESCREEN = "Join on<br />your phone at<br /><strong>cmoneon.github.io/planes</strong>";
+    this.INFO_TEXT = ["This experience allows people to throw and catch virtual paper planes with one another<br/><br/>Visit <strong>cmoneon.github.io/planes</strong> on your computer to throw planes<br/>into your screen", 'Made by some friends at <a href="http://damvan.ca/" target="_blank">Damvan</a>'];
     this.INFO_GPS_1 = "Currently using IP for location.";
     this.INFO_GPS_2 = "Enable GPS for more accuracy.";
     this.LOCATION_DENIED_TITLE = "Location needed";
     this.LOCATION_DENIED_SUB = "Please allow location access and reload so we can show the right town, province, and country.";
-    this.THROWN_TEXT = ["Planes have just left", "Planes were just thrown from", "Planes are on their way from", "Planes just took off from", "Planes have just departed", ];
+    this.THROWN_TEXT = ["Planes have just left", "Planes were just thrown from", "Planes are on their way from", "Planes just took off from", "Planes have just departed",];
     this.READY = "Ready for takeoff?";
     this.CONNECT = "Join on your phone at";
     this.NON_IO = "Watch on a desktop at the same time to see your plane enter the screen and flock around the world with other planes.";
@@ -10590,7 +10651,7 @@ Class(function AssetUtil() {
         }
         return true
     }
-    this.loadAssets = function(list) {
+    this.loadAssets = function (list) {
         var assets = this.get(list);
         var output = [];
         for (var i = assets.length - 1; i > -1; i--) {
@@ -10602,8 +10663,8 @@ Class(function AssetUtil() {
         }
         return output
     }
-    ;
-    this.get = function(list) {
+        ;
+    this.get = function (list) {
         if (!Array.isArray(list)) {
             list = [list]
         }
@@ -10621,8 +10682,8 @@ Class(function AssetUtil() {
         }
         return assets
     }
-    ;
-    this.exclude = function(list) {
+        ;
+    this.exclude = function (list) {
         if (!Array.isArray(list)) {
             list = [list]
         }
@@ -10630,12 +10691,12 @@ Class(function AssetUtil() {
             _exclude.push(list[i])
         }
     }
-    ;
-    this.clearExclude = function() {
+        ;
+    this.clearExclude = function () {
         _exclude = []
     }
-    ;
-    this.loadAllAssets = function(list) {
+        ;
+    this.loadAllAssets = function (list) {
         var assets = _this.loadAssets(list || "/");
         var loader = new AssetLoader(assets)
     }
@@ -10647,7 +10708,7 @@ Class(function Antimatter(_num, _renderer) {
     var _cursor = 0;
     var _size = findSize();
     this.particleCount = _num;
-    (function() {
+    (function () {
         if (!window.Shader) {
             throw "Antimatter requires hydra-three"
         }
@@ -10664,10 +10725,10 @@ Class(function Antimatter(_num, _renderer) {
         }
     }
     function createBuffer() {
-        AntimatterUtil.createBufferArray(_size, _num, function(geometry, vertices) {
-            _this.vertices = _this.vertices || new AntimatterAttribute(vertices,4);
+        AntimatterUtil.createBufferArray(_size, _num, function (geometry, vertices) {
+            _this.vertices = _this.vertices || new AntimatterAttribute(vertices, 4);
             _geometry = new THREE.BufferGeometry();
-            _geometry.addAttribute("position", new THREE.BufferAttribute(geometry,3));
+            _geometry.addAttribute("position", new THREE.BufferAttribute(geometry, 3));
             _this.vertices.geometry = _geometry;
             _this.init(_geometry, _renderer, _size);
             if (_callback) {
@@ -10676,26 +10737,26 @@ Class(function Antimatter(_num, _renderer) {
             }
         })
     }
-    this.createFloatArray = function(components) {
+    this.createFloatArray = function (components) {
         return new Float32Array(_size * _size * (components || 3))
     }
-    ;
-    this.ready = function(callback) {
+        ;
+    this.ready = function (callback) {
         _callback = callback
     }
-    ;
-    this.getMesh = function() {
+        ;
+    this.getMesh = function () {
         var shader = _this.createShader(_this.fragmentShader || "void main() { gl_FragColor = vec4(1.0); }");
-        _this.mesh = new THREE.Points(_geometry,shader.material);
+        _this.mesh = new THREE.Points(_geometry, shader.material);
         _this.mesh.frustumCulled = false;
         _this.shader = shader;
         _this.geometry = _geometry;
         return _this.mesh
     }
-    ;
-    this.createShader = function(fs) {
+        ;
+    this.createShader = function (fs) {
         var uniforms = _this.uniforms || {};
-        var shader = new Shader(_this.vertexShader || "AntimatterPosition",fs);
+        var shader = new Shader(_this.vertexShader || "AntimatterPosition", fs);
         shader.uniforms = THREE.UniformsUtils.merge([{
             tPos: {
                 type: "t",
@@ -10712,15 +10773,15 @@ Class(function AntimatterAttribute(_data, _components) {
     this.size = _size;
     this.count = _size * _size;
     this.buffer = _data;
-    this.texture = new THREE.DataTexture(_data,_size,_size,_components == 4 ? THREE.RGBAFormat : THREE.RGBFormat,THREE.FloatType);
+    this.texture = new THREE.DataTexture(_data, _size, _size, _components == 4 ? THREE.RGBAFormat : THREE.RGBFormat, THREE.FloatType);
     this.texture.needsUpdate = true;
-    this.set("needsUpdate", function() {
+    this.set("needsUpdate", function () {
         _this.texture.needsUpdate = true
     });
-    this.clone = function() {
+    this.clone = function () {
         var array = new Float32Array(_data.length);
         array.set(_data);
-        return new AntimatterAttribute(array,_components)
+        return new AntimatterAttribute(array, _components)
     }
 });
 Class(function AntimatterCalculation() {
@@ -10735,19 +10796,19 @@ Class(function AntimatterCalculation() {
     var _callbacks = [];
     this.passes = [];
     function initPasses() {
-        _camera = new THREE.OrthographicCamera(_size / -2,_size / 2,_size / 2,_size / -2,1,1000);
-        _geometry = new THREE.PlaneBufferGeometry(2,2,1,1);
+        _camera = new THREE.OrthographicCamera(_size / -2, _size / 2, _size / 2, _size / -2, 1, 1000);
+        _geometry = new THREE.PlaneBufferGeometry(2, 2, 1, 1);
         _scene = new THREE.Scene();
-        _mesh = new THREE.Mesh(_geometry,new THREE.MeshBasicMaterial());
+        _mesh = new THREE.Mesh(_geometry, new THREE.MeshBasicMaterial());
         _scene.add(_mesh);
-        var copyShader = new Shader("AntimatterCopy","AntimatterCopy");
+        var copyShader = new Shader("AntimatterCopy", "AntimatterCopy");
         copyShader.uniforms = {
             tDiffuse: {
                 type: "t",
                 value: null
             }
         };
-        _copy = new THREE.Mesh(_geometry,copyShader.material);
+        _copy = new THREE.Mesh(_geometry, copyShader.material);
         _scene.add(_copy);
         _copy.visible = false
     }
@@ -10765,17 +10826,17 @@ Class(function AntimatterCalculation() {
     function postRender(callback) {
         _callbacks.push(callback)
     }
-    this.init = function(geometry, renderer, size) {
+    this.init = function (geometry, renderer, size) {
         _this = this;
         _gpuGeom = geometry.attributes.position.array;
         _renderer = renderer;
         _size = size;
         initPasses()
     }
-    ;
-    this.addPass = function(pass, index) {
+        ;
+    this.addPass = function (pass, index) {
         _this = this;
-        var add = function(pass, index) {
+        var add = function (pass, index) {
             if (typeof index == "number") {
                 _this.passes.splice(index, 0, pass);
                 return
@@ -10785,13 +10846,13 @@ Class(function AntimatterCalculation() {
         if (_this.passes.length) {
             add(pass, index)
         } else {
-            postRender(function() {
+            postRender(function () {
                 add(pass, index)
             })
         }
     }
-    ;
-    this.findPass = function(name) {
+        ;
+    this.findPass = function (name) {
         for (var i = 0; i < _this.passes.length; i++) {
             var pass = _this.passes[i];
             if (pass.name == name) {
@@ -10799,8 +10860,8 @@ Class(function AntimatterCalculation() {
             }
         }
     }
-    ;
-    this.removePass = function(pass) {
+        ;
+    this.removePass = function (pass) {
         _this = this;
         if (typeof pass == "number") {
             _this.passes.splice(pass)
@@ -10808,8 +10869,8 @@ Class(function AntimatterCalculation() {
             _this.passes.findAndRemove(pass)
         }
     }
-    ;
-    this.update = function() {
+        ;
+    this.update = function () {
         _this = this;
         if (!_this.mesh) {
             return
@@ -10848,20 +10909,20 @@ Class(function AntimatterCalculation() {
         _output.value = output;
         _this.mesh.material.uniforms.tPos = _output;
         if (_callbacks.length) {
-            _callbacks.forEach(function(c) {
+            _callbacks.forEach(function (c) {
                 c()
             });
             _callbacks.length = 0
         }
     }
-    ;
-    this.onDestroy = function() {
-        _this.passes.forEach(function(pass) {
+        ;
+    this.onDestroy = function () {
+        _this.passes.forEach(function (pass) {
             pass && pass.destroy && pass.destroy()
         })
     }
-    ;
-    this.getOutput = function() {
+        ;
+    this.getOutput = function () {
         return _output
     }
 });
@@ -10899,7 +10960,7 @@ Class(function AntimatterPass(_shader, _uni, _clone) {
     this.uniforms = _uniforms;
     this.output = initRT(64);
     this.name = _shader;
-    (function() {
+    (function () {
         if (_uni) {
             for (var key in _uni) {
                 _uniforms[key] = _uni[key]
@@ -10922,12 +10983,12 @@ Class(function AntimatterPass(_shader, _uni, _clone) {
             stencilBuffer: false,
             type: type
         };
-        var rt = new THREE.WebGLRenderTarget(size,size,parameters);
+        var rt = new THREE.WebGLRenderTarget(size, size, parameters);
         rt.texture.generateMipmaps = false;
         return rt
     }
-    this.addInput = function(name, attribute) {
-        var uniform = (function() {
+    this.addInput = function (name, attribute) {
+        var uniform = (function () {
             if (typeof attribute === "object" && !attribute.height && typeof attribute.type === "string") {
                 return attribute
             }
@@ -10945,28 +11006,28 @@ Class(function AntimatterPass(_shader, _uni, _clone) {
         )();
         _uniforms[name] = uniform
     }
-    ;
-    this.getRT = function(index) {
+        ;
+    this.getRT = function (index) {
         return _rts[index]
     }
-    ;
-    this.getRead = function() {
+        ;
+    this.getRead = function () {
         return _rts[_read]
     }
-    ;
-    this.getWrite = function() {
+        ;
+    this.getWrite = function () {
         return _rts[_write]
     }
-    ;
-    this.setRead = function(index) {
+        ;
+    this.setRead = function (index) {
         _read = index
     }
-    ;
-    this.setWrite = function(index) {
+        ;
+    this.setWrite = function (index) {
         _write = index
     }
-    ;
-    this.swap = function() {
+        ;
+    this.swap = function () {
         _write++;
         if (_write > 2) {
             _write = 0
@@ -10976,8 +11037,8 @@ Class(function AntimatterPass(_shader, _uni, _clone) {
             _read = 0
         }
     }
-    ;
-    this.initialize = function(size, num) {
+        ;
+    this.initialize = function (size, num) {
         this.init = true;
         for (var i = 0; i < 3; i++) {
             _rts.push(initRT(size))
@@ -10985,31 +11046,31 @@ Class(function AntimatterPass(_shader, _uni, _clone) {
         _this.output.setSize(size, size);
         _uniforms.fTotalNum.value = num;
         if (!(_shader instanceof Shader)) {
-            _shader = new Shader("AntimatterPass",prepareShader(size));
+            _shader = new Shader("AntimatterPass", prepareShader(size));
             _shader.uniforms = _uniforms
         }
         _this.shader = _shader;
         _shader.uniforms.fSize.value = size
     }
-    ;
-    this.setUniform = function(key, value) {
+        ;
+    this.setUniform = function (key, value) {
         if (_shader && _shader.uniforms) {
             _shader.uniforms[key].value = value
         }
     }
-    ;
-    this.tween = function(key, value, time, ease, delay, callback, update) {
+        ;
+    this.tween = function (key, value, time, ease, delay, callback, update) {
         TweenManager.tween(_shader.uniforms[key], {
             value: value
         }, time, ease, delay, callback, update)
     }
-    ;
-    this.clone = function() {
-        return new AntimatterPass(_shader,_uni)
+        ;
+    this.clone = function () {
+        return new AntimatterPass(_shader, _uni)
     }
-    ;
-    this.destroy = function() {
-        _rts.forEach(function(rt) {
+        ;
+    this.destroy = function () {
+        _rts.forEach(function (rt) {
             rt && rt.dispose && rt.dispose()
         })
     }
@@ -11018,7 +11079,7 @@ Class(function AntimatterUtil() {
     Inherit(this, Component);
     var _this = this;
     var _thread;
-    (function() {
+    (function () {
         initThread()
     }
     )();
@@ -11051,11 +11112,11 @@ Class(function AntimatterUtil() {
             vertices: vertices
         }, id, [position.buffer, vertices.buffer])
     }
-    this.createBufferArray = function(size, num, callback) {
+    this.createBufferArray = function (size, num, callback) {
         _thread.createBufferArray({
             size: size,
             num: num
-        }, function(data) {
+        }, function (data) {
             callback(data.array, data.vertices)
         })
     }
@@ -11069,10 +11130,10 @@ Class(function BMFontLayout() {
     var TAB_ID = "\t".charCodeAt(0);
     var SPACE_ID = " ".charCodeAt(0);
     var ALIGN_LEFT = 0
-      , ALIGN_CENTER = 1
-      , ALIGN_RIGHT = 2;
+        , ALIGN_CENTER = 1
+        , ALIGN_RIGHT = 2;
     var wordWrap = new BMFontWordWrap();
-    var xtend = function(target) {
+    var xtend = function (target) {
         for (var i = 1; i < arguments.length; i++) {
             var source = arguments[i];
             for (var key in source) {
@@ -11083,23 +11144,23 @@ Class(function BMFontLayout() {
         }
         return target
     };
-    var findChar = (function(property) {
+    var findChar = (function (property) {
         if (!property || typeof property !== "string") {
             throw new Error("must specify property for indexof search")
         }
-        return new Function("array","value","start",["start = start || 0", "for (var i=start; i<array.length; i++)", '  if (array[i]["' + property + '"] === value)', "      return i", "return -1"].join("\n"))
+        return new Function("array", "value", "start", ["start = start || 0", "for (var i=start; i<array.length; i++)", '  if (array[i]["' + property + '"] === value)', "      return i", "return -1"].join("\n"))
     }
     )("id");
-    var number = function(num, def) {
+    var number = function (num, def) {
         return typeof num === "number" ? num : (typeof def === "number" ? def : 0)
     };
-    prototype.init = function(opt) {
+    prototype.init = function (opt) {
         this.glyphs = [];
         this._measure = this.computeMetrics.bind(this);
         this.update(opt)
     }
-    ;
-    prototype.update = function(opt) {
+        ;
+    prototype.update = function (opt) {
         opt = xtend({
             measure: this._measure
         }, opt);
@@ -11115,7 +11176,7 @@ Class(function BMFontLayout() {
         var lines = wordWrap.lines(text, opt);
         var minWidth = opt.width || 0;
         glyphs.length = 0;
-        var maxLineWidth = lines.reduce(function(prev, line) {
+        var maxLineWidth = lines.reduce(function (prev, line) {
             return Math.max(prev, line.width, minWidth)
         }, 0);
         var x = 0;
@@ -11136,7 +11197,7 @@ Class(function BMFontLayout() {
         this._lineHeight = lineHeight;
         this._ascender = lineHeight - descender - this._xHeight;
         var self = this;
-        lines.forEach(function(line, lineIndex) {
+        lines.forEach(function (line, lineIndex) {
             var start = line.start;
             var end = line.end;
             var lineWidth = line.width;
@@ -11171,8 +11232,8 @@ Class(function BMFontLayout() {
         });
         this._linesTotal = lines.length
     }
-    ;
-    prototype._setupSpaceGlyphs = function(font) {
+        ;
+    prototype._setupSpaceGlyphs = function (font) {
         this._fallbackSpaceGlyph = null;
         this._fallbackTabGlyph = null;
         if (!font.chars || font.chars.length === 0) {
@@ -11193,8 +11254,8 @@ Class(function BMFontLayout() {
             height: 0
         })
     }
-    ;
-    prototype.getGlyph = function(font, id) {
+        ;
+    prototype.getGlyph = function (font, id) {
         var glyph = getGlyphById(font, id);
         if (glyph) {
             return glyph
@@ -11209,8 +11270,8 @@ Class(function BMFontLayout() {
         }
         return null
     }
-    ;
-    prototype.computeMetrics = function(text, start, end, width) {
+        ;
+    prototype.computeMetrics = function (text, start, end, width) {
         var letterSpacing = this._opt.letterSpacing || 0;
         var font = this._opt.font;
         var curPen = 0;
@@ -11252,7 +11313,7 @@ Class(function BMFontLayout() {
             width: curWidth
         }
     }
-    ;
+        ;
     ["width", "height", "descender", "ascender", "xHeight", "baseline", "capHeight", "lineHeight"].forEach(addGetter);
     function addGetter(name) {
         Object.defineProperty(prototype, name, {
@@ -11324,7 +11385,7 @@ Class(function BMFontText(_opt) {
     Inherit(this, Component);
     var _this = this;
     var _layout;
-    (function() {
+    (function () {
         update()
     }
     )();
@@ -11338,7 +11399,7 @@ Class(function BMFontText(_opt) {
         var font = _opt.font;
         var texWidth = font.common.scaleW;
         var texHeight = font.common.scaleH;
-        var glyphs = _layout.glyphs.filter(function(glyph) {
+        var glyphs = _layout.glyphs.filter(function (glyph) {
             var bitmap = glyph.data;
             return bitmap.width * bitmap.height > 0
         });
@@ -11356,7 +11417,7 @@ Class(function BMFontText(_opt) {
         var scales = [];
         var newPositions = [];
         var newUvs = [];
-        indices.forEach(function(index) {
+        indices.forEach(function (index) {
             newPositions.push(positions[index * 3 + 0]);
             newPositions.push(positions[index * 3 + 1]);
             newPositions.push(positions[index * 3 + 2]);
@@ -11373,12 +11434,12 @@ Class(function BMFontText(_opt) {
             scales.push(1)
         });
         _this.geometry = new THREE.BufferGeometry();
-        var position = new THREE.BufferAttribute(new Float32Array(newPositions),3);
-        var uv = new THREE.BufferAttribute(new Float32Array(newUvs),2);
-        var letter = new THREE.BufferAttribute(new Float32Array(letters),1);
-        var offset = new THREE.BufferAttribute(new Float32Array(offsets),3);
-        var orientation = new THREE.BufferAttribute(new Float32Array(orientations),4);
-        var scale = new THREE.BufferAttribute(new Float32Array(scales),1);
+        var position = new THREE.BufferAttribute(new Float32Array(newPositions), 3);
+        var uv = new THREE.BufferAttribute(new Float32Array(newUvs), 2);
+        var letter = new THREE.BufferAttribute(new Float32Array(letters), 1);
+        var offset = new THREE.BufferAttribute(new Float32Array(offsets), 3);
+        var orientation = new THREE.BufferAttribute(new Float32Array(orientations), 4);
+        var scale = new THREE.BufferAttribute(new Float32Array(scales), 1);
         _this.geometry.addAttribute("position", position);
         _this.geometry.addAttribute("uv", uv);
         _this.geometry.addAttribute("letter", letter);
@@ -11391,7 +11452,7 @@ Class(function BMFontText(_opt) {
     function pages(glyphs) {
         var pages = new Float32Array(glyphs.length * 4 * 1);
         var i = 0;
-        glyphs.forEach(function(glyph) {
+        glyphs.forEach(function (glyph) {
             var id = glyph.data.page || 0;
             pages[i++] = id;
             pages[i++] = id;
@@ -11403,7 +11464,7 @@ Class(function BMFontText(_opt) {
     function getUvs(glyphs, texWidth, texHeight, flipY) {
         var uvs = new Float32Array(glyphs.length * 4 * 2);
         var i = 0;
-        glyphs.forEach(function(glyph) {
+        glyphs.forEach(function (glyph) {
             var bitmap = glyph.data;
             var bw = (bitmap.x + bitmap.width);
             var bh = (bitmap.y + bitmap.height);
@@ -11425,7 +11486,7 @@ Class(function BMFontText(_opt) {
     function getPositions(glyphs) {
         var positions = new Float32Array(glyphs.length * 3 * 4);
         var i = 0;
-        glyphs.forEach(function(glyph) {
+        glyphs.forEach(function (glyph) {
             var bitmap = glyph.data;
             var x = glyph.position[0] + bitmap.xoffset;
             var y = glyph.position[1] + bitmap.yoffset;
@@ -11448,26 +11509,26 @@ Class(function BMFontText(_opt) {
     }
     function dtype(dtype) {
         switch (dtype) {
-        case "int8":
-            return Int8Array;
-        case "int16":
-            return Int16Array;
-        case "int32":
-            return Int32Array;
-        case "uint8":
-            return Uint8Array;
-        case "uint16":
-            return Uint16Array;
-        case "uint32":
-            return Uint32Array;
-        case "float32":
-            return Float32Array;
-        case "float64":
-            return Float64Array;
-        case "array":
-            return Array;
-        case "uint8_clamped":
-            return Uint8ClampedArray
+            case "int8":
+                return Int8Array;
+            case "int16":
+                return Int16Array;
+            case "int32":
+                return Int32Array;
+            case "uint8":
+                return Uint8Array;
+            case "uint16":
+                return Uint16Array;
+            case "uint32":
+                return Uint32Array;
+            case "float32":
+                return Float32Array;
+            case "float64":
+                return Float64Array;
+            case "array":
+                return Array;
+            case "uint8_clamped":
+                return Uint8ClampedArray
         }
     }
     function createQuadElements(opt) {
@@ -11478,13 +11539,13 @@ Class(function BMFontText(_opt) {
         var count = typeof opt.count === "number" ? opt.count : 1;
         var start = (opt.start || 0);
         var dir = opt.clockwise !== false ? CW : CCW
-          , a = dir[0]
-          , b = dir[1]
-          , c = dir[2];
+            , a = dir[0]
+            , b = dir[1]
+            , c = dir[2];
         var numIndices = count * 6;
         var indices = [];
         for (var i = 0, j = 0; i < numIndices; i += 6,
-        j += 4) {
+            j += 4) {
             var x = i + start;
             indices[x + 0] = j + 0;
             indices[x + 1] = j + 1;
@@ -11526,7 +11587,7 @@ Class(function BMFontText(_opt) {
             this.boundingSphere.center.set(0, 0, 0);
             return
         }
-        var computeSphere = function(positions, output) {
+        var computeSphere = function (positions, output) {
             bounds(positions);
             var minX = box.min[0];
             var minY = box.min[1];
@@ -11554,7 +11615,7 @@ Class(function BMFontText(_opt) {
             bbox.makeEmpty();
             return
         }
-        var computeBox = function(positions, output) {
+        var computeBox = function (positions, output) {
             bounds(positions);
             output.min.set(box.min[0], box.min[1], 0);
             output.max.set(box.max[0], box.max[1], 0)
@@ -11646,7 +11707,7 @@ Class(function BMFontWordWrap() {
             end: start + glyphs
         }
     }
-    this.lines = function(text, opt) {
+    this.lines = function (text, opt) {
         opt = opt || {};
         if (opt.width === 0 && opt.mode !== "nowrap") {
             return []
@@ -11667,9 +11728,9 @@ Class(function BMFontWordWrap() {
 Class(function DateUtil() {
     Inherit(this, Model);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.getDate = function() {
+    this.getDate = function () {
         var date = new Date();
         var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         var month = months[date.getMonth()];
@@ -11691,22 +11752,22 @@ Class(function FoldMechanic() {
     var _progressVel = 0;
     var _progress = 0;
     var _steps = [{
-        dir: new Vector2(-1,-1),
+        dir: new Vector2(-1, -1),
         dist: 300
     }, {
-        dir: new Vector2(1,-1),
+        dir: new Vector2(1, -1),
         dist: 300
     }, {
-        dir: new Vector2(-2,-1),
+        dir: new Vector2(-2, -1),
         dist: 250
     }, {
-        dir: new Vector2(2,-1),
+        dir: new Vector2(2, -1),
         dist: 250
     }, {
-        dir: new Vector2(-1,0),
+        dir: new Vector2(-1, 0),
         dist: 300
-    }, ];
-    (function() {
+    },];
+    (function () {
         initInteraction();
         Render.start(loop)
     }
@@ -11761,26 +11822,26 @@ Class(function FoldMechanic() {
             }
         }
     }
-    this.next = function() {
+    this.next = function () {
         _this.disabled = false;
         _progressTarget = 0;
         _progressVel = 0;
         _progress = 0;
         _current++
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         Render.stop(loop)
     }
 });
 Class(function GATracker() {
-    this.trackPage = function(page) {
+    this.trackPage = function (page) {
         if (typeof ga !== "undefined") {
             ga("send", "pageview", page)
         }
     }
-    ;
-    this.trackEvent = function(category, action, label, value) {
+        ;
+    this.trackEvent = function (category, action, label, value) {
         if (typeof ga !== "undefined") {
             ga("send", "event", category, action, label, (value || 0))
         }
@@ -11818,98 +11879,98 @@ Class(function GPU() {
         var res = Math.min(screen.width, screen.height) + "x" + Math.max(screen.width, screen.height);
         var time = test();
         switch (res) {
-        case "320x480":
-            Device.graphics.webgl.gpu = "legacy";
-            break;
-        case "320x568":
-            if (time <= 400) {
-                Device.graphics.webgl.gpu = "apple a8"
-            } else {
-                if (time <= 500) {
-                    Device.graphics.webgl.gpu = "apple a7"
+            case "320x480":
+                Device.graphics.webgl.gpu = "legacy";
+                break;
+            case "320x568":
+                if (time <= 400) {
+                    Device.graphics.webgl.gpu = "apple a8"
                 } else {
-                    Device.graphics.webgl.gpu = "legacy"
-                }
-            }
-            break;
-        case "375x812":
-        case "414x896":
-            if (time <= 180) {
-                Device.graphics.webgl.gpu = "apple a12"
-            } else {
-                Device.graphics.webgl.gpu = "apple a11"
-            }
-            break;
-        default:
-        case "414x736":
-        case "375x667":
-        case "768x1024":
-            if (time <= 180) {
-                Device.graphics.webgl.gpu = "apple a12"
-            } else {
-                if (time <= 220) {
-                    Device.graphics.webgl.gpu = "apple a11"
-                } else {
-                    if (time <= 250) {
-                        Device.graphics.webgl.gpu = "apple a10"
+                    if (time <= 500) {
+                        Device.graphics.webgl.gpu = "apple a7"
                     } else {
-                        if (time <= 320) {
-                            Device.graphics.webgl.gpu = "apple a9"
+                        Device.graphics.webgl.gpu = "legacy"
+                    }
+                }
+                break;
+            case "375x812":
+            case "414x896":
+                if (time <= 180) {
+                    Device.graphics.webgl.gpu = "apple a12"
+                } else {
+                    Device.graphics.webgl.gpu = "apple a11"
+                }
+                break;
+            default:
+            case "414x736":
+            case "375x667":
+            case "768x1024":
+                if (time <= 180) {
+                    Device.graphics.webgl.gpu = "apple a12"
+                } else {
+                    if (time <= 220) {
+                        Device.graphics.webgl.gpu = "apple a11"
+                    } else {
+                        if (time <= 250) {
+                            Device.graphics.webgl.gpu = "apple a10"
                         } else {
-                            if (time <= 400) {
-                                Device.graphics.webgl.gpu = "apple a8"
+                            if (time <= 320) {
+                                Device.graphics.webgl.gpu = "apple a9"
                             } else {
-                                if (time <= 600) {
-                                    Device.graphics.webgl.gpu = "apple a7"
+                                if (time <= 400) {
+                                    Device.graphics.webgl.gpu = "apple a8"
                                 } else {
-                                    Device.graphics.webgl.gpu = "legacy"
+                                    if (time <= 600) {
+                                        Device.graphics.webgl.gpu = "apple a7"
+                                    } else {
+                                        Device.graphics.webgl.gpu = "legacy"
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            break;
-        case "834x1112":
-            if (time <= 180) {
-                Device.graphics.webgl.gpu = "apple a12"
-            } else {
-                if (time <= 220) {
-                    Device.graphics.webgl.gpu = "apple a11"
+                break;
+            case "834x1112":
+                if (time <= 180) {
+                    Device.graphics.webgl.gpu = "apple a12"
                 } else {
-                    Device.graphics.webgl.gpu = "apple a10"
-                }
-            }
-            break;
-        case "834x1194":
-            Device.graphics.webgl.gpu = "apple a12";
-            break;
-        case "1024x1366":
-            if (time <= 180) {
-                Device.graphics.webgl.gpu = "apple a12"
-            } else {
-                if (time <= 220) {
-                    Device.graphics.webgl.gpu = "apple a11"
-                } else {
-                    if (time <= 250) {
-                        Device.graphics.webgl.gpu = "apple a10"
+                    if (time <= 220) {
+                        Device.graphics.webgl.gpu = "apple a11"
                     } else {
-                        Device.graphics.webgl.gpu = "apple a9"
+                        Device.graphics.webgl.gpu = "apple a10"
                     }
                 }
-            }
-            break
+                break;
+            case "834x1194":
+                Device.graphics.webgl.gpu = "apple a12";
+                break;
+            case "1024x1366":
+                if (time <= 180) {
+                    Device.graphics.webgl.gpu = "apple a12"
+                } else {
+                    if (time <= 220) {
+                        Device.graphics.webgl.gpu = "apple a11"
+                    } else {
+                        if (time <= 250) {
+                            Device.graphics.webgl.gpu = "apple a10"
+                        } else {
+                            Device.graphics.webgl.gpu = "apple a9"
+                        }
+                    }
+                }
+                break
         }
     }
-    defer(function() {
-        _this.detect = function(match) {
+    defer(function () {
+        _this.detect = function (match) {
             if (!Device.graphics.webgl) {
                 return
             }
             return Device.graphics.webgl.detect(match)
         }
-        ;
-        _this.detectAll = function() {
+            ;
+        _this.detectAll = function () {
             if (!Device.graphics.webgl) {
                 return
             }
@@ -11921,7 +11982,7 @@ Class(function GPU() {
             }
             return match
         }
-        ;
+            ;
         _this.gpu = Device.graphics.webgl ? Device.graphics.webgl.gpu : "";
         if (Device.mobile && _this.gpu == "apple gpu") {
             matchiOS()
@@ -11943,7 +12004,7 @@ Class(function GPU() {
         }
         Mobile.iOS = require("iOSDevices").find();
         _this.BLACKLIST = require("GPUBlacklist").match();
-        _this.T0 = (function() {
+        _this.T0 = (function () {
             if (Device.mobile) {
                 return false
             }
@@ -11957,7 +12018,7 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.T1 = (function() {
+        _this.T1 = (function () {
             if (Device.mobile) {
                 return false
             }
@@ -11967,7 +12028,7 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.T2 = (function() {
+        _this.T2 = (function () {
             if (Device.mobile) {
                 return false
             }
@@ -11980,7 +12041,7 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.T3 = (function() {
+        _this.T3 = (function () {
             if (Device.mobile) {
                 return false
             }
@@ -11990,7 +12051,7 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.MT0 = (function() {
+        _this.MT0 = (function () {
             if (!Device.mobile) {
                 return false
             }
@@ -12007,7 +12068,7 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.MT1 = (function() {
+        _this.MT1 = (function () {
             if (!Device.mobile) {
                 return false
             }
@@ -12020,7 +12081,7 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.MT2 = (function() {
+        _this.MT2 = (function () {
             if (!Device.mobile) {
                 return false
             }
@@ -12034,7 +12095,7 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.MT3 = (function() {
+        _this.MT3 = (function () {
             if (!Device.mobile) {
                 return false
             }
@@ -12050,48 +12111,48 @@ Class(function GPU() {
             return false
         }
         )();
-        _this.lt = function(num) {
+        _this.lt = function (num) {
             if (_this.TIER > -1) {
                 return _this.TIER <= num
             }
             return false
         }
-        ;
-        _this.gt = function(num) {
+            ;
+        _this.gt = function (num) {
             if (_this.TIER > -1) {
                 return _this.TIER >= num
             }
             return false
         }
-        ;
-        _this.eq = function(num) {
+            ;
+        _this.eq = function (num) {
             if (_this.TIER > -1) {
                 return _this.TIER == num
             }
             return false
         }
-        ;
-        _this.mobileEq = function(num) {
+            ;
+        _this.mobileEq = function (num) {
             if (_this.M_TIER > -1) {
                 return _this.M_TIER == num
             }
             return false
         }
-        ;
-        _this.mobileLT = function(num) {
+            ;
+        _this.mobileLT = function (num) {
             if (_this.M_TIER > -1) {
                 return _this.M_TIER <= num
             }
             return false
         }
-        ;
-        _this.mobileGT = function(num) {
+            ;
+        _this.mobileGT = function (num) {
             if (_this.M_TIER > -1) {
                 return _this.M_TIER >= num
             }
             return false
         }
-        ;
+            ;
         for (var key in _this) {
             if (key.charAt(0) == "T" && _this[key] === true) {
                 _this.TIER = Number(key.charAt(1))
@@ -12105,11 +12166,11 @@ Class(function GPU() {
 }, "static");
 Module(function GPUBlacklist() {
     this.exports = {
-        match: function() {
+        match: function () {
             if (!Device.graphics.webgl) {
                 return true
             }
-            return Device.graphics.webgl.detect(["radeon hd 6970m", "radeon hd 6770m", "radeon hd 6490m", "radeon hd 6630m", "radeon hd 6750m", "radeon hd 5750", "radeon hd 5670", "radeon hd 4850", "radeon hd 4870", "radeon hd 4670", "geforce 9400m", "geforce 320m", "geforce 330m", "geforce gt 130", "geforce gt 120", "geforce gtx 285", "geforce 8600", "geforce 9600m", "geforce 9400m", "geforce 8800 gs", "geforce 8800 gt", "quadro fx 5", "quadro fx 4", "radeon hd 2600", "radeon hd 2400", "radeon hd 2600", "radeon r9 200", "mali-4", "mali-3", "mali-2", ])
+            return Device.graphics.webgl.detect(["radeon hd 6970m", "radeon hd 6770m", "radeon hd 6490m", "radeon hd 6630m", "radeon hd 6750m", "radeon hd 5750", "radeon hd 5670", "radeon hd 4850", "radeon hd 4870", "radeon hd 4670", "geforce 9400m", "geforce 320m", "geforce 330m", "geforce gt 130", "geforce gt 120", "geforce gtx 285", "geforce 8600", "geforce 9600m", "geforce 9400m", "geforce 8800 gs", "geforce 8800 gt", "quadro fx 5", "quadro fx 4", "radeon hd 2600", "radeon hd 2400", "radeon hd 2600", "radeon r9 200", "mali-4", "mali-3", "mali-2",])
         }
     }
 });
@@ -12143,7 +12204,7 @@ Class(function Nuke(_stage, _params) {
         format: THREE.RGBAFormat,
         stencilBuffer: false
     };
-    (function() {
+    (function () {
         initNuke();
         addListeners()
     }
@@ -12151,12 +12212,12 @@ Class(function Nuke(_stage, _params) {
     function initNuke() {
         var width = _this.stage.width * _dpr;
         var height = _this.stage.height * _dpr;
-        _rttPing = new THREE.WebGLRenderTarget(width,height,_parameters);
-        _rttPong = new THREE.WebGLRenderTarget(width,height,_parameters);
-        _rttCamera = new THREE.OrthographicCamera(_this.stage.width / -2,_this.stage.width / 2,_this.stage.height / 2,_this.stage.height / -2,1,1000);
+        _rttPing = new THREE.WebGLRenderTarget(width, height, _parameters);
+        _rttPong = new THREE.WebGLRenderTarget(width, height, _parameters);
+        _rttCamera = new THREE.OrthographicCamera(_this.stage.width / -2, _this.stage.width / 2, _this.stage.height / 2, _this.stage.height / -2, 1, 1000);
         _nukeScene = new THREE.Scene();
-        var geoPass = new THREE.PlaneBufferGeometry(2,2,1,1);
-        _nukeMesh = new THREE.Mesh(geoPass,new THREE.MeshBasicMaterial());
+        var geoPass = new THREE.PlaneBufferGeometry(2, 2, 1, 1);
+        _nukeMesh = new THREE.Mesh(geoPass, new THREE.MeshBasicMaterial());
         _nukeScene.add(_nukeMesh)
     }
     function finalRender(scene, camera) {
@@ -12178,35 +12239,35 @@ Class(function Nuke(_stage, _params) {
         if (_rttPong) {
             _rttPong.dispose()
         }
-        _rttPing = new THREE.WebGLRenderTarget(width,height,_parameters);
-        _rttPong = new THREE.WebGLRenderTarget(width,height,_parameters);
+        _rttPing = new THREE.WebGLRenderTarget(width, height, _parameters);
+        _rttPong = new THREE.WebGLRenderTarget(width, height, _parameters);
         _rttCamera.left = _this.stage.width / -2;
         _rttCamera.right = _this.stage.width / 2;
         _rttCamera.top = _this.stage.height / 2;
         _rttCamera.bottom = _this.stage.height / -2;
         _rttCamera.updateProjectionMatrix()
     }
-    _this.add = function(pass, index) {
+    _this.add = function (pass, index) {
         if (typeof index == "number") {
             _this.passes.splice(index, 0, pass);
             return
         }
         _this.passes.push(pass)
     }
-    ;
-    _this.remove = function(pass) {
+        ;
+    _this.remove = function (pass) {
         if (typeof pass == "number") {
             _this.passes.splice(pass)
         } else {
             _this.passes.findAndRemove(pass)
         }
     }
-    ;
-    _this.renderToTexture = function(clear, rtt) {
+        ;
+    _this.renderToTexture = function (clear, rtt) {
         _this.renderer.render(_this.scene, _this.camera, rtt || _rttPing, typeof clear == "boolean" ? clear : true)
     }
-    ;
-    _this.render = function() {
+        ;
+    _this.render = function () {
         if (!_this.enabled || !_this.passes.length) {
             finalRender(_this.scene);
             return
@@ -12225,19 +12286,19 @@ Class(function Nuke(_stage, _params) {
         _nukeMesh.material.uniforms.tDiffuse.value = pingPong ? _rttPing : _rttPong;
         finalRender(_nukeScene, _rttCamera)
     }
-    ;
-    _this.set("dpr", function(v) {
+        ;
+    _this.set("dpr", function (v) {
         _dpr = v || Device.pixelRatio;
         resizeHandler()
     });
-    this.get("dpr", function() {
+    this.get("dpr", function () {
         return _dpr
     })
 });
 Class(function NukePass(_fs, _vs) {
     Inherit(this, Component);
     var _this = this;
-    this.init = function(fs) {
+    this.init = function (fs) {
         _this = this;
         var name = fs || this.constructor.toString().match(/function ([^\(]+)/)[1];
         var fragmentShader = Array.isArray(fs) ? fs.join("") : null;
@@ -12253,20 +12314,20 @@ Class(function NukePass(_fs, _vs) {
         });
         _this.uniforms = _this.pass.uniforms
     }
-    ;
-    this.set = function(key, value) {
+        ;
+    this.set = function (key, value) {
         TweenManager.clearTween(_this.uniforms[key]);
         this.uniforms[key].value = value
     }
-    ;
-    this.tween = function(key, value, time, ease, delay, callback, update) {
+        ;
+    this.tween = function (key, value, time, ease, delay, callback, update) {
         TweenManager.tween(_this.uniforms[key], {
             value: value
         }, time, ease, delay, callback, update)
     }
-    ;
+        ;
     if (typeof _fs === "string") {
-        defer(function() {
+        defer(function () {
             _this.init(_fs)
         })
     }
@@ -12277,7 +12338,7 @@ Class(function Raycaster(_camera) {
     var _mouse = new THREE.Vector3();
     var _raycaster = new THREE.Raycaster();
     var _debug = null;
-    (function() {}
+    (function () { }
     )();
     function intersect(objects) {
         var hit;
@@ -12298,21 +12359,21 @@ Class(function Raycaster(_camera) {
         vertices[0].x += 1;
         _debug.geometry.verticesNeedUpdate = true
     }
-    this.set("camera", function(camera) {
+    this.set("camera", function (camera) {
         _camera = camera
     });
-    this.debug = function(scene) {
+    this.debug = function (scene) {
         var geom = new THREE.Geometry();
-        geom.vertices.push(new THREE.Vector3(-100,0,0));
-        geom.vertices.push(new THREE.Vector3(100,0,0));
+        geom.vertices.push(new THREE.Vector3(-100, 0, 0));
+        geom.vertices.push(new THREE.Vector3(100, 0, 0));
         var mat = new THREE.LineBasicMaterial({
             color: 16711680
         });
-        _debug = new THREE.Line(geom,mat);
+        _debug = new THREE.Line(geom, mat);
         scene.add(_debug)
     }
-    ;
-    this.checkHit = function(objects, mouse) {
+        ;
+    this.checkHit = function (objects, mouse) {
         mouse = mouse || Mouse;
         var rect = _this.rect || Stage;
         _mouse.x = (mouse.x / rect.width) * 2 - 1;
@@ -12320,8 +12381,8 @@ Class(function Raycaster(_camera) {
         _raycaster.setFromCamera(_mouse, _camera);
         return intersect(objects)
     }
-    ;
-    this.checkFromValues = function(objects, origin, direction) {
+        ;
+    this.checkFromValues = function (objects, origin, direction) {
         _raycaster.set(origin, direction, 0, Number.POSITIVE_INFINITY);
         return intersect(objects)
     }
@@ -12331,12 +12392,12 @@ Class(function ScreenProjection(_camera) {
     var _this = this;
     var _v3 = new THREE.Vector3();
     var _value = new THREE.Vector3();
-    (function() {}
+    (function () { }
     )();
-    this.set("camera", function(v) {
+    this.set("camera", function (v) {
         _camera = v
     });
-    this.unproject = function(mouse) {
+    this.unproject = function (mouse) {
         var rect = _this.rect || Stage;
         _v3.set((mouse.x / rect.width) * 2 - 1, -(mouse.y / rect.height) * 2 + 1, 0.5);
         _v3.unproject(_camera);
@@ -12346,8 +12407,8 @@ Class(function ScreenProjection(_camera) {
         _value.copy(pos).add(_v3.multiplyScalar(dist));
         return _value
     }
-    ;
-    this.project = function(pos, screen) {
+        ;
+    this.project = function (pos, screen) {
         screen = screen || Stage;
         if (pos instanceof THREE.Object3D) {
             pos.updateMatrixWorld();
@@ -12366,7 +12427,7 @@ Class(function RandomEulerRotation(_container) {
     var _euler = ["x", "y", "z"];
     var _rot;
     this.speed = 1;
-    (function() {
+    (function () {
         initRotation()
     }
     )();
@@ -12379,20 +12440,20 @@ Class(function RandomEulerRotation(_container) {
         _rot.vy = Utils.doRandom(-5, 5) * 0.0025;
         _rot.vz = Utils.doRandom(-5, 5) * 0.0025
     }
-    this.update = function() {
+    this.update = function () {
         var time = Render.TIME;
         for (var i = 0; i < 3; i++) {
             var v = _euler[i];
             switch (_rot[v]) {
-            case 0:
-                _container.rotation[v] += Math.cos(Math.sin(time * 0.25)) * _rot["v" + v] * _this.speed;
-                break;
-            case 1:
-                _container.rotation[v] += Math.cos(Math.sin(time * 0.25)) * _rot["v" + v] * _this.speed;
-                break;
-            case 2:
-                _container.rotation[v] += Math.cos(Math.cos(time * 0.25)) * _rot["v" + v] * _this.speed;
-                break
+                case 0:
+                    _container.rotation[v] += Math.cos(Math.sin(time * 0.25)) * _rot["v" + v] * _this.speed;
+                    break;
+                case 1:
+                    _container.rotation[v] += Math.cos(Math.sin(time * 0.25)) * _rot["v" + v] * _this.speed;
+                    break;
+                case 2:
+                    _container.rotation[v] += Math.cos(Math.cos(time * 0.25)) * _rot["v" + v] * _this.speed;
+                    break
             }
         }
     }
@@ -12400,7 +12461,7 @@ Class(function RandomEulerRotation(_container) {
 Class(function Shader(_vertexShader, _fragmentShader, _name, _material) {
     Inherit(this, Component);
     var _this = this;
-    (function() {
+    (function () {
         if (Hydra.LOCAL && _name) {
             expose()
         }
@@ -12414,12 +12475,12 @@ Class(function Shader(_vertexShader, _fragmentShader, _name, _material) {
         Dev.expose(_name, _this)
     }
     function process(code) {
-        var threeChunk = function(a, b) {
+        var threeChunk = function (a, b) {
             return THREE.ShaderChunk[b] + "\n"
         };
         return code.replace(/#s?chunk\(\s?(\w+)\s?\);/g, threeChunk)
     }
-    this.get("material", function() {
+    this.get("material", function () {
         if (!_material) {
             var params = {};
             params.vertexShader = process(Shaders.getShader(_vertexShader + ".vs") || _vertexShader);
@@ -12435,35 +12496,35 @@ Class(function Shader(_vertexShader, _fragmentShader, _name, _material) {
         }
         return _material
     });
-    this.set = function(key, value) {
+    this.set = function (key, value) {
         if (typeof value !== "undefined") {
             _this.uniforms[key].value = value
         }
         return _this.uniforms[key].value
     }
-    ;
-    this.getValues = function() {
+        ;
+    this.getValues = function () {
         var out = {};
         for (var key in _this.uniforms) {
             out[key] = _this.uniforms[key].value
         }
         return out
     }
-    ;
-    this.copyUniformsTo = function(obj) {
+        ;
+    this.copyUniformsTo = function (obj) {
         for (var key in _this.uniforms) {
             obj.uniforms[key] = _this.uniforms[key]
         }
     }
-    ;
-    this.tween = function(key, value, time, ease, delay, callback, update) {
+        ;
+    this.tween = function (key, value, time, ease, delay, callback, update) {
         TweenManager.tween(_this.uniforms[key], {
             value: value
         }, time, ease, delay, callback, update)
     }
-    ;
-    this.clone = function(name) {
-        return new Shader(_vertexShader,_fragmentShader,name || _name,_this.material.clone())
+        ;
+    this.clone = function (name) {
+        return new Shader(_vertexShader, _fragmentShader, name || _name, _this.material.clone())
     }
 });
 Class(function Utils3D() {
@@ -12471,35 +12532,35 @@ Class(function Utils3D() {
     var _objectLoader, _geomLoader, _bufferGeomLoader;
     var _textures = {};
     this.PATH = "";
-    this.decompose = function(local, world) {
+    this.decompose = function (local, world) {
         local.matrixWorld.decompose(world.position, world.quaternion, world.scale)
     }
-    ;
-    this.createDebug = function(size, color) {
-        var geom = new THREE.IcosahedronGeometry(size || 40,1);
+        ;
+    this.createDebug = function (size, color) {
+        var geom = new THREE.IcosahedronGeometry(size || 40, 1);
         var mat = color ? new THREE.MeshBasicMaterial({
             color: color
         }) : new THREE.MeshNormalMaterial();
-        return new THREE.Mesh(geom,mat)
+        return new THREE.Mesh(geom, mat)
     }
-    ;
-    this.createRT = function(width, height) {
+        ;
+    this.createRT = function (width, height) {
         var params = {
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
             format: THREE.RGBAFormat,
             stencilBuffer: false
         };
-        return new THREE.WebGLRenderTarget(width,height,params)
+        return new THREE.WebGLRenderTarget(width, height, params)
     }
-    ;
-    this.getTexture = function(path) {
+        ;
+    this.getTexture = function (path) {
         if (!_textures[path]) {
             var img = new Image();
             img.crossOrigin = "";
             img.src = _this.PATH + path;
             var texture = new THREE.Texture(img);
-            img.onload = function() {
+            img.onload = function () {
                 texture.needsUpdate = true;
                 if (texture.onload) {
                     texture.onload();
@@ -12509,24 +12570,24 @@ Class(function Utils3D() {
                     texture.minFilter = THREE.LinearFilter
                 }
             }
-            ;
+                ;
             _textures[path] = texture
         }
         return _textures[path]
     }
-    ;
-    this.setInfinity = function(v) {
+        ;
+    this.setInfinity = function (v) {
         var inf = Number.POSITIVE_INFINITY;
         v.set(inf, inf, inf);
         return v
     }
-    ;
-    this.freezeMatrix = function(mesh) {
+        ;
+    this.freezeMatrix = function (mesh) {
         mesh.matrixAutoUpdate = false;
         mesh.updateMatrix()
     }
-    ;
-    this.getCubemap = function(src) {
+        ;
+    this.getCubemap = function (src) {
         var path = "cube_" + (Array.isArray(src) ? src[0] : src);
         if (!_textures[path]) {
             var images = [];
@@ -12535,7 +12596,7 @@ Class(function Utils3D() {
                 img.crossOrigin = "";
                 img.src = _this.PATH + (Array.isArray(src) ? src[i] : src);
                 images.push(img);
-                img.onload = function() {
+                img.onload = function () {
                     _textures[path].needsUpdate = true
                 }
             }
@@ -12545,15 +12606,15 @@ Class(function Utils3D() {
         }
         return _textures[path]
     }
-    ;
-    this.loadObject = function(name) {
+        ;
+    this.loadObject = function (name) {
         if (!_objectLoader) {
             _objectLoader = new THREE.ObjectLoader()
         }
         return _objectLoader.parse(Hydra.JSON[name])
     }
-    ;
-    this.loadGeometry = function(name) {
+        ;
+    this.loadGeometry = function (name) {
         if (!_geomLoader) {
             _geomLoader = new THREE.JSONLoader()
         }
@@ -12567,20 +12628,20 @@ Class(function Utils3D() {
             return _geomLoader.parse(json.data).geometry
         }
     }
-    ;
-    this.disposeAllTextures = function() {
+        ;
+    this.disposeAllTextures = function () {
         for (var key in _textures) {
             _textures[key].dispose()
         }
     }
-    ;
-    this.disableWarnings = function() {
-        window.console.warn = function(str, msg) {}
         ;
-        window.console.error = function() {}
+    this.disableWarnings = function () {
+        window.console.warn = function (str, msg) { }
+            ;
+        window.console.error = function () { }
     }
-    ;
-    this.getGPUDetails = function(renderer) {
+        ;
+    this.getGPUDetails = function (renderer) {
         var gl = renderer.context;
         var info = gl.getExtension("WEBGL_debug_renderer_info");
         var output = {};
@@ -12594,8 +12655,8 @@ Class(function Utils3D() {
         _this.GPU_INFO = output;
         return output
     }
-    ;
-    this.detectGPU = function(matches) {
+        ;
+    this.detectGPU = function (matches) {
         var gpu = _this.GPU_INFO;
         if (gpu.gpu && gpu.gpu.strpos(matches)) {
             return true
@@ -12608,7 +12669,7 @@ Class(function Utils3D() {
 }, "static");
 Module(function iOSDevices() {
     this.exports = {
-        find: function() {
+        find: function () {
             if (Mobile.os != "iOS") {
                 return ""
             }
@@ -12635,7 +12696,7 @@ Module(function iOSDevices() {
         }
     }
 });
-(function(root) {
+(function (root) {
     var Klang;
     function Main(func) {
         Klang = func()
@@ -12643,7 +12704,7 @@ Module(function iOSDevices() {
     function Module(func) {
         func(Klang)
     }
-    Main(function() {
+    Main(function () {
         var Klang = {};
         Klang.version = Klang.versionNumber = 3;
         Klang.context;
@@ -12663,17 +12724,17 @@ Module(function iOSDevices() {
         Klang.Model = {};
         return Klang
     });
-    Module(function(Klang) {
-        return Klang.Model.Data = function(data, name) {
+    Module(function (Klang) {
+        return Klang.Model.Data = function (data, name) {
             this.data = data.data;
             this._name = name
         }
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         return Klang.core = {}
     });
-    Module(function(Klang) {
-        (function(detector) {
+    Module(function (Klang) {
+        (function (detector) {
             var supportedAudioFileSuffixes;
             function detectAudioFileSuffixes() {
                 var a = window.document.createElement("audio");
@@ -12739,8 +12800,8 @@ Module(function iOSDevices() {
         var detector = Klang.detector;
         return Klang.core.detector = detector
     });
-    Module(function(Klang) {
-        (function(network) {
+    Module(function (Klang) {
+        (function (network) {
             function isCrossDomain(url) {
                 var target = document.createElement("a");
                 target.href = url;
@@ -12755,22 +12816,22 @@ Module(function iOSDevices() {
                 options.type = options.type || "GET";
                 if (Klang.detector.browser.name == "MSIE" && Klang.detector.browser.version < 10) {
                     request = new window.XDomainRequest();
-                    request.onload = function() {
-                        setTimeout(function() {
+                    request.onload = function () {
+                        setTimeout(function () {
                             onDone && onDone(request.responseText)
                         }, 10)
                     }
-                    ;
-                    request.onprogress = onProgress || function() {}
-                    ;
-                    request.onerror = onError || function() {}
-                    ;
+                        ;
+                    request.onprogress = onProgress || function () { }
+                        ;
+                    request.onerror = onError || function () { }
+                        ;
                     request.open(options.type, options.url, true)
                 } else {
                     if (window.XMLHttpRequest) {
                         request = new XMLHttpRequest();
                         request.open(options.type, options.url, true);
-                        request.onreadystatechange = function() {
+                        request.onreadystatechange = function () {
                             try {
                                 if (request.readyState == 4 && request.status == 200) {
                                     if (onDone) {
@@ -12808,7 +12869,7 @@ Module(function iOSDevices() {
         var network = Klang.network;
         return Klang.core.network = network
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function FileHandler() {
             this.memUsage = 0;
             this._decoding = false;
@@ -12819,7 +12880,7 @@ Module(function iOSDevices() {
         }
         FileHandler.inst = null;
         Object.defineProperty(FileHandler, "instance", {
-            get: function() {
+            get: function () {
                 if (FileHandler.inst == null) {
                     FileHandler.inst = new FileHandler()
                 }
@@ -12831,7 +12892,7 @@ Module(function iOSDevices() {
         function createSilentBuffer() {
             return Klang.context.createBuffer(1, 1, Klang.context.sampleRate)
         }
-        FileHandler.prototype.sendProgressCallback = function(group) {
+        FileHandler.prototype.sendProgressCallback = function (group) {
             var loadGroup = this._groups[group];
             if (loadGroup.progressCallback && !loadGroup.loadInterrupted) {
                 var percent = 0;
@@ -12844,8 +12905,8 @@ Module(function iOSDevices() {
                 this._lastSentPercent = percent
             }
         }
-        ;
-        FileHandler.prototype.updateProgress = function(request, e) {
+            ;
+        FileHandler.prototype.updateProgress = function (request, e) {
             var group = request.load_group;
             if (!request.sizeReceived) {
                 request.sizeReceived = true;
@@ -12865,8 +12926,8 @@ Module(function iOSDevices() {
                 this.sendProgressCallback(group)
             }
         }
-        ;
-        FileHandler.prototype.decodeBufferQue = function() {
+            ;
+        FileHandler.prototype.decodeBufferQue = function () {
             var _this = this;
             if (this._bufferQue.length) {
                 var queItem = this._bufferQue.pop();
@@ -12874,7 +12935,7 @@ Module(function iOSDevices() {
                 var info = queItem.info;
                 var callback = queItem.callback;
                 this._decoding = true;
-                Klang.context.decodeAudioData(data, function(buf) {
+                Klang.context.decodeAudioData(data, function (buf) {
                     var group = _this._groups[info.load_group];
                     _this._decoding = false;
                     if (Klang.useMonoBuffers) {
@@ -12900,7 +12961,7 @@ Module(function iOSDevices() {
                             callback()
                         }
                     }
-                }, function(ex) {
+                }, function (ex) {
                     var group = _this._groups[info.load_group];
                     _this._decoding = false;
                     _this.addFile(info, createSilentBuffer());
@@ -12915,8 +12976,8 @@ Module(function iOSDevices() {
                 })
             }
         }
-        ;
-        FileHandler.prototype.loadAudioBuffer = function(info, callback) {
+            ;
+        FileHandler.prototype.loadAudioBuffer = function (info, callback) {
             var _this = this;
             var request = new XMLHttpRequest();
             var format = ".mp3";
@@ -12928,11 +12989,11 @@ Module(function iOSDevices() {
             request.responseType = "arraybuffer";
             request.sizeReceived = false;
             request.load_group = info.load_group;
-            request.onprogress = function(e) {
+            request.onprogress = function (e) {
                 _this.updateProgress(request, e)
             }
-            ;
-            request.onload = function(e) {
+                ;
+            request.onload = function (e) {
                 var group = _this._groups[info.load_group];
                 if (request.status != 200 || !request.response || !request.response.byteLength) {
                     _this.addFile(info, createSilentBuffer());
@@ -12941,7 +13002,7 @@ Module(function iOSDevices() {
                     }
                     try {
                         request.response = null
-                    } catch (e) {}
+                    } catch (e) { }
                     request = null;
                     return
                 }
@@ -12961,16 +13022,16 @@ Module(function iOSDevices() {
                 _this.decodeBufferQue();
                 try {
                     request.response = null
-                } catch (e) {}
+                } catch (e) { }
                 request = null
             }
-            ;
-            request.onreadystatechange = function() {
+                ;
+            request.onreadystatechange = function () {
                 if (request.readyState == 4 && request.status == 200) {
                 }
             }
-            ;
-            request.onerror = function() {
+                ;
+            request.onerror = function () {
                 var group = _this._groups[info.load_group];
                 if (!group || group.loadInterrupted) {
                     return
@@ -12980,53 +13041,53 @@ Module(function iOSDevices() {
                     callback()
                 }
             }
-            ;
+                ;
             request.send();
             this._groups[info.load_group].progress.totalAudioFiles++
         }
-        ;
-        FileHandler.prototype.loadMidiFile = function(info, callback) {
+            ;
+        FileHandler.prototype.loadMidiFile = function (info, callback) {
             var _this = this;
-            loadRemote(this._baseURL + info.url, function(request, e) {
+            loadRemote(this._baseURL + info.url, function (request, e) {
                 _this.updateProgress(request, e)
-            }, function(data) {
+            }, function (data) {
                 _this.addFile(info, readMidiFile(data));
                 if (callback) {
                     callback()
                 }
             })
         }
-        ;
-        FileHandler.prototype.loadMidiString = function(info) {
+            ;
+        FileHandler.prototype.loadMidiString = function (info) {
             var _this = this;
             var request = new XMLHttpRequest();
             request.open("GET", this._baseURL + info.url);
-            request.onprogress = function(e) {
+            request.onprogress = function (e) {
                 _this.updateProgress(request, e)
             }
-            ;
-            request.onreadystatechange = function() {
+                ;
+            request.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     _this.addFile(info, readMidiString(request.response))
                 }
             }
-            ;
+                ;
             request.send()
         }
-        ;
-        FileHandler.prototype.loadFiles = function(group, filesLoadedCallback, progressCallback, loadFailedCallback) {
+            ;
+        FileHandler.prototype.loadFiles = function (group, filesLoadedCallback, progressCallback, loadFailedCallback) {
             if (typeof group == "string") {
                 group = [group]
             }
             var groupsToLoad = group.length;
-            var _filesLoadedCallback = function() {
+            var _filesLoadedCallback = function () {
                 groupsToLoad--;
                 if (groupsToLoad === 0) {
                     filesLoadedCallback && filesLoadedCallback.apply(this, arguments)
                 }
             };
             var loadProgression = {};
-            var _progressCallback = function(prog) {
+            var _progressCallback = function (prog) {
                 if (progressCallback) {
                     loadProgression[this.name] = prog;
                     var cnt = 0;
@@ -13041,7 +13102,7 @@ Module(function iOSDevices() {
                     progressCallback(totProg)
                 }
             };
-            var _loadFailedCallback = function() {
+            var _loadFailedCallback = function () {
                 _filesLoadedCallback()
             };
             for (var ix = 0, len = group.length; ix < len; ix++) {
@@ -13068,15 +13129,15 @@ Module(function iOSDevices() {
                 var groupIx = group.indexOf(info.load_group);
                 if (groupIx != -1 && !this._files[info.id] && !info.only_audio_tag) {
                     switch (info.file_type) {
-                    case "audio":
-                        this.loadAudioBuffer(info);
-                        break;
-                    case "midi":
-                        this.loadMidiFile(info);
-                        break;
-                    case "midistring":
-                        this.loadMidiString(info);
-                        break
+                        case "audio":
+                            this.loadAudioBuffer(info);
+                            break;
+                        case "midi":
+                            this.loadMidiFile(info);
+                            break;
+                        case "midistring":
+                            this.loadMidiString(info);
+                            break
                     }
                     this._groups[group[groupIx]].progress.totalFiles++
                 }
@@ -13089,20 +13150,20 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        FileHandler.prototype.prepareFile = function(fileInfo) {
+            ;
+        FileHandler.prototype.prepareFile = function (fileInfo) {
             this._fileInfo.push(fileInfo)
         }
-        ;
-        FileHandler.prototype.prepareFiles = function(fileInfo) {
+            ;
+        FileHandler.prototype.prepareFiles = function (fileInfo) {
             var i, len;
             for (i = 0,
-            len = fileInfo.length; i < len; i++) {
+                len = fileInfo.length; i < len; i++) {
                 this.prepareFile(fileInfo[i])
             }
         }
-        ;
-        FileHandler.prototype.addFile = function(info, file) {
+            ;
+        FileHandler.prototype.addFile = function (info, file) {
             this._files[info.id] = file;
             this._groups[info.load_group].progress.bufferedFiles++;
             this._groups[info.load_group]._loadedFiles = this._groups[info.load_group]._loadedFiles || [];
@@ -13114,8 +13175,8 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        FileHandler.prototype.freeSoundFiles = function(group) {
+            ;
+        FileHandler.prototype.freeSoundFiles = function (group) {
             if (typeof group == "string") {
                 group = [group]
             }
@@ -13126,8 +13187,8 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        FileHandler.prototype.getLoadGroups = function() {
+            ;
+        FileHandler.prototype.getLoadGroups = function () {
             var i;
             var fileInfoArr = this._fileInfo || [];
             var groupTable = {};
@@ -13141,12 +13202,12 @@ Module(function iOSDevices() {
             }
             return listOfGroups
         }
-        ;
-        FileHandler.prototype.getFile = function(id) {
+            ;
+        FileHandler.prototype.getFile = function (id) {
             return this._files[id] || null
         }
-        ;
-        FileHandler.prototype.getFilesForLoadgroup = function(loadGroup) {
+            ;
+        FileHandler.prototype.getFilesForLoadgroup = function (loadGroup) {
             var ret = [];
             for (var ix = 0, len = this._fileInfo.length; ix < len; ix++) {
                 if (this._fileInfo[ix].load_group == loadGroup) {
@@ -13155,8 +13216,8 @@ Module(function iOSDevices() {
             }
             return ret
         }
-        ;
-        FileHandler.prototype.getFileInfo = function(fileId) {
+            ;
+        FileHandler.prototype.getFileInfo = function (fileId) {
             for (var ix = 0, len = this._fileInfo.length; ix < len; ix++) {
                 if (this._fileInfo[ix].id == fileId) {
                     return this._fileInfo[ix]
@@ -13164,23 +13225,23 @@ Module(function iOSDevices() {
             }
             return undefined
         }
-        ;
+            ;
         Object.defineProperty(FileHandler.prototype, "progress", {
-            get: function() {
+            get: function () {
                 return this._groups
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(FileHandler.prototype, "baseURL", {
-            set: function(url) {
+            set: function (url) {
                 this._baseURL = url
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(FileHandler.prototype, "fileInfo", {
-            set: function(fileInfo) {
+            set: function (fileInfo) {
                 this._fileInfo = fileInfo
             },
             enumerable: true,
@@ -13188,20 +13249,20 @@ Module(function iOSDevices() {
         });
         return Klang.core.FileHandler = FileHandler
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Scheduler() {
             this._updateTime = 100;
             this._lookAHead = this._updateTime * 2;
             this._callbacks = []
         }
-        Scheduler.prototype.scheduleClose = function(callback) {
+        Scheduler.prototype.scheduleClose = function (callback) {
             var timeOffset = callback.targetTime - Klang.context.currentTime;
-            setTimeout(function() {
+            setTimeout(function () {
                 callback.func.apply(callback.ctx)
             }, timeOffset * 1000)
         }
-        ;
-        Scheduler.prototype.runScheduler = function() {
+            ;
+        Scheduler.prototype.runScheduler = function () {
             if (this._callbacks.length > 0) {
                 var currentTime = Klang.context.currentTime;
                 for (var ix = 0; ix < this._callbacks.length; ix++) {
@@ -13214,32 +13275,32 @@ Module(function iOSDevices() {
                 }
                 this._lastTime = currentTime;
                 var _this = this;
-                this._scheduler = setTimeout(function() {
+                this._scheduler = setTimeout(function () {
                     _this.runScheduler()
                 }, _this._updateTime)
             } else {
                 this.stop()
             }
         }
-        ;
-        Scheduler.prototype.start = function() {
+            ;
+        Scheduler.prototype.start = function () {
             this._started = true;
             this._lastTime = Klang.context.currentTime;
             clearTimeout(this._scheduler);
             this.runScheduler()
         }
-        ;
-        Scheduler.prototype.stop = function() {
+            ;
+        Scheduler.prototype.stop = function () {
             this._started = false;
             clearTimeout(this._scheduler);
             this._scheduler = null
         }
-        ;
-        Scheduler.prototype.delay = function(targetTime, func, ctx) {
+            ;
+        Scheduler.prototype.delay = function (targetTime, func, ctx) {
             return this.at(Klang.context.currentTime + targetTime, func, ctx)
         }
-        ;
-        Scheduler.prototype.at = function(targetTime, func, ctx) {
+            ;
+        Scheduler.prototype.at = function (targetTime, func, ctx) {
             if (targetTime < Klang.context.currentTime) {
                 return this
             }
@@ -13253,8 +13314,8 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
-        Scheduler.prototype.cancel = function(func) {
+            ;
+        Scheduler.prototype.cancel = function (func) {
             for (var i = 0; i < this._callbacks.length; i++) {
                 if (this._callbacks[i]["func"] && this._callbacks[i]["func"] === func) {
                     this._callbacks.splice(i, 1);
@@ -13263,16 +13324,16 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
+            ;
         return Klang.core.Scheduler = Scheduler
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function TimeHandler() {
             this._callbacks = []
         }
         TimeHandler.inst = null;
         Object.defineProperty(TimeHandler, "instance", {
-            get: function() {
+            get: function () {
                 if (TimeHandler.inst == null) {
                     TimeHandler.inst = new TimeHandler()
                 }
@@ -13281,7 +13342,7 @@ Module(function iOSDevices() {
             enumerable: true,
             configurable: true
         });
-        TimeHandler.prototype.startScheduler = function() {
+        TimeHandler.prototype.startScheduler = function () {
             if (this._callbacks.length > 0) {
                 var currentTime = Klang.context.currentTime;
                 var deltaTime = currentTime - this._lastTime;
@@ -13296,28 +13357,28 @@ Module(function iOSDevices() {
                 }
                 this._lastTime = currentTime;
                 var _this = this;
-                this._scheduler = setTimeout(function() {
+                this._scheduler = setTimeout(function () {
                     _this.startScheduler()
                 }, Klang.core.Core.settings.timehandler_lookahead)
             } else {
                 this.stop()
             }
         }
-        ;
-        TimeHandler.prototype.start = function() {
+            ;
+        TimeHandler.prototype.start = function () {
             this._started = true;
             this._lastTime = Klang.context.currentTime;
             clearTimeout(this._scheduler);
             this.startScheduler()
         }
-        ;
-        TimeHandler.prototype.stop = function() {
+            ;
+        TimeHandler.prototype.stop = function () {
             this._started = false;
             clearTimeout(this._scheduler);
             this._scheduler = null
         }
-        ;
-        TimeHandler.prototype.registerMethodCallback = function(obj, func, targetTime) {
+            ;
+        TimeHandler.prototype.registerMethodCallback = function (obj, func, targetTime) {
             this._callbacks.push({
                 obj: obj,
                 func: func,
@@ -13329,8 +13390,8 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
-        TimeHandler.prototype.removeMethodCallback = function(obj, func) {
+            ;
+        TimeHandler.prototype.removeMethodCallback = function (obj, func) {
             for (var ix = 0, len = this._callbacks.length; ix < len; ix++) {
                 var callback = this._callbacks[ix];
                 if (callback.obj == obj && callback.func == func) {
@@ -13340,12 +13401,12 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
+            ;
         return Klang.core.TimeHandler = TimeHandler
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var Util;
-        (function(Util) {
+        (function (Util) {
             function setParam(param, value, when) {
                 param.setValueAtTime(value, when || Klang.context.currentTime)
             }
@@ -13459,21 +13520,21 @@ Module(function iOSDevices() {
             Util.LOG_WARN_COLOR = "DarkOrange";
             Util.LOG_ERROR_COLOR = "Red";
             function applyMixins(derivedCtor, baseCtors) {
-                baseCtors.forEach(function(baseCtor) {
-                    Object.getOwnPropertyNames(baseCtor.prototype).forEach(function(name) {
+                baseCtors.forEach(function (baseCtor) {
+                    Object.getOwnPropertyNames(baseCtor.prototype).forEach(function (name) {
                         derivedCtor.prototype[name] = baseCtor.prototype[name]
                     })
                 })
             }
             Util.lastEvent = undefined;
-            Util.clamp = function(value, min, max) {
+            Util.clamp = function (value, min, max) {
                 return Math.max(min, Math.min(max, value))
             }
-            ;
-            Util.clamp01 = function(value) {
+                ;
+            Util.clamp01 = function (value) {
                 return Util.clamp(value, 0, 1)
             }
-            ;
+                ;
             Util.vars = {};
             function random(max, min) {
                 min !== undefined ? min : 1;
@@ -13488,16 +13549,16 @@ Module(function iOSDevices() {
             function loadScriptFile(url, success, fail) {
                 var script = document.createElement("script");
                 script.async = true;
-                script.onload = function() {
+                script.onload = function () {
                     success && success();
                     script.onload = null
                 }
-                ;
-                script.onerror = function(e) {
+                    ;
+                script.onerror = function (e) {
                     fail && fail(e);
                     script.onerror = null
                 }
-                ;
+                    ;
                 script.src = url;
                 document.getElementsByTagName("head")[0].appendChild(script)
             }
@@ -13543,7 +13604,7 @@ Module(function iOSDevices() {
             function getParameterByName(name) {
                 name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
-                  , results = regex.exec(location.search);
+                    , results = regex.exec(location.search);
                 return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "))
             }
             Util.getParameterByName = getParameterByName;
@@ -13721,25 +13782,25 @@ Module(function iOSDevices() {
                 midiOut: null,
                 inputs: [],
                 outputs: [],
-                init: function(done) {
+                init: function (done) {
                     this.MIDIUtils.initUtils();
                     var _this = this;
-                    window.navigator.requestMIDIAccess().then(function(e) {
+                    window.navigator.requestMIDIAccess().then(function (e) {
                         _this.onMIDIStarted(e);
                         done && done()
                     }, this.onMIDISystemError)
                 },
-                onMIDISystemError: function(msg) {
+                onMIDISystemError: function (msg) {
                     console.log("Error encountered:", msg)
                 },
-                onMIDIStarted: function(midi) {
+                onMIDIStarted: function (midi) {
                     Util.MidiHandler.midiAccess = midi;
                     var inputs = midi.inputs;
-                    inputs.forEach(function(port) {
+                    inputs.forEach(function (port) {
                         Util.MidiHandler.inputs.push(port)
                     });
                     var outputs = midi.outputs;
-                    outputs.forEach(function(port) {
+                    outputs.forEach(function (port) {
                         Util.MidiHandler.outputs.push(port)
                     });
                     if (Util.MidiHandler.inputs.length) {
@@ -13751,7 +13812,7 @@ Module(function iOSDevices() {
                         return
                     }
                 },
-                midiMessageReceived: function(ev) {
+                midiMessageReceived: function (ev) {
                     var a = ev.data[0];
                     var cmd = ev.data[0] >> 4;
                     var channel = ev.data[0] & 15;
@@ -13759,8 +13820,8 @@ Module(function iOSDevices() {
                     var velocity = ev.data[2];
                     Util.MidiHandler.handleMidiData(a, cmd, channel, noteNumber, velocity)
                 },
-                handleMidiData: function(a, cmd, channel, noteNumber, velocity) {},
-                changeMidi: function(index) {
+                handleMidiData: function (a, cmd, channel, noteNumber, velocity) { },
+                changeMidi: function (index) {
                     this.midiOut = this.outputs[index];
                     this.midiIn = this.inputs[index]
                 },
@@ -13768,11 +13829,11 @@ Module(function iOSDevices() {
                     noteMap: {},
                     noteNumberMap: [],
                     notes: ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
-                    initUtils: function(argument) {
+                    initUtils: function (argument) {
                         for (var i = 0; i < 127; i++) {
                             var index = i
-                              , key = this.notes[index % 12]
-                              , octave = (index / 12 | 0) - 1;
+                                , key = this.notes[index % 12]
+                                , octave = (index / 12 | 0) - 1;
                             if (key.length === 1) {
                                 key = key + "-"
                             }
@@ -13781,23 +13842,23 @@ Module(function iOSDevices() {
                             this.noteNumberMap[i] = key
                         }
                     },
-                    getBaseLog: function(value, base) {
+                    getBaseLog: function (value, base) {
                         return Math.log(value) / Math.log(base)
                     },
-                    noteNameToNoteNumber: function(name) {
+                    noteNameToNoteNumber: function (name) {
                         return this.noteMap[name]
                     },
-                    noteNumberToFrequency: function(note) {
+                    noteNumberToFrequency: function (note) {
                         return 440 * Math.pow(2, (note - 69) / 12)
                     },
-                    noteNumberToName: function(note) {
+                    noteNumberToName: function (note) {
                         return this.noteNumberMap[note]
                     },
-                    frequencyToNoteNumber: function(f) {
+                    frequencyToNoteNumber: function (f) {
                         return Math.round(12 * this.getBaseLog(f / 440, 2) + 69)
                     }
                 },
-                play: function(note, noteLength, velocity) {
+                play: function (note, noteLength, velocity) {
                     if (typeof velocity === "undefined") {
                         velocity = 100
                     }
@@ -13805,24 +13866,24 @@ Module(function iOSDevices() {
                     console.log("On");
                     this.midiOut.send([128, note, 0], window.performance.now() + noteLength)
                 },
-                panic: function() {
+                panic: function () {
                     for (var i = 1; i < 128; ++i) {
                         this.midiOut.send([128, i, 0])
                     }
                 }
             }
         }(Util || (Util = {})));
-        Util.__extends = function(d, b) {
+        Util.__extends = function (d, b) {
             function __() {
                 this.constructor = d
             }
             __.prototype = b.prototype;
             d.prototype = new __()
         }
-        ;
+            ;
         return Klang.Util = Util
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Core() {
             this._initComplete = false;
             this._blurFadeOut = false;
@@ -13844,16 +13905,16 @@ Module(function iOSDevices() {
             }
             return Core.inst._initComplete
         }
-        ;
+            ;
         Object.defineProperty(Core.prototype, "initComplete", {
-            get: function() {
+            get: function () {
                 return this._initComplete
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Core, "instance", {
-            get: function() {
+            get: function () {
                 if (Core.inst == null) {
                     Core.inst = new Core()
                 }
@@ -13862,12 +13923,12 @@ Module(function iOSDevices() {
             enumerable: true,
             configurable: true
         });
-        Core.prototype.setCallbacks = function(callbacks) {
+        Core.prototype.setCallbacks = function (callbacks) {
             this._callbacks = callbacks
         }
-        ;
+            ;
         Object.defineProperty(Core, "callbacks", {
-            get: function() {
+            get: function () {
                 return Core.instance._callbacks
             },
             enumerable: true,
@@ -13876,8 +13937,8 @@ Module(function iOSDevices() {
         Core.deinit = function deinit() {
             Core.inst = null
         }
-        ;
-        Core.prototype.stopAll = function() {
+            ;
+        Core.prototype.stopAll = function () {
             if (window.KlangVisual) {
                 KlangVisual.stop()
             }
@@ -13885,15 +13946,15 @@ Module(function iOSDevices() {
                 if (this._objectTable[p].stop) {
                     try {
                         this._objectTable[p].stop()
-                    } catch (ex) {}
+                    } catch (ex) { }
                 }
             }
         }
-        ;
-        Core.prototype.loadJSON = function(options, readyCallback, progressCallback, url) {
-            this._readyCallback = readyCallback;
-            this._progressCallback = progressCallback || function() {}
             ;
+        Core.prototype.loadJSON = function (options, readyCallback, progressCallback, url) {
+            this._readyCallback = readyCallback;
+            this._progressCallback = progressCallback || function () { }
+                ;
             if (typeof options === "object") {
                 Klang.log("Loading config (editor)");
                 var data = this.createConfigNode(options);
@@ -13908,7 +13969,7 @@ Module(function iOSDevices() {
                     var request = new XMLHttpRequest();
                     request.open("GET", options, true);
                     var _this = this;
-                    request.onreadystatechange = function() {
+                    request.onreadystatechange = function () {
                         if (request.readyState == 4 && request.status == 200) {
                             var configText = request.responseText;
                             var data = _this.parseConfigJSON(configText);
@@ -13927,23 +13988,23 @@ Module(function iOSDevices() {
                             }
                         }
                     }
-                    ;
+                        ;
                     request.send(null)
                 } else {
                     throw "Klang exception: unrecognized options: '" + options + "'"
                 }
             }
         }
-        ;
-        Core.prototype.parseConfigJSON = function(jsonString) {
+            ;
+        Core.prototype.parseConfigJSON = function (jsonString) {
             if (typeof jsonString === "string") {
-                return JSON.parse(jsonString, function(key, value) {
+                return JSON.parse(jsonString, function (key, value) {
                     if (value && typeof value === "object" && typeof value.type === "string") {
                         if (!Klang.Model[value.type]) {
                             Klang.warn("Core: Type not found: " + value.type);
                             return null
                         }
-                        return new Klang.Model[value.type](value,key)
+                        return new Klang.Model[value.type](value, key)
                     }
                     return value
                 })
@@ -13954,12 +14015,12 @@ Module(function iOSDevices() {
                         Klang.warn("Core: Type not found: " + value.type);
                         return null
                     }
-                    return new Klang.Model[value.type](value,key)
+                    return new Klang.Model[value.type](value, key)
                 }
             }
         }
-        ;
-        Core.prototype.createConfigNode = function(node) {
+            ;
+        Core.prototype.createConfigNode = function (node) {
             if (typeof node === "object") {
                 for (var key in node) {
                     var prop = node[key];
@@ -13971,7 +14032,7 @@ Module(function iOSDevices() {
                             continue
                         }
                         node[key] = this.createConfigNode(prop);
-                        node[key] = new Klang.Model[prop.type](prop,key)
+                        node[key] = new Klang.Model[prop.type](prop, key)
                     } else {
                         node[key] = this.createConfigNode(prop)
                     }
@@ -13979,8 +14040,8 @@ Module(function iOSDevices() {
             }
             return node
         }
-        ;
-        Core.prototype.createObject = function(name, data, options) {
+            ;
+        Core.prototype.createObject = function (name, data, options) {
             if (!options) {
                 options = {}
             }
@@ -13991,7 +14052,7 @@ Module(function iOSDevices() {
             if (!options.excludeFromTable && this._objectTable[name]) {
                 Klang.warn("Core: Duplicate object: " + name)
             }
-            var obj = new Klang.Model[data.type](data,name);
+            var obj = new Klang.Model[data.type](data, name);
             if (!options.excludeFromTable) {
                 this._objectTable[name] = obj
             }
@@ -14014,8 +14075,8 @@ Module(function iOSDevices() {
             }
             return obj
         }
-        ;
-        Core.prototype.updateObject = function(object, data) {
+            ;
+        Core.prototype.updateObject = function (object, data) {
             var obj = typeof object == "string" ? this._objectTable[object] : object;
             if (obj._type == "SimpleProcess" && data.type == "AdvancedProcess") {
                 var advancedProcess = newAdvancedProcess(data, object);
@@ -14033,15 +14094,15 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        Core.prototype.createEvent = function(name, target) {
+            ;
+        Core.prototype.createEvent = function (name, target) {
             if (this._eventTable[name]) {
                 Klang.warn("Core: Duplicate event: " + name)
             }
             this._eventTable[name] = target
         }
-        ;
-        Core.prototype.visChange = function(fadeTime) {
+            ;
+        Core.prototype.visChange = function (fadeTime) {
             if (this.isHidden()) {
                 if (this._blurFadeOut) {
                     Klang.Util.curveParamLin(this._superMasterOutput.gain, 0, fadeTime)
@@ -14050,8 +14111,8 @@ Module(function iOSDevices() {
                 Klang.Util.curveParamLin(this._superMasterOutput.gain, 1, fadeTime)
             }
         }
-        ;
-        Core.prototype.initContent = function(data, files, url) {
+            ;
+        Core.prototype.initContent = function (data, files, url) {
             var relativePath = data.settings.relative_path;
             var baseURL;
             var filePath = data.settings.file_path || "";
@@ -14080,7 +14141,7 @@ Module(function iOSDevices() {
                 var visProp = this.getHiddenProp();
                 if (visProp) {
                     var evtname = "visibilitychange";
-                    document.addEventListener(evtname, function() {
+                    document.addEventListener(evtname, function () {
                         _this.visChange(fadeTime)
                     })
                 }
@@ -14135,21 +14196,21 @@ Module(function iOSDevices() {
             for (var ix = 0, len = this._connectStack.length; ix < len; ix++) {
                 var element = this._connectStack[ix];
                 switch (element.destinationName) {
-                case "$OUT":
-                    element.connect(this._superMasterOutput);
-                    break;
-                case "$PARENT":
-                    break;
-                default:
-                    var destination = this.findInstance(element.destinationName);
-                    if (!destination) {
-                        Klang.warn("Core: Destination not found: " + element.destinationName)
-                    }
-                    if (destination._type != "Bus") {
-                        Klang.warn("Core: Destination is not a bus: " + element.destinationName)
-                    }
-                    element.connect(destination.input);
-                    break
+                    case "$OUT":
+                        element.connect(this._superMasterOutput);
+                        break;
+                    case "$PARENT":
+                        break;
+                    default:
+                        var destination = this.findInstance(element.destinationName);
+                        if (!destination) {
+                            Klang.warn("Core: Destination not found: " + element.destinationName)
+                        }
+                        if (destination._type != "Bus") {
+                            Klang.warn("Core: Destination is not a bus: " + element.destinationName)
+                        }
+                        element.connect(destination.input);
+                        break
                 }
             }
             Klang.log("Nodes connected");
@@ -14165,29 +14226,29 @@ Module(function iOSDevices() {
                 setTimeout(Core.soundsLoaded, 4)
             }
         }
-        ;
-        Core.prototype.isHidden = function() {
+            ;
+        Core.prototype.isHidden = function () {
             var prop = this.getHiddenProp();
             if (!prop) {
                 return false
             }
             return document[prop]
         }
-        ;
-        Core.prototype.getHiddenProp = function() {
+            ;
+        Core.prototype.getHiddenProp = function () {
             var prefixes = ["webkit", "moz", "ms", "o"];
-            if ("hidden"in document) {
+            if ("hidden" in document) {
                 return "hidden"
             }
             for (var i = 0; i < prefixes.length; i++) {
-                if (prefixes[i] + "Hidden"in document) {
+                if (prefixes[i] + "Hidden" in document) {
                     return prefixes[i] + "Hidden"
                 }
             }
             return null
         }
-        ;
-        Core.prototype.setVars = function(vars) {
+            ;
+        Core.prototype.setVars = function (vars) {
             if (vars) {
                 for (var key in vars) {
                     if (typeof vars[key] == "string" && vars[key].indexOf("me.") > -1) {
@@ -14208,14 +14269,14 @@ Module(function iOSDevices() {
                 Klang.Util.vars = vars
             }
         }
-        ;
-        Core.prototype.loadSoundFiles = function(name, callback, progressCallback, loadFailedCallback) {
+            ;
+        Core.prototype.loadSoundFiles = function (name, callback, progressCallback, loadFailedCallback) {
             var start = new Date().getTime();
             if (progressCallback) {
                 this._progressCallback = progressCallback
             }
             var _this = this;
-            Klang.core.FileHandler.instance.loadFiles(name, function(success, loadedFiles) {
+            Klang.core.FileHandler.instance.loadFiles(name, function (success, loadedFiles) {
                 for (var i = 0; i < loadedFiles.length; i++) {
                     var fileId = loadedFiles[i].id;
                     for (var j in _this._objectTable) {
@@ -14233,8 +14294,8 @@ Module(function iOSDevices() {
                 callback && callback(true)
             }, this._progressCallback, loadFailedCallback)
         }
-        ;
-        Core.prototype.freeSoundFiles = function(name) {
+            ;
+        Core.prototype.freeSoundFiles = function (name) {
             Klang.core.FileHandler.instance.freeSoundFiles(name);
             for (var p in this._objectTable) {
                 var obj = this._objectTable[p];
@@ -14246,7 +14307,7 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
+            ;
         Core.soundsLoaded = function soundsLoaded() {
             Klang.log("Post load initialization started");
             var _this = Core.instance;
@@ -14259,40 +14320,40 @@ Module(function iOSDevices() {
                 _this._readyCallback(true)
             }
         }
-        ;
-        Core.prototype.pushToPreLoadInitStack = function(instance) {
+            ;
+        Core.prototype.pushToPreLoadInitStack = function (instance) {
             if (this._preLoadInitStack) {
                 this._preLoadInitStack.push(instance);
                 return true
             }
             return false
         }
-        ;
-        Core.prototype.pushToPostLoadInitStack = function(instance) {
+            ;
+        Core.prototype.pushToPostLoadInitStack = function (instance) {
             if (this._postLoadInitStack) {
                 this._postLoadInitStack.push(instance);
                 return true
             }
             return false
         }
-        ;
-        Core.prototype.pushToConnectStack = function(instance) {
+            ;
+        Core.prototype.pushToConnectStack = function (instance) {
             if (this._connectStack) {
                 this._connectStack.push(instance);
                 return true
             }
             return false
         }
-        ;
-        Core.prototype.findInstance = function(name) {
+            ;
+        Core.prototype.findInstance = function (name) {
             var instance = this._objectTable[name];
             if (!instance) {
                 Klang.warn("Core: Unknown reference: '" + name + "'")
             }
             return instance
         }
-        ;
-        Core.prototype.triggerEvent = function(id) {
+            ;
+        Core.prototype.triggerEvent = function (id) {
             var eventArgs = [];
             for (var _i = 0; _i < arguments.length - 1; _i++) {
                 eventArgs[_i] = arguments[_i + 1]
@@ -14337,35 +14398,35 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        Core.prototype.getSymbolId = function(symbol) {
+            ;
+        Core.prototype.getSymbolId = function (symbol) {
             return this._exportedSymbols[symbol]
         }
-        ;
-        Core.prototype.initIOS = function() {
+            ;
+        Core.prototype.initIOS = function () {
             var src = Klang.context.createBufferSource();
             src.start(0)
         }
-        ;
+            ;
         Object.defineProperty(Core.prototype, "timeHandler", {
-            get: function() {
+            get: function () {
                 return this._timeHandler
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Core.prototype, "output", {
-            get: function() {
+            get: function () {
                 return this._superMasterOutput
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Core.prototype, "blurFadeOut", {
-            get: function() {
+            get: function () {
                 return this._blurFadeOut
             },
-            set: function(state) {
+            set: function (state) {
                 this._blurFadeOut = state
             },
             enumerable: true,
@@ -14373,7 +14434,7 @@ Module(function iOSDevices() {
         });
         return Klang.core.Core = Core
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         Klang.READY_STATE_NOT_INITIATED = 0;
         Klang.READY_STATE_INITIATED = 1;
         Klang.READY_STATE_LOADED = 2;
@@ -14457,18 +14518,18 @@ Module(function iOSDevices() {
                 try {
                     if (typeof json === "string" && json.indexOf(".json") === -1 && json.indexOf(".js") > 1) {
                         var oldKLANG_CONFIG = window.KLANGCONFIG;
-                        Klang.Util.loadScriptFile(json, function() {
+                        Klang.Util.loadScriptFile(json, function () {
                             var config = window.KLANG_CONFIG;
                             window.KLANG_CONFIG = oldKLANG_CONFIG;
-                            Klang.audioTagHandler = new AudioTagHandler(config,function(success) {
+                            Klang.audioTagHandler = new AudioTagHandler(config, function (success) {
                                 Klang.readyState = Klang.READY_STATE_LOADED;
                                 readyCallback && readyCallback(success);
                                 processEventQue()
                             }
-                            ,progressCallback,json)
-                        }, function() {})
+                                , progressCallback, json)
+                        }, function () { })
                     } else {
-                        Klang.audioTagHandler = new AudioTagHandler(json,function(success) {
+                        Klang.audioTagHandler = new AudioTagHandler(json, function (success) {
                             Klang.readyState = Klang.READY_STATE_LOADED;
                             readyCallback && readyCallback(success);
                             var end = new Date().getTime();
@@ -14476,7 +14537,7 @@ Module(function iOSDevices() {
                             Klang.log("Execution time: " + time);
                             processEventQue()
                         }
-                        ,progressCallback,json)
+                            , progressCallback, json)
                     }
                 } catch (ex) {
                     Klang.err("Klang exception: unable to initialize audio tag fallback");
@@ -14493,17 +14554,17 @@ Module(function iOSDevices() {
                 }
                 if (typeof json === "string" && json.indexOf(".json") === -1 && json.indexOf(".js") > 1) {
                     var oldKLANG_CONFIG = window.KLANG_CONFIG;
-                    Klang.Util.loadScriptFile(json, function() {
+                    Klang.Util.loadScriptFile(json, function () {
                         var config = window.KLANG_CONFIG;
                         window.KLANG_CONFIG = oldKLANG_CONFIG;
-                        Klang.core.Core.instance.loadJSON(config, function(success) {
+                        Klang.core.Core.instance.loadJSON(config, function (success) {
                             Klang.readyState = Klang.READY_STATE_LOADED;
                             readyCallback && readyCallback(success);
                             processEventQue()
                         }, progressCallback, json)
-                    }, function() {})
+                    }, function () { })
                 } else {
-                    Klang.core.Core.instance.loadJSON(json, function(success) {
+                    Klang.core.Core.instance.loadJSON(json, function (success) {
                         Klang.readyState = Klang.READY_STATE_LOADED;
                         readyCallback && readyCallback(success);
                         processEventQue();
@@ -14534,10 +14595,10 @@ Module(function iOSDevices() {
                 }
             }
         }
-        Klang.initIOS = function(debugButton) {
+        Klang.initIOS = function (debugButton) {
             initIOS()
         }
-        ;
+            ;
         function getLoadGroups() {
             var listOfGroups = [];
             var fileHandler;
@@ -14558,14 +14619,14 @@ Module(function iOSDevices() {
             return listOfGroups
         }
         Klang.getLoadGroups = getLoadGroups;
-        Klang.getCoreInstance = function() {
+        Klang.getCoreInstance = function () {
             return Klang.core.Core.instance
         }
-        ;
-        Klang.getFileHandlerInstance = function() {
+            ;
+        Klang.getFileHandlerInstance = function () {
             return Klang.core.FileHandler.instance
         }
-        ;
+            ;
         function getUtil() {
             return Util
         }
@@ -14626,7 +14687,7 @@ Module(function iOSDevices() {
                 if (Klang.engineVersion == "webaudio") {
                     Klang.core.Core.instance.freeSoundFiles(name)
                 } else {
-                    if (Klang.engineVersion == "audiotag") {}
+                    if (Klang.engineVersion == "audiotag") { }
                 }
             } catch (ex) {
                 Klang.err("Klang exception: unable to free file group: '" + name + "': " + ex.name + ": " + ex.message)
@@ -14671,12 +14732,12 @@ Module(function iOSDevices() {
                     }
                 }
             } else {
-                if (Klang.engineVersion == "audiotag") {}
+                if (Klang.engineVersion == "audiotag") { }
             }
         }
         Klang.$ = $
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function log() {
             var args = [];
             for (var _i = 0; _i < arguments.length - 0; _i++) {
@@ -14777,7 +14838,7 @@ Module(function iOSDevices() {
         Klang.setCallbacks = setCallbacks;
         function schedulePredefinedEvents(events) {
             var nextEventIx = 0;
-            var eventInterval = setInterval(function() {
+            var eventInterval = setInterval(function () {
                 var now = Klang.context.currentTime;
                 var e = events[nextEventIx];
                 while (e.time < now) {
@@ -14809,9 +14870,9 @@ Module(function iOSDevices() {
         }
         Klang.deinit = deinit
     });
-    Module(function(Klang) {
-        function EventEmitter() {}
-        EventEmitter.prototype.on = function(name, callback, context) {
+    Module(function (Klang) {
+        function EventEmitter() { }
+        EventEmitter.prototype.on = function (name, callback, context) {
             this._events = this._events || {};
             var events = this._events[name] || (this._events[name] = []);
             events.push({
@@ -14821,8 +14882,8 @@ Module(function iOSDevices() {
             });
             return this
         }
-        ;
-        EventEmitter.prototype.off = function(name, callback, context) {
+            ;
+        EventEmitter.prototype.off = function (name, callback, context) {
             var i, len, listener, retain;
             if (!this._events || !this._events[name]) {
                 return this
@@ -14835,7 +14896,7 @@ Module(function iOSDevices() {
                 retain = [];
                 if (callback && context) {
                     for (i = 0,
-                    len = eventListeners.length; i < len; i++) {
+                        len = eventListeners.length; i < len; i++) {
                         listener = eventListeners[i];
                         if (callback !== listener.callback && context !== listener.ctxArg) {
                             retain.push(eventListeners[i])
@@ -14844,7 +14905,7 @@ Module(function iOSDevices() {
                 } else {
                     if (callback) {
                         for (i = 0,
-                        len = eventListeners.length; i < len; i++) {
+                            len = eventListeners.length; i < len; i++) {
                             listener = eventListeners[i];
                             if (callback !== listener.callback) {
                                 retain.push(eventListeners[i])
@@ -14853,7 +14914,7 @@ Module(function iOSDevices() {
                     } else {
                         if (context) {
                             for (i = 0,
-                            len = eventListeners.length; i < len; i++) {
+                                len = eventListeners.length; i < len; i++) {
                                 listener = eventListeners[i];
                                 if (context !== listener.ctxArg) {
                                     retain.push(eventListeners[i])
@@ -14869,8 +14930,8 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
-        EventEmitter.prototype.trigger = function(name) {
+            ;
+        EventEmitter.prototype.trigger = function (name) {
             var args = [];
             for (var _i = 0; _i < arguments.length - 1; _i++) {
                 args[_i] = arguments[_i + 1]
@@ -14887,30 +14948,30 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
+            ;
         return Klang.core.EventEmitter = EventEmitter
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function SyncCountdown(targetStep, process, args) {
             this._currentStep = 0;
             this._targetStep = targetStep;
             this._process = process;
             this._args = args
         }
-        SyncCountdown.prototype.advance = function(step) {
+        SyncCountdown.prototype.advance = function (step) {
             this._currentStep += step
         }
-        ;
-        SyncCountdown.prototype.performAction = function() {
+            ;
+        SyncCountdown.prototype.performAction = function () {
             if (typeof this._process == "string") {
-                new Function("Core","Model","Util","args",this._process)(Klang.core.Core, Klang.Model, Klang.Util, this._args)
+                new Function("Core", "Model", "Util", "args", this._process)(Klang.core.Core, Klang.Model, Klang.Util, this._args)
             } else {
                 this._process.start(this._args)
             }
         }
-        ;
+            ;
         Object.defineProperty(SyncCountdown.prototype, "finished", {
-            get: function() {
+            get: function () {
                 return this._currentStep >= this._targetStep
             },
             enumerable: true,
@@ -14918,15 +14979,15 @@ Module(function iOSDevices() {
         });
         return Klang.core.SyncCountdown = SyncCountdown
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function SyncHandler() {
             this._timers = []
         }
-        SyncHandler.prototype.addSyncCountdown = function(countdown) {
+        SyncHandler.prototype.addSyncCountdown = function (countdown) {
             this._timers.push(countdown)
         }
-        ;
-        SyncHandler.prototype.update = function(step) {
+            ;
+        SyncHandler.prototype.update = function (step) {
             for (var ix = 0; ix < this._timers.length; ix++) {
                 var countdown = this._timers[ix];
                 countdown.advance(step);
@@ -14937,11 +14998,11 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
+            ;
         return Klang.core.SyncHandler = SyncHandler
     });
-    Module(function() {});
-    Module(function(Klang) {
+    Module(function () { });
+    Module(function (Klang) {
         function Audio(data, name) {
             this.data = data;
             this._name = name;
@@ -14956,58 +15017,58 @@ Module(function iOSDevices() {
                 }
             }
         }
-        Audio.prototype.connect = function(destination) {
+        Audio.prototype.connect = function (destination) {
             Klang.warn("Audio: Invocation of abstract method: Audio.connect in", this);
             return this
         }
-        ;
-        Audio.prototype.disconnect = function() {
+            ;
+        Audio.prototype.disconnect = function () {
             Klang.warn("Audio: Invocation of abstract method: Audio.disconnect in", this);
             return this
         }
-        ;
-        Audio.prototype.play = function(when, offset) {
+            ;
+        Audio.prototype.play = function (when, offset) {
             Klang.warn("Audio: Invocation of abstract method: Audio.play in", this);
             return this
         }
-        ;
-        Audio.prototype.stop = function(when) {
+            ;
+        Audio.prototype.stop = function (when) {
             Klang.warn("Audio: Invocation of abstract method: Audio.stop in", this);
             return this
         }
-        ;
-        Audio.prototype.pause = function() {
+            ;
+        Audio.prototype.pause = function () {
             Klang.warn("Audio: Invocation of abstract method: Audio.pause in", this);
             return this
         }
-        ;
-        Audio.prototype.unpause = function() {
+            ;
+        Audio.prototype.unpause = function () {
             Klang.warn("Audio: Invocation of abstract method: Audio.unpause in", this);
             return this
         }
-        ;
-        Audio.prototype.curvePlaybackRate = function(value, duration) {
+            ;
+        Audio.prototype.curvePlaybackRate = function (value, duration) {
             Klang.warn("Audio: Invocation of abstract method: Audio.curvePlaybackRate in", this);
             return this
         }
-        ;
-        Audio.prototype.fadeInAndPlay = function(duration, when) {
+            ;
+        Audio.prototype.fadeInAndPlay = function (duration, when) {
             console.warn("Audio: Invocation of abstract method: Audio.fadeInAndPlay in", this);
             return this
         }
-        ;
-        Audio.prototype.fadeOutAndStop = function(duration, when) {
+            ;
+        Audio.prototype.fadeOutAndStop = function (duration, when) {
             console.warn("Audio: Invocation of abstract method: Audio.fadeOutAndStop in", this);
             return this
         }
-        ;
-        Audio.prototype.deschedule = function() {
+            ;
+        Audio.prototype.deschedule = function () {
             console.warn("Audio: Invocation of abstract method: Audio.deschedule in", this);
             return this
         }
-        ;
+            ;
         Object.defineProperty(Audio.prototype, "playbackRate", {
-            set: function(value) {
+            set: function (value) {
                 Klang.warn("Audio: Invocation of abstract property: Audio.playbackRate in", this);
                 return this
             },
@@ -15015,7 +15076,7 @@ Module(function iOSDevices() {
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "playing", {
-            get: function() {
+            get: function () {
                 Klang.warn("Audio: Invocation of abstract property: Audio.playing in", this);
                 return false
             },
@@ -15023,7 +15084,7 @@ Module(function iOSDevices() {
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "duration", {
-            get: function() {
+            get: function () {
                 Klang.warn("Audio: Invocation of abstract property: Audio.duration in", this);
                 return 0
             },
@@ -15031,21 +15092,21 @@ Module(function iOSDevices() {
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "output", {
-            get: function() {
+            get: function () {
                 return this._output
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "playbackState", {
-            get: function() {
+            get: function () {
                 Klang.warn("Audio: Invocation of abstract property: Audio.playbackState in", this);
                 return 0
             },
             enumerable: true,
             configurable: true
         });
-        Audio.prototype.setData = function(data) {
+        Audio.prototype.setData = function (data) {
             this._volume = data.volume === undefined ? 1 : data.volume;
             this._output.gain.value = this._volume;
             if (this.destinationName != data.destination_name) {
@@ -15054,17 +15115,17 @@ Module(function iOSDevices() {
                 this.connect(Klang.core.Core.instance.findInstance(this.destinationName).input)
             }
         }
-        ;
-        Audio.prototype.clone = function() {
-            var clone = new this["constructor"](this.data,this._name);
+            ;
+        Audio.prototype.clone = function () {
+            var clone = new this["constructor"](this.data, this._name);
             clone.connect(Klang.core.Core.instance.findInstance(this.destinationName).input);
             return clone
         }
-        ;
+            ;
         return Klang.Model.Audio = Audio
     });
-    Module(function(Klang) {
-        var AudioSource = function(_super) {
+    Module(function (Klang) {
+        var AudioSource = function (_super) {
             Klang.Util.__extends(AudioSource, _super);
             function AudioSource(data, name) {
                 _super.call(this, data, name);
@@ -15120,7 +15181,7 @@ Module(function iOSDevices() {
                     this.init()
                 }
             }
-            AudioSource.prototype.init = function() {
+            AudioSource.prototype.init = function () {
                 if (this._fileId) {
                     if (typeof this._fileId == "string") {
                         this._buffer = Klang.core.FileHandler.instance.getFile(this._fileId)
@@ -15172,8 +15233,8 @@ Module(function iOSDevices() {
                     crossfade(this._buffer, loopStart, loopEnd, fadeLength)
                 }
             }
-            ;
-            AudioSource.prototype.setLoopRegion = function(loopStart, loopEnd) {
+                ;
+            AudioSource.prototype.setLoopRegion = function (loopStart, loopEnd) {
                 this._loopStart = loopStart || this._loopStart;
                 this._loopEnd = loopEnd || this._loopEnd;
                 for (var ix = 0, len = this._sources.length; ix < len; ix++) {
@@ -15183,8 +15244,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.connect = function(destination, forceConnect) {
+                ;
+            AudioSource.prototype.connect = function (destination, forceConnect) {
                 if (!this._destination || forceConnect) {
                     this._destination = destination;
                     if (this._panner) {
@@ -15196,8 +15257,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.disconnect = function() {
+                ;
+            AudioSource.prototype.disconnect = function () {
                 this._output.disconnect();
                 this._destination = null;
                 if (this._panner) {
@@ -15205,8 +15266,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.scheduleGrain = function() {
+                ;
+            AudioSource.prototype.scheduleGrain = function () {
                 if (!this._buffer) {
                     return
                 }
@@ -15249,18 +15310,18 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            AudioSource.prototype.granularSchedule = function(when) {
+                ;
+            AudioSource.prototype.granularSchedule = function (when) {
                 while (this._granular.realTime < when + 0.1) {
                     this.scheduleGrain()
                 }
                 var _this = this;
-                this._granular.scheduleId = setTimeout(function() {
+                this._granular.scheduleId = setTimeout(function () {
                     _this.granularSchedule(Klang.context.currentTime)
                 }, 20)
             }
-            ;
-            AudioSource.prototype.play = function(when, offset, duration, resume) {
+                ;
+            AudioSource.prototype.play = function (when, offset, duration, resume) {
                 if (typeof when === "undefined") {
                     when = 0
                 }
@@ -15324,7 +15385,7 @@ Module(function iOSDevices() {
                         this._stopping = false;
                         return
                     } else {
-                        if (!this._fading) {}
+                        if (!this._fading) { }
                     }
                     this._fading = false;
                     if (!this._retrig && !this.loop) {
@@ -15388,12 +15449,12 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.getNumberOfSamples = function() {
+                ;
+            AudioSource.prototype.getNumberOfSamples = function () {
                 return this._buffer.length
             }
-            ;
-            AudioSource.prototype.stop = function(when) {
+                ;
+            AudioSource.prototype.stop = function (when) {
                 if (typeof when === "undefined") {
                     when = 0
                 }
@@ -15428,8 +15489,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.deschedule = function() {
+                ;
+            AudioSource.prototype.deschedule = function () {
                 for (var ix = 0; ix < this._sources.length; ix++) {
                     var source = this._sources[ix];
                     if (source.startTime > Klang.context.currentTime) {
@@ -15442,8 +15503,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.pause = function() {
+                ;
+            AudioSource.prototype.pause = function () {
                 if (this._endTime > Klang.Util.now()) {
                     this._paused = true;
                     var pauseDelta = Klang.Util.now() - this._startTime;
@@ -15452,8 +15513,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.unpause = function() {
+                ;
+            AudioSource.prototype.unpause = function () {
                 if (this.paused) {
                     var realOffset = this._offset;
                     this._offset += this._pauseTime;
@@ -15463,15 +15524,15 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            AudioSource.prototype.createBufferSource = function() {
+                ;
+            AudioSource.prototype.createBufferSource = function () {
                 var source = Klang.context.createBufferSource();
                 source.playbackRate.value = this._playbackRate;
                 this._sources.push(source);
                 return source
             }
-            ;
-            AudioSource.prototype.fadeInAndPlay = function(fadeDuration, when, offset, duration) {
+                ;
+            AudioSource.prototype.fadeInAndPlay = function (fadeDuration, when, offset, duration) {
                 if (typeof offset === "undefined") {
                     offset = 0
                 }
@@ -15502,8 +15563,8 @@ Module(function iOSDevices() {
                 this.output.gain.linearRampToValueAtTime(this._volume, when + fadeDuration);
                 return this
             }
-            ;
-            AudioSource.prototype.fadeOutAndStop = function(duration, when) {
+                ;
+            AudioSource.prototype.fadeOutAndStop = function (duration, when) {
                 if (!this.playing) {
                     return
                 }
@@ -15517,7 +15578,7 @@ Module(function iOSDevices() {
                 this.output.gain.setValueAtTime(this.output.gain.value || this._volume, when);
                 this.output.gain.linearRampToValueAtTime(0, when + duration);
                 var _this = this;
-                this._stoppingId = setTimeout(function() {
+                this._stoppingId = setTimeout(function () {
                     if (!_this._stopping) {
                         return
                     }
@@ -15530,8 +15591,8 @@ Module(function iOSDevices() {
                 this._stopping = true;
                 return this
             }
-            ;
-            AudioSource.prototype.removeUnusedSources = function() {
+                ;
+            AudioSource.prototype.removeUnusedSources = function () {
                 for (var ix = 0; ix < this._sources.length; ix++) {
                     var source = this._sources[ix];
                     if (!source.buffer || !this.loop && source.startTime + source.buffer.duration < Klang.context.currentTime) {
@@ -15541,8 +15602,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            AudioSource.prototype.curvePlaybackRate = function(value, duration, when) {
+                ;
+            AudioSource.prototype.curvePlaybackRate = function (value, duration, when) {
                 if (this._lockPlaybackrate) {
                     return
                 }
@@ -15556,9 +15617,9 @@ Module(function iOSDevices() {
                 this._playbackRate = value;
                 return this
             }
-            ;
+                ;
             Object.defineProperty(AudioSource.prototype, "lastSource", {
-                get: function() {
+                get: function () {
                     var numSources = this._sources.length;
                     if (numSources == 0) {
                         return null
@@ -15569,20 +15630,20 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "loop", {
-                get: function() {
+                get: function () {
                     return this._loop
                 },
-                set: function(value) {
+                set: function (value) {
                     this._loop = value
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "offset", {
-                get: function() {
+                get: function () {
                     return this._offset
                 },
-                set: function(value) {
+                set: function (value) {
                     if (typeof value === "string" && value.indexOf("%") !== -1) {
                         value = this._duration * parseFloat(value)
                     }
@@ -15592,7 +15653,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "position", {
-                get: function() {
+                get: function () {
                     if (!this.playing || !this._duration) {
                         return 0
                     }
@@ -15612,27 +15673,27 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "duration", {
-                get: function() {
+                get: function () {
                     return this._duration
                 },
-                set: function(value) {
+                set: function (value) {
                     this._duration = value
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "paused", {
-                get: function() {
+                get: function () {
                     return this._paused
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "playbackRate", {
-                get: function() {
+                get: function () {
                     return this._playbackRate
                 },
-                set: function(value) {
+                set: function (value) {
                     if (this._lockPlaybackrate) {
                         return
                     }
@@ -15649,7 +15710,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "nextPlaybackRate", {
-                set: function(value) {
+                set: function (value) {
                     if (this._lockPlaybackrate) {
                         return
                     }
@@ -15659,7 +15720,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "playbackRateNode", {
-                get: function() {
+                get: function () {
                     var source = this.lastSource;
                     return source && source.playbackRate
                 },
@@ -15667,27 +15728,27 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "buffer", {
-                get: function() {
+                get: function () {
                     if (!this._buffer) {
                         this._buffer = Klang.core.FileHandler.instance.getFile(this._fileId)
                     }
                     return this._buffer
                 },
-                set: function(buffer) {
+                set: function (buffer) {
                     this._buffer = buffer
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "playing", {
-                get: function() {
+                get: function () {
                     return this._endTime == -1 || this._endTime > Klang.Util.now()
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "playbackState", {
-                get: function() {
+                get: function () {
                     var source = this.lastSource;
                     if (source) {
                         return source.playbackState
@@ -15698,7 +15759,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "output", {
-                get: function() {
+                get: function () {
                     if (this._panner) {
                         return this._panner.output
                     } else {
@@ -15709,25 +15770,25 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(AudioSource.prototype, "panner", {
-                get: function() {
+                get: function () {
                     return this._panner
                 },
                 enumerable: true,
                 configurable: true
             });
-            AudioSource.prototype.freeBuffer = function() {
+            AudioSource.prototype.freeBuffer = function () {
                 this._buffer = null;
                 for (var ix = 0, len = this._sources.length; ix < len; ix++) {
                     try {
                         this._sources[ix].stop(0)
-                    } catch (ex) {}
+                    } catch (ex) { }
                     this._sources[ix].disconnect();
                     this._sources[ix] = null
                 }
                 this._sources = []
             }
-            ;
-            AudioSource.prototype.setData = function(data) {
+                ;
+            AudioSource.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 var reinit = false;
                 this._volumeStartRange = data.volume_start_range;
@@ -15851,7 +15912,7 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
+                ;
             return AudioSource
         }(Klang.Model.Audio);
         function crossfade(buf, loopStart, loopEnd, length, type) {
@@ -15861,20 +15922,20 @@ Module(function iOSDevices() {
             var funA;
             var funB;
             if (type == "linear") {
-                funA = function(x) {
+                funA = function (x) {
                     return 1 - x
                 }
-                ;
-                funB = function(x) {
+                    ;
+                funB = function (x) {
                     return x
                 }
             } else {
                 if (type == "equalpower") {
-                    funA = function(x) {
+                    funA = function (x) {
                         return Math.pow(1 - x, 0.5)
                     }
-                    ;
-                    funB = function(x) {
+                        ;
+                    funB = function (x) {
                         return Math.pow(x, 0.5)
                     }
                 } else {
@@ -15903,7 +15964,7 @@ Module(function iOSDevices() {
         Klang.Model.crossfade = crossfade;
         return Klang.Model.AudioSource = AudioSource
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var GroupType = {
             CONCURRENT: 0,
             STEP: 1,
@@ -15930,15 +15991,15 @@ Module(function iOSDevices() {
             this._content = data.content || [];
             Klang.core.Core.instance.pushToPreLoadInitStack(this)
         }
-        AudioGroup.prototype.init = function() {
+        AudioGroup.prototype.init = function () {
             var newContent = [];
             for (var ix = 0, len = this._content.length; ix < len; ix++) {
                 newContent.push(Klang.core.Core.instance.findInstance(this._content[ix]))
             }
             this._content = newContent
         }
-        ;
-        AudioGroup.prototype.play = function(when, audioSource, forcePlay) {
+            ;
+        AudioGroup.prototype.play = function (when, audioSource, forcePlay) {
             if (!this._content.length) {
                 return
             }
@@ -15988,8 +16049,8 @@ Module(function iOSDevices() {
             this._latestStartTime = when || Klang.context.currentTime;
             return this
         }
-        ;
-        AudioGroup.prototype.getIdToPlay = function() {
+            ;
+        AudioGroup.prototype.getIdToPlay = function () {
             var _id;
             if (this._groupType == GroupType.STEP) {
                 if (this._adder < 0) {
@@ -16026,36 +16087,36 @@ Module(function iOSDevices() {
             }
             return _id
         }
-        ;
-        AudioGroup.prototype.stop = function(when) {
+            ;
+        AudioGroup.prototype.stop = function (when) {
             this._content[this._currentId].stop(when);
             return this
         }
-        ;
-        AudioGroup.prototype.stopAll = function(when) {
+            ;
+        AudioGroup.prototype.stopAll = function (when) {
             for (var ix = 0, len = this._content.length; ix < len; ix++) {
                 this._content[ix].stop(when)
             }
             return this
         }
-        ;
-        AudioGroup.prototype.pause = function() {
+            ;
+        AudioGroup.prototype.pause = function () {
             this._paused = true;
             if (this._latestPlayed) {
                 this._latestPlayed.pause()
             }
             return this
         }
-        ;
-        AudioGroup.prototype.unpause = function() {
+            ;
+        AudioGroup.prototype.unpause = function () {
             this._paused = false;
             if (this._latestPlayed) {
                 this._latestPlayed.unpause()
             }
             return this
         }
-        ;
-        AudioGroup.prototype.fadeInAndPlay = function(duration, when) {
+            ;
+        AudioGroup.prototype.fadeInAndPlay = function (duration, when) {
             var latestPlaying = this.latestPlayed ? this.latestPlayed.playing : false;
             if (!this._retrig && latestPlaying) {
                 return
@@ -16065,8 +16126,8 @@ Module(function iOSDevices() {
             this._content[this._currentId].fadeInAndPlay(duration, when);
             return this
         }
-        ;
-        AudioGroup.prototype.fadeOutAndStop = function(duration, when) {
+            ;
+        AudioGroup.prototype.fadeOutAndStop = function (duration, when) {
             if (when === undefined) {
                 when = Klang.context.currentTime
             }
@@ -16075,32 +16136,32 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
-        AudioGroup.prototype.curvePlaybackRate = function(value, duration, when) {
+            ;
+        AudioGroup.prototype.curvePlaybackRate = function (value, duration, when) {
             var startTime = when ? when : Klang.Util.now();
             for (var ix = 0, len = this._content.length; ix < len; ix++) {
                 this._content[ix].curvePlaybackRate(value, duration, when)
             }
             return this
         }
-        ;
-        AudioGroup.prototype.deschedule = function() {
+            ;
+        AudioGroup.prototype.deschedule = function () {
             for (var ix = 0, len = this._content.length; ix < len; ix++) {
                 this._content[ix].deschedule()
             }
             return this
         }
-        ;
-        AudioGroup.prototype.getIdFromString = function(str) {
+            ;
+        AudioGroup.prototype.getIdFromString = function (str) {
             for (var ix = 0, len = this._content.length; ix < len; ix++) {
                 if (this._content[ix]._name == str) {
                     return ix
                 }
             }
         }
-        ;
+            ;
         Object.defineProperty(AudioGroup.prototype, "playbackRate", {
-            set: function(value) {
+            set: function (value) {
                 for (var ix = 0, len = this._content.length; ix < len; ix++) {
                     this._content[ix].playbackRate = value
                 }
@@ -16109,67 +16170,67 @@ Module(function iOSDevices() {
             configurable: true
         });
         Object.defineProperty(AudioGroup.prototype, "groupType", {
-            get: function() {
+            get: function () {
                 return this._groupType
             },
-            set: function(value) {
+            set: function (value) {
                 this._groupType = value
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(AudioGroup.prototype, "content", {
-            get: function() {
+            get: function () {
                 return this._content
             },
-            set: function(value) {
+            set: function (value) {
                 this._content = value;
                 this.init()
             },
             enumerable: true,
             configurable: true
         });
-        AudioGroup.prototype.addContent = function(audio) {
+        AudioGroup.prototype.addContent = function (audio) {
             this._content.push(audio)
         }
-        ;
-        AudioGroup.prototype.removeContent = function(name) {
+            ;
+        AudioGroup.prototype.removeContent = function (name) {
             for (var i = 0; i < this._content.length; i++) {
                 if (this._content[i]._name === name) {
                     this._content.splice(i, 1)
                 }
             }
         }
-        ;
+            ;
         Object.defineProperty(AudioGroup.prototype, "playing", {
-            get: function() {
+            get: function () {
                 return this._latestPlayed ? this._latestPlayed.playing : false
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(AudioGroup.prototype, "duration", {
-            get: function() {
+            get: function () {
                 return this._latestPlayed ? this._latestPlayed.duration : this._content[0].duration
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(AudioGroup.prototype, "playbackState", {
-            get: function() {
+            get: function () {
                 return this._content[this._currentId].playbackState
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(AudioGroup.prototype, "latestPlayed", {
-            get: function() {
+            get: function () {
                 return this._latestPlayed
             },
             enumerable: true,
             configurable: true
         });
-        AudioGroup.prototype.setData = function(data) {
+        AudioGroup.prototype.setData = function (data) {
             this._groupType = data.group_type === undefined ? GroupType.STEP : data.group_type;
             this._retrig = data.retrig === undefined ? true : data.retrig;
             this._queue = data.queue === undefined ? QueueType.NONE : data.queue;
@@ -16178,15 +16239,15 @@ Module(function iOSDevices() {
                 this.init()
             }
         }
-        ;
+            ;
         return Klang.Model.AudioGroup = AudioGroup
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Automation(data) {
             this._startValue = data.start_value || 0;
             this._points = data.points || []
         }
-        Automation.prototype.automate = function(param, when) {
+        Automation.prototype.automate = function (param, when) {
             when = when || Klang.context.currentTime;
             param.cancelScheduledValues(when);
             param.setValueAtTime(this._startValue, when);
@@ -16194,27 +16255,27 @@ Module(function iOSDevices() {
             for (var ix = 0, len = this._points.length; ix < len; ix++) {
                 var p = this._points[ix];
                 switch (p.curve) {
-                case "lin":
-                    param.linearRampToValueAtTime(p.value, when + p.time);
-                    break;
-                case "exp":
-                    param.exponentialRampToValueAtTime(p.value, when + p.time);
-                    break;
-                default:
-                    if (Klang.Util.CUSTOM_CURVES[p.curve]) {
-                        Klang.warn("Automation: Invalid curve type: " + p.curve);
+                    case "lin":
+                        param.linearRampToValueAtTime(p.value, when + p.time);
+                        break;
+                    case "exp":
+                        param.exponentialRampToValueAtTime(p.value, when + p.time);
+                        break;
+                    default:
+                        if (Klang.Util.CUSTOM_CURVES[p.curve]) {
+                            Klang.warn("Automation: Invalid curve type: " + p.curve);
+                            break
+                        }
+                        param.setValueCurveAtTime(Klang.Util.CUSTOM_CURVES[p.curve], when + lastEndTime, p.time - lastEndTime);
                         break
-                    }
-                    param.setValueCurveAtTime(Klang.Util.CUSTOM_CURVES[p.curve], when + lastEndTime, p.time - lastEndTime);
-                    break
                 }
                 lastEndTime = p.time
             }
         }
-        ;
+            ;
         return Klang.Model.Automation = Automation
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Bus(data, name) {
             this._name = name;
             this._type = data.type;
@@ -16234,7 +16295,7 @@ Module(function iOSDevices() {
             }
             Klang.core.Core.instance.pushToPreLoadInitStack(this)
         }
-        Bus.prototype.init = function() {
+        Bus.prototype.init = function () {
             var lastNode = this._input;
             for (var i = 0, len = this._effects.length; i < len; i++) {
                 lastNode.disconnect();
@@ -16243,19 +16304,19 @@ Module(function iOSDevices() {
             }
             lastNode.connect(this._output)
         }
-        ;
-        Bus.prototype.connect = function(destination) {
+            ;
+        Bus.prototype.connect = function (destination) {
             this._output.connect(destination);
             this._destination = destination;
             return this
         }
-        ;
-        Bus.prototype.disconnect = function() {
+            ;
+        Bus.prototype.disconnect = function () {
             this._output.disconnect();
             return this
         }
-        ;
-        Bus.prototype.refreshAudioNodes = function() {
+            ;
+        Bus.prototype.refreshAudioNodes = function () {
             for (var i = 0; i < this.effects.length; i++) {
                 this.effects[i].disconnect();
                 if (this.effects[i].refreshAudioNodes) {
@@ -16272,8 +16333,8 @@ Module(function iOSDevices() {
                 this._output.connect(this._destination)
             }
         }
-        ;
-        Bus.prototype.insertEffect = function(effectData, index) {
+            ;
+        Bus.prototype.insertEffect = function (effectData, index) {
             var effect = Klang.core.Core.instance.createObject(undefined, effectData, {
                 excludeFromTable: true
             });
@@ -16285,8 +16346,8 @@ Module(function iOSDevices() {
             this.init();
             return this
         }
-        ;
-        Bus.prototype.moveEffect = function(fromIndex, toIndex) {
+            ;
+        Bus.prototype.moveEffect = function (fromIndex, toIndex) {
             for (var i = 0, len = this._effects.length; i < len; i++) {
                 this._effects[i].disconnect()
             }
@@ -16296,29 +16357,29 @@ Module(function iOSDevices() {
             this.init();
             return this
         }
-        ;
+            ;
         Object.defineProperty(Bus.prototype, "input", {
-            get: function() {
+            get: function () {
                 return this._input
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Bus.prototype, "output", {
-            get: function() {
+            get: function () {
                 return this._output
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Bus.prototype, "effects", {
-            get: function() {
+            get: function () {
                 return this._effects
             },
             enumerable: true,
             configurable: true
         });
-        Bus.prototype.setData = function(data) {
+        Bus.prototype.setData = function (data) {
             this._input.gain.value = data.input_vol === undefined ? 1 : data.input_vol;
             this._output.gain.value = data.output_vol === undefined ? 1 : data.output_vol;
             if (data.effects.length < this.effects.length) {
@@ -16359,17 +16420,17 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
+            ;
         return Klang.Model.Bus = Bus
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         Klang.engines = Klang.engines || {};
         Klang.engines.webAudio = {}
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         Klang.audioUtil = Klang.engines.webAudio.Util = {}
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var scales = {
             diatonic: [0, -1, 0, -1, 0, 0, -1, 0, -1, 0, -1, 0],
             dorian: [0, 1, 0, 0, -1, 0, 1, 0, 1, 0, 0, -1],
@@ -16387,7 +16448,7 @@ Module(function iOSDevices() {
             chromatic: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             custom: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         };
-        var getTransposeFromScale = function(midiNoteNumber, scale, root) {
+        var getTransposeFromScale = function (midiNoteNumber, scale, root) {
             var scaleStep = midiNoteNumber % 12 - root;
             if (scaleStep < 0) {
                 scaleStep += 12
@@ -16395,7 +16456,7 @@ Module(function iOSDevices() {
             var transpose = this.scales[scale][scaleStep];
             return transpose
         };
-        var getNoteInScale = function(midiNoteNumber, scale, root) {
+        var getNoteInScale = function (midiNoteNumber, scale, root) {
             var transpose;
             if (scale) {
                 var orgNote = midiNoteNumber;
@@ -16411,7 +16472,7 @@ Module(function iOSDevices() {
         Klang.engines.webAudio.Util.getTransposeFromScale = getTransposeFromScale;
         Klang.engines.webAudio.Util.scales = scales
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Audio(data, name) {
             this.data = data;
             this._name = name;
@@ -16426,58 +16487,58 @@ Module(function iOSDevices() {
                 }
             }
         }
-        Audio.prototype.connect = function(destination) {
+        Audio.prototype.connect = function (destination) {
             Klang.warn("Audio: Invocation of abstract method: Audio.connect in", this);
             return this
         }
-        ;
-        Audio.prototype.disconnect = function() {
+            ;
+        Audio.prototype.disconnect = function () {
             Klang.warn("Audio: Invocation of abstract method: Audio.disconnect in", this);
             return this
         }
-        ;
-        Audio.prototype.play = function(when, offset) {
+            ;
+        Audio.prototype.play = function (when, offset) {
             Klang.warn("Audio: Invocation of abstract method: Audio.play in", this);
             return this
         }
-        ;
-        Audio.prototype.stop = function(when) {
+            ;
+        Audio.prototype.stop = function (when) {
             Klang.warn("Audio: Invocation of abstract method: Audio.stop in", this);
             return this
         }
-        ;
-        Audio.prototype.pause = function() {
+            ;
+        Audio.prototype.pause = function () {
             Klang.warn("Audio: Invocation of abstract method: Audio.pause in", this);
             return this
         }
-        ;
-        Audio.prototype.unpause = function() {
+            ;
+        Audio.prototype.unpause = function () {
             Klang.warn("Audio: Invocation of abstract method: Audio.unpause in", this);
             return this
         }
-        ;
-        Audio.prototype.curvePlaybackRate = function(value, duration) {
+            ;
+        Audio.prototype.curvePlaybackRate = function (value, duration) {
             Klang.warn("Audio: Invocation of abstract method: Audio.curvePlaybackRate in", this);
             return this
         }
-        ;
-        Audio.prototype.fadeInAndPlay = function(duration, when) {
+            ;
+        Audio.prototype.fadeInAndPlay = function (duration, when) {
             console.warn("Audio: Invocation of abstract method: Audio.fadeInAndPlay in", this);
             return this
         }
-        ;
-        Audio.prototype.fadeOutAndStop = function(duration, when) {
+            ;
+        Audio.prototype.fadeOutAndStop = function (duration, when) {
             console.warn("Audio: Invocation of abstract method: Audio.fadeOutAndStop in", this);
             return this
         }
-        ;
-        Audio.prototype.deschedule = function() {
+            ;
+        Audio.prototype.deschedule = function () {
             console.warn("Audio: Invocation of abstract method: Audio.deschedule in", this);
             return this
         }
-        ;
+            ;
         Object.defineProperty(Audio.prototype, "playbackRate", {
-            set: function(value) {
+            set: function (value) {
                 Klang.warn("Audio: Invocation of abstract property: Audio.playbackRate in", this);
                 return this
             },
@@ -16485,7 +16546,7 @@ Module(function iOSDevices() {
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "playing", {
-            get: function() {
+            get: function () {
                 Klang.warn("Audio: Invocation of abstract property: Audio.playing in", this);
                 return false
             },
@@ -16493,7 +16554,7 @@ Module(function iOSDevices() {
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "duration", {
-            get: function() {
+            get: function () {
                 Klang.warn("Audio: Invocation of abstract property: Audio.duration in", this);
                 return 0
             },
@@ -16501,21 +16562,21 @@ Module(function iOSDevices() {
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "output", {
-            get: function() {
+            get: function () {
                 return this._output
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Audio.prototype, "playbackState", {
-            get: function() {
+            get: function () {
                 Klang.warn("Audio: Invocation of abstract property: Audio.playbackState in", this);
                 return 0
             },
             enumerable: true,
             configurable: true
         });
-        Audio.prototype.setData = function(data) {
+        Audio.prototype.setData = function (data) {
             this._volume = data.volume === undefined ? 1 : data.volume;
             this._output.gain.value = this._volume;
             if (this.destinationName != data.destination_name) {
@@ -16524,17 +16585,17 @@ Module(function iOSDevices() {
                 this.connect(Klang.core.Core.instance.findInstance(this.destinationName).input)
             }
         }
-        ;
-        Audio.prototype.clone = function() {
-            var clone = new this["constructor"](this.data,this._name);
+            ;
+        Audio.prototype.clone = function () {
+            var clone = new this["constructor"](this.data, this._name);
             clone.connect(Klang.core.Core.instance.findInstance(this.destinationName).input);
             return clone
         }
-        ;
+            ;
         return Klang.Model.Audio = Audio
     });
-    Module(function(Klang) {
-        (function(PatternState) {
+    Module(function (Klang) {
+        (function (PatternState) {
             PatternState._map = [];
             PatternState._map[0] = "PrePlaying";
             PatternState.PrePlaying = 0;
@@ -16550,20 +16611,20 @@ Module(function iOSDevices() {
         var PatternState = Klang.Model.PatternState;
         function getPatternStateString(state) {
             switch (state) {
-            case PatternState.PrePlaying:
-                return "PrePlaying";
-            case PatternState.Playing:
-                return "Playing";
-            case PatternState.PreStopping:
-                return "PreStopping";
-            case PatternState.PostStop:
-                return "PostStop";
-            case PatternState.Stopped:
-                return "Stopped"
+                case PatternState.PrePlaying:
+                    return "PrePlaying";
+                case PatternState.Playing:
+                    return "Playing";
+                case PatternState.PreStopping:
+                    return "PreStopping";
+                case PatternState.PostStop:
+                    return "PostStop";
+                case PatternState.Stopped:
+                    return "Stopped"
             }
         }
         Klang.Model.getPatternStateString = getPatternStateString;
-        var Pattern = function(_super) {
+        var Pattern = function (_super) {
             Klang.Util.__extends(Pattern, _super);
             function Pattern(data, name) {
                 _super.call(this, data, name);
@@ -16594,7 +16655,7 @@ Module(function iOSDevices() {
                 };
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            Pattern.prototype.init = function() {
+            Pattern.prototype.init = function () {
                 if (this._initData.dummyClips) {
                     for (var ix = 0, len = this._initData.dummyClips.length; ix < len; ix++) {
                         var dummy = this._initData.dummyClips[ix];
@@ -16645,7 +16706,7 @@ Module(function iOSDevices() {
                             clips: upbeatClips
                         })
                     }
-                    this._upbeats.sort(function(a, b) {
+                    this._upbeats.sort(function (a, b) {
                         return b.length - a.length
                     })
                 }
@@ -16653,8 +16714,8 @@ Module(function iOSDevices() {
                 this._sequencer.registerPattern(this);
                 this._initData = null
             }
-            ;
-            Pattern.prototype.connect = function(destination) {
+                ;
+            Pattern.prototype.connect = function (destination) {
                 for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                     var a = this._clips[ix].audio;
                     if (a && (!a.destinationName || Klang.core.Core.instance.findInstance(a.destinationName).destinationName == "$OUT")) {
@@ -16665,13 +16726,13 @@ Module(function iOSDevices() {
                 this._output.connect(destination);
                 return this
             }
-            ;
-            Pattern.prototype.disconnect = function() {
+                ;
+            Pattern.prototype.disconnect = function () {
                 this._output.disconnect();
                 return this
             }
-            ;
-            Pattern.prototype.changeState = function(state) {
+                ;
+            Pattern.prototype.changeState = function (state) {
                 if (state == this._state) {
                     return
                 }
@@ -16685,8 +16746,8 @@ Module(function iOSDevices() {
                 }
                 this._state = state
             }
-            ;
-            Pattern.prototype.prePlaySchedule = function(steps, syncStep, restart, fadeIn, duration, offset) {
+                ;
+            Pattern.prototype.prePlaySchedule = function (steps, syncStep, restart, fadeIn, duration, offset) {
                 restart = restart || false;
                 var t = Klang.context.currentTime;
                 if (this._state == PatternState.PreStopping || this._state == PatternState.PostStop) {
@@ -16747,8 +16808,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.play = function(when) {
+                ;
+            Pattern.prototype.play = function (when) {
                 if (this._state == PatternState.Playing || this._state == PatternState.PrePlaying) {
                     return this
                 } else {
@@ -16763,8 +16824,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.stop = function(when, beat, fadeTime, wait) {
+                ;
+            Pattern.prototype.stop = function (when, beat, fadeTime, wait) {
                 if (this._state == PatternState.Stopped) {
                     return this
                 } else {
@@ -16811,8 +16872,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.pause = function() {
+                ;
+            Pattern.prototype.pause = function () {
                 for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                     if (this._clips[ix].audio) {
                         this._clips[ix].audio.pause()
@@ -16820,8 +16881,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.unpause = function() {
+                ;
+            Pattern.prototype.unpause = function () {
                 for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                     if (this._clips[ix].audio) {
                         this._clips[ix].audio.unpause()
@@ -16829,8 +16890,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.playStep = function(currentStep, scheduleTime) {
+                ;
+            Pattern.prototype.playStep = function (currentStep, scheduleTime) {
                 if (this._currentStep >= this._length + this._startStep) {
                     if (this._loop) {
                         this._currentStep = this._startStep
@@ -16853,62 +16914,62 @@ Module(function iOSDevices() {
                 this._totalStep += this._beatSubscription;
                 this._currentStep += this._beatSubscription
             }
-            ;
-            Pattern.prototype.update = function(currentStep, scheduleTime) {
+                ;
+            Pattern.prototype.update = function (currentStep, scheduleTime) {
                 if (this._state != PatternState.Stopped && currentStep % this._beatSubscription == 0) {
                     switch (this._state) {
-                    case PatternState.PrePlaying:
-                        if (this._activeUpbeat != -1) {
-                            var upbeat = this._upbeats[this._activeUpbeat];
-                            for (var ix = 0, len = upbeat.clips.length; ix < len; ix++) {
-                                var clip = upbeat.clips[ix];
-                                if (clip.step == upbeat.length - this._stepCount) {
-                                    if (clip.audio) {
-                                        clip.audio.play(scheduleTime)
-                                    } else {
-                                        clip.process.start(clip.args)
+                        case PatternState.PrePlaying:
+                            if (this._activeUpbeat != -1) {
+                                var upbeat = this._upbeats[this._activeUpbeat];
+                                for (var ix = 0, len = upbeat.clips.length; ix < len; ix++) {
+                                    var clip = upbeat.clips[ix];
+                                    if (clip.step == upbeat.length - this._stepCount) {
+                                        if (clip.audio) {
+                                            clip.audio.play(scheduleTime)
+                                        } else {
+                                            clip.process.start(clip.args)
+                                        }
                                     }
                                 }
                             }
-                        }
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            this._currentStep = this._startStep + this._syncStep % this._length;
-                            this._syncStep = 0;
-                            this.changeState(PatternState.Playing)
-                        }
-                        break;
-                    case PatternState.Playing:
-                        this.playStep(currentStep, scheduleTime);
-                        break;
-                    case PatternState.PreStopping:
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            if (!this._tail || this._forceFade) {
-                                this.stop(scheduleTime, false, this._fadeTime)
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                this._currentStep = this._startStep + this._syncStep % this._length;
+                                this._syncStep = 0;
+                                this.changeState(PatternState.Playing)
+                            }
+                            break;
+                        case PatternState.Playing:
+                            this.playStep(currentStep, scheduleTime);
+                            break;
+                        case PatternState.PreStopping:
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                if (!this._tail || this._forceFade) {
+                                    this.stop(scheduleTime, false, this._fadeTime)
+                                } else {
+                                    this.changeState(PatternState.Stopped);
+                                    this._currentStep = 0
+                                }
                             } else {
+                                this.playStep(currentStep, scheduleTime)
+                            }
+                            break;
+                        case PatternState.PostStop:
+                            this.playStep(currentStep, scheduleTime);
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                this._forceFade = false;
                                 this.changeState(PatternState.Stopped);
                                 this._currentStep = 0
                             }
-                        } else {
-                            this.playStep(currentStep, scheduleTime)
-                        }
-                        break;
-                    case PatternState.PostStop:
-                        this.playStep(currentStep, scheduleTime);
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            this._forceFade = false;
-                            this.changeState(PatternState.Stopped);
-                            this._currentStep = 0
-                        }
-                        break
+                            break
                     }
                 }
                 return this
             }
-            ;
-            Pattern.prototype.deschedule = function(steps) {
+                ;
+            Pattern.prototype.deschedule = function (steps) {
                 if (steps === undefined) {
                     steps = this._length
                 }
@@ -16930,41 +16991,41 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.fadeInAndPlay = function(duration, when) {
+                ;
+            Pattern.prototype.fadeInAndPlay = function (duration, when) {
                 return this
             }
-            ;
-            Pattern.prototype.fadeOutAndStop = function(duration, when) {
+                ;
+            Pattern.prototype.fadeOutAndStop = function (duration, when) {
                 when = when || Klang.Util.now();
                 this.stop(when, false, duration);
                 return this
             }
-            ;
-            Pattern.prototype.curvePlaybackRate = function(value, duration) {
+                ;
+            Pattern.prototype.curvePlaybackRate = function (value, duration) {
                 for (var i = 0, l = this._clips.length; i < l; i++) {
                     this._clips[i].audio.curvePlaybackRate(value, duration)
                 }
                 return this
             }
-            ;
-            Pattern.prototype.getNextBar = function(x) {
+                ;
+            Pattern.prototype.getNextBar = function (x) {
                 var nextBar = Math.ceil(this._currentStep / x);
                 if (this._currentStep > this._length - x) {
                     nextBar = 0
                 }
                 return nextBar
             }
-            ;
+                ;
             Object.defineProperty(Pattern.prototype, "forceFade", {
-                set: function(value) {
+                set: function (value) {
                     this._forceFade = value
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "playbackRate", {
-                set: function(value) {
+                set: function (value) {
                     for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                         this._clips[ix].audio.playbackRate = value
                     }
@@ -16973,28 +17034,28 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "length", {
-                get: function() {
+                get: function () {
                     return this._length
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "loop", {
-                get: function() {
+                get: function () {
                     return this._loop
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "state", {
-                get: function() {
+                get: function () {
                     return this._state
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "playing", {
-                get: function() {
+                get: function () {
                     var _playing = false;
                     if (this._state === 1 || this._state === 1) {
                         _playing = true
@@ -17005,27 +17066,27 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "duration", {
-                get: function() {
+                get: function () {
                     return this._length * this._sequencer.getNoteTime(1)
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "playbackState", {
-                get: function() {
+                get: function () {
                     return 0
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "currentStep", {
-                get: function() {
+                get: function () {
                     return this._currentStep
                 },
                 enumerable: true,
                 configurable: true
             });
-            Pattern.prototype.setData = function(data) {
+            Pattern.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 var reinit = false;
                 this._beatSubscription = data.beat_subscription !== undefined ? data.beat_subscription : 0.25;
@@ -17056,15 +17117,15 @@ Module(function iOSDevices() {
                     this.init()
                 }
             }
-            ;
+                ;
             return Pattern
         }(Klang.Model.Audio);
         return Klang.Model.Pattern = Pattern
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var PatternState = Klang.Model.PatternState;
         var audioUtil = Klang.engines.webAudio.Util;
-        var MidiPattern = function(_super) {
+        var MidiPattern = function (_super) {
             Klang.Util.__extends(MidiPattern, _super);
             function MidiPattern(data, name) {
                 _super.call(this, data, name);
@@ -17106,7 +17167,7 @@ Module(function iOSDevices() {
                 }
                 Klang.core.Core.instance.pushToPostLoadInitStack(this)
             }
-            MidiPattern.prototype.init = function() {
+            MidiPattern.prototype.init = function () {
                 this._sequencer = Klang.core.Core.instance.findInstance(this._sequencerName);
                 this._sequencer.registerPattern(this);
                 if (this._synthName === "progression") {
@@ -17127,8 +17188,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            MidiPattern.prototype.setupFile = function() {
+                ;
+            MidiPattern.prototype.setupFile = function () {
                 this._midiTrack = this._midiFile.tracks[this._midiTrackIx];
                 if (this._midiTrack === undefined) {
                     Klang.warn("MidiPattern: midi track out of bounds: " + this._midiTrackIx)
@@ -17151,18 +17212,18 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            MidiPattern.prototype.connect = function(destination) {
+                ;
+            MidiPattern.prototype.connect = function (destination) {
                 this._output.connect(destination);
                 return this
             }
-            ;
-            MidiPattern.prototype.disconnect = function() {
+                ;
+            MidiPattern.prototype.disconnect = function () {
                 this._output.disconnect();
                 return this
             }
-            ;
-            MidiPattern.prototype.changeState = function(state) {
+                ;
+            MidiPattern.prototype.changeState = function (state) {
                 if (state == this._state) {
                     return
                 }
@@ -17176,8 +17237,8 @@ Module(function iOSDevices() {
                 }
                 this._state = state
             }
-            ;
-            MidiPattern.prototype.prePlaySchedule = function(steps, syncStep, restart) {
+                ;
+            MidiPattern.prototype.prePlaySchedule = function (steps, syncStep, restart) {
                 if (!this._midiFile) {
                     this._midiFile = Klang.core.FileHandler.instance.getFile(this._midiFileId);
                     if (!this._midiFile) {
@@ -17227,8 +17288,8 @@ Module(function iOSDevices() {
                 this._patternStartTime = Klang.Util.now();
                 return this
             }
-            ;
-            MidiPattern.prototype.play = function(when) {
+                ;
+            MidiPattern.prototype.play = function (when) {
                 if (!this._midiFile) {
                     this._midiFile = Klang.core.FileHandler.instance.getFile(this._midiFileId);
                     if (!this._midiFile) {
@@ -17253,14 +17314,14 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            MidiPattern.prototype.restart = function() {
+                ;
+            MidiPattern.prototype.restart = function () {
                 this._currentStep = this._startStep;
                 this._nextClip = 0;
                 return this
             }
-            ;
-            MidiPattern.prototype.stop = function(when, beat) {
+                ;
+            MidiPattern.prototype.stop = function (when, beat) {
                 this.trigger("stop", when);
                 if (this._synth.deschedule && this._sequencer._scheduleAheadTime > 0.5) {
                     this._synth.deschedule()
@@ -17283,16 +17344,16 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            MidiPattern.prototype.pause = function() {
+                ;
+            MidiPattern.prototype.pause = function () {
                 return this
             }
-            ;
-            MidiPattern.prototype.unpause = function() {
+                ;
+            MidiPattern.prototype.unpause = function () {
                 return this
             }
-            ;
-            MidiPattern.prototype.sendMidiEvents = function(step, scheduleTime, bypassNoteOn) {
+                ;
+            MidiPattern.prototype.sendMidiEvents = function (step, scheduleTime, bypassNoteOn) {
                 if (!this._clips.length) {
                     return
                 }
@@ -17341,7 +17402,7 @@ Module(function iOSDevices() {
                     }
                 }
                 if (this._progression && this._currentChord.length) {
-                    this._currentChord.sort(function(a, b) {
+                    this._currentChord.sort(function (a, b) {
                         return a - b
                     });
                     var chordRootMidiNote = this._currentChord[0];
@@ -17359,7 +17420,7 @@ Module(function iOSDevices() {
                         }
                         chordNormalized.push(n)
                     }
-                    chordNormalized.sort(function(a, b) {
+                    chordNormalized.sort(function (a, b) {
                         return a - b
                     });
                     for (var i = 0; i < scale.length; i++) {
@@ -17373,10 +17434,10 @@ Module(function iOSDevices() {
                     this._rootNote = chordRootMidiNote
                 }
             }
-            ;
-            MidiPattern.prototype.getClosestValues = function(a, x) {
+                ;
+            MidiPattern.prototype.getClosestValues = function (a, x) {
                 var lo = -1
-                  , hi = a.length;
+                    , hi = a.length;
                 while (hi - lo > 1) {
                     var mid = Math.round((lo + hi) / 2);
                     if (a[mid] <= x) {
@@ -17400,8 +17461,8 @@ Module(function iOSDevices() {
                 }
                 return a[closest]
             }
-            ;
-            MidiPattern.prototype.findNextClip = function(step) {
+                ;
+            MidiPattern.prototype.findNextClip = function (step) {
                 for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                     if (this._clips[ix].step >= step) {
                         this._nextClip = ix;
@@ -17410,8 +17471,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            MidiPattern.prototype.playStep = function(currentStep, scheduleTime) {
+                ;
+            MidiPattern.prototype.playStep = function (currentStep, scheduleTime) {
                 var playThisStep = true;
                 if (this._currentStep >= this._length + this._startStep) {
                     this.sendMidiEvents(this._length, scheduleTime, true);
@@ -17423,7 +17484,7 @@ Module(function iOSDevices() {
                     }
                     if (this._updatedClips.length) {
                         var newArray = this._clips.concat(this._updatedClips);
-                        newArray.sort(function(a, b) {
+                        newArray.sort(function (a, b) {
                             return a.step - b.step
                         });
                         this._clips = newArray;
@@ -17436,8 +17497,8 @@ Module(function iOSDevices() {
                 this._totalStep += this._beatSubscription;
                 this._currentStep += this._beatSubscription
             }
-            ;
-            MidiPattern.prototype.update = function(currentStep, scheduleTime) {
+                ;
+            MidiPattern.prototype.update = function (currentStep, scheduleTime) {
                 if (this._state != PatternState.Stopped && currentStep % this._beatSubscription == 0) {
                     if (this._upbeats && this._activeUpbeat != -1 && this._upbeats[this._activeUpbeat].playInLoop && this._state == PatternState.Playing) {
                         if (this._currentStep >= this._length + this._startStep - this._upbeatLoopOffset) {
@@ -17451,64 +17512,64 @@ Module(function iOSDevices() {
                         }
                     }
                     switch (this._state) {
-                    case PatternState.PrePlaying:
-                        if (this._activeUpbeat != -1) {
-                            var upbeat = this._upbeats[this._activeUpbeat];
-                            var currentUpbeatStep = upbeat.length - this._stepCount;
-                            if (currentUpbeatStep >= 0) {
-                                this.sendMidiEvents(upbeat.step + currentUpbeatStep, scheduleTime, false)
+                        case PatternState.PrePlaying:
+                            if (this._activeUpbeat != -1) {
+                                var upbeat = this._upbeats[this._activeUpbeat];
+                                var currentUpbeatStep = upbeat.length - this._stepCount;
+                                if (currentUpbeatStep >= 0) {
+                                    this.sendMidiEvents(upbeat.step + currentUpbeatStep, scheduleTime, false)
+                                }
                             }
-                        }
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            if (this._activeUpbeat != -1 && upbeat.targetStep) {
-                                this._currentStep = upbeat.targetStep
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                if (this._activeUpbeat != -1 && upbeat.targetStep) {
+                                    this._currentStep = upbeat.targetStep
+                                }
+                                this.findNextClip(this._currentStep);
+                                this.changeState(PatternState.Playing)
                             }
-                            this.findNextClip(this._currentStep);
-                            this.changeState(PatternState.Playing)
-                        }
-                        break;
-                    case PatternState.Playing:
-                        this.playStep(currentStep, scheduleTime);
-                        break;
-                    case PatternState.PreStopping:
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            this.stop(scheduleTime, false)
-                        } else {
-                            this.playStep(currentStep, scheduleTime)
-                        }
-                        break;
-                    case PatternState.PostStop:
-                        break
+                            break;
+                        case PatternState.Playing:
+                            this.playStep(currentStep, scheduleTime);
+                            break;
+                        case PatternState.PreStopping:
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                this.stop(scheduleTime, false)
+                            } else {
+                                this.playStep(currentStep, scheduleTime)
+                            }
+                            break;
+                        case PatternState.PostStop:
+                            break
                     }
                 }
                 return this
             }
-            ;
-            MidiPattern.prototype.recalculateBPM = function(bpm) {
+                ;
+            MidiPattern.prototype.recalculateBPM = function (bpm) {
                 var ticksPerBeat = this._midiFile.header.ticksPerBeat;
                 var microsecPerQuarterNote = 60000000 / bpm;
                 var secPerQuarterNote = microsecPerQuarterNote / 1000000;
                 this._secPerTick = secPerQuarterNote / ticksPerBeat
             }
-            ;
-            MidiPattern.prototype.getNextBar = function(x) {
+                ;
+            MidiPattern.prototype.getNextBar = function (x) {
                 var nextBar = Math.ceil(this._currentStep / x);
                 if (this._currentStep > this._length - x) {
                     nextBar = 0
                 }
                 return nextBar
             }
-            ;
-            MidiPattern.prototype.fadeInAndPlay = function(duration, when) {
+                ;
+            MidiPattern.prototype.fadeInAndPlay = function (duration, when) {
                 this.play(when);
                 this.output.gain.value = 0;
                 Klang.Util.curveParamLin(this.output.gain, 1, duration, when);
                 return this
             }
-            ;
-            MidiPattern.prototype.fadeOutAndStop = function(duration, when) {
+                ;
+            MidiPattern.prototype.fadeOutAndStop = function (duration, when) {
                 if (when === undefined) {
                     when = Klang.context.currentTime
                 }
@@ -17518,8 +17579,8 @@ Module(function iOSDevices() {
                 this.stop(when + duration);
                 return this
             }
-            ;
-            MidiPattern.prototype.deschedule = function(steps) {
+                ;
+            MidiPattern.prototype.deschedule = function (steps) {
                 if (steps === undefined) {
                     steps = this._length
                 }
@@ -17542,23 +17603,23 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            MidiPattern.prototype.resetTranspose = function() {
+                ;
+            MidiPattern.prototype.resetTranspose = function () {
                 this._transpose = this._orgTranspose
             }
-            ;
+                ;
             Object.defineProperty(MidiPattern.prototype, "length", {
-                get: function() {
+                get: function () {
                     return this._length
                 },
-                set: function(length) {
+                set: function (length) {
                     this._length = length
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "startStep", {
-                set: function(step) {
+                set: function (step) {
                     this._startStep = step;
                     this._currentStep = this._sequencer.currentStep % this._length + this._startStep;
                     for (var ix = 0, len = this._clips.length; ix < len; ix++) {
@@ -17572,7 +17633,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "scale", {
-                set: function(scale) {
+                set: function (scale) {
                     if (!this._progression) {
                         if (scale === "reset") {
                             this._scale = this._orgScale
@@ -17585,7 +17646,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "customScale", {
-                set: function(obj) {
+                set: function (obj) {
                     if (!this._progression) {
                         Klang.audioUtil.scales.custom = obj;
                         this._scale = "custom"
@@ -17595,31 +17656,31 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "transpose", {
-                get: function() {
+                get: function () {
                     return this._transpose
                 },
-                set: function(transpose) {
+                set: function (transpose) {
                     this._transpose = transpose
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "loop", {
-                get: function() {
+                get: function () {
                     return this._loop
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "state", {
-                get: function() {
+                get: function () {
                     return this._state
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "playing", {
-                get: function() {
+                get: function () {
                     var _playing = false;
                     if (this._state === 1 || this._state === 1) {
                         _playing = true
@@ -17630,17 +17691,17 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MidiPattern.prototype, "duration", {
-                get: function() {
+                get: function () {
                     return this._length * this._sequencer.getNoteTime(1)
                 },
                 enumerable: true,
                 configurable: true
             });
-            MidiPattern.prototype.getNoteInScale = function(midiNumber) {
+            MidiPattern.prototype.getNoteInScale = function (midiNumber) {
                 return Klang.audioUtil.getNoteInScale(midiNumber, this._scale, this._root)
             }
-            ;
-            MidiPattern.prototype.getPositionInPattern = function() {
+                ;
+            MidiPattern.prototype.getPositionInPattern = function () {
                 var patternLength = this.length;
                 var lengthSeconds = this._sequencer.getNoteTime(patternLength);
                 var positionSeconds = (Klang.Util.now() - this._patternStartTime) % lengthSeconds;
@@ -17655,8 +17716,8 @@ Module(function iOSDevices() {
                     offset: offset
                 }
             }
-            ;
-            MidiPattern.prototype.addNote = function(noteNumber, velocity, step, duration, offset) {
+                ;
+            MidiPattern.prototype.addNote = function (noteNumber, velocity, step, duration, offset) {
                 this.addSingleEvent("noteOn", noteNumber, velocity, step, offset);
                 var noteOffStep = step + duration;
                 if (noteOffStep > this.length) {
@@ -17664,8 +17725,8 @@ Module(function iOSDevices() {
                 }
                 this.addSingleEvent("noteOff", noteNumber, velocity, noteOffStep, offset)
             }
-            ;
-            MidiPattern.prototype.addSingleEvent = function(type, noteNumber, velocity, step, offset) {
+                ;
+            MidiPattern.prototype.addSingleEvent = function (type, noteNumber, velocity, step, offset) {
                 this._updatedClips.push({
                     event: {
                         type: "channel",
@@ -17676,12 +17737,12 @@ Module(function iOSDevices() {
                     step: step,
                     offset: offset || 0
                 });
-                this._updatedClips.sort(function(a, b) {
+                this._updatedClips.sort(function (a, b) {
                     return a.step - b.step
                 })
             }
-            ;
-            MidiPattern.prototype.setData = function(data) {
+                ;
+            MidiPattern.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 var reinit = false;
                 this._beatSubscription = data.beat_subscription === undefined ? 0.25 : data.beat_subscription;
@@ -17729,13 +17790,13 @@ Module(function iOSDevices() {
                     this.init()
                 }
             }
-            ;
+                ;
             return MidiPattern
         }(Klang.Model.Audio);
         return Klang.Model.MidiPattern = MidiPattern
     });
-    Module(function(Klang) {
-        (function(PatternState) {
+    Module(function (Klang) {
+        (function (PatternState) {
             PatternState._map = [];
             PatternState._map[0] = "PrePlaying";
             PatternState.PrePlaying = 0;
@@ -17751,20 +17812,20 @@ Module(function iOSDevices() {
         var PatternState = Klang.Model.PatternState;
         function getPatternStateString(state) {
             switch (state) {
-            case PatternState.PrePlaying:
-                return "PrePlaying";
-            case PatternState.Playing:
-                return "Playing";
-            case PatternState.PreStopping:
-                return "PreStopping";
-            case PatternState.PostStop:
-                return "PostStop";
-            case PatternState.Stopped:
-                return "Stopped"
+                case PatternState.PrePlaying:
+                    return "PrePlaying";
+                case PatternState.Playing:
+                    return "Playing";
+                case PatternState.PreStopping:
+                    return "PreStopping";
+                case PatternState.PostStop:
+                    return "PostStop";
+                case PatternState.Stopped:
+                    return "Stopped"
             }
         }
         Klang.Model.getPatternStateString = getPatternStateString;
-        var Pattern = function(_super) {
+        var Pattern = function (_super) {
             Klang.Util.__extends(Pattern, _super);
             function Pattern(data, name) {
                 _super.call(this, data, name);
@@ -17795,7 +17856,7 @@ Module(function iOSDevices() {
                 };
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            Pattern.prototype.init = function() {
+            Pattern.prototype.init = function () {
                 if (this._initData.dummyClips) {
                     for (var ix = 0, len = this._initData.dummyClips.length; ix < len; ix++) {
                         var dummy = this._initData.dummyClips[ix];
@@ -17846,7 +17907,7 @@ Module(function iOSDevices() {
                             clips: upbeatClips
                         })
                     }
-                    this._upbeats.sort(function(a, b) {
+                    this._upbeats.sort(function (a, b) {
                         return b.length - a.length
                     })
                 }
@@ -17854,8 +17915,8 @@ Module(function iOSDevices() {
                 this._sequencer.registerPattern(this);
                 this._initData = null
             }
-            ;
-            Pattern.prototype.connect = function(destination) {
+                ;
+            Pattern.prototype.connect = function (destination) {
                 for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                     var a = this._clips[ix].audio;
                     if (a && (!a.destinationName || Klang.core.Core.instance.findInstance(a.destinationName).destinationName == "$OUT")) {
@@ -17866,13 +17927,13 @@ Module(function iOSDevices() {
                 this._output.connect(destination);
                 return this
             }
-            ;
-            Pattern.prototype.disconnect = function() {
+                ;
+            Pattern.prototype.disconnect = function () {
                 this._output.disconnect();
                 return this
             }
-            ;
-            Pattern.prototype.changeState = function(state) {
+                ;
+            Pattern.prototype.changeState = function (state) {
                 if (state == this._state) {
                     return
                 }
@@ -17886,8 +17947,8 @@ Module(function iOSDevices() {
                 }
                 this._state = state
             }
-            ;
-            Pattern.prototype.prePlaySchedule = function(steps, syncStep, restart, fadeIn, duration, offset) {
+                ;
+            Pattern.prototype.prePlaySchedule = function (steps, syncStep, restart, fadeIn, duration, offset) {
                 restart = restart || false;
                 var t = Klang.context.currentTime;
                 if (this._state == PatternState.PreStopping || this._state == PatternState.PostStop) {
@@ -17948,8 +18009,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.play = function(when) {
+                ;
+            Pattern.prototype.play = function (when) {
                 if (this._state == PatternState.Playing || this._state == PatternState.PrePlaying) {
                     return this
                 } else {
@@ -17964,8 +18025,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.stop = function(when, beat, fadeTime, wait) {
+                ;
+            Pattern.prototype.stop = function (when, beat, fadeTime, wait) {
                 if (this._state == PatternState.Stopped) {
                     return this
                 } else {
@@ -18012,8 +18073,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.pause = function() {
+                ;
+            Pattern.prototype.pause = function () {
                 for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                     if (this._clips[ix].audio) {
                         this._clips[ix].audio.pause()
@@ -18021,8 +18082,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.unpause = function() {
+                ;
+            Pattern.prototype.unpause = function () {
                 for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                     if (this._clips[ix].audio) {
                         this._clips[ix].audio.unpause()
@@ -18030,8 +18091,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.playStep = function(currentStep, scheduleTime) {
+                ;
+            Pattern.prototype.playStep = function (currentStep, scheduleTime) {
                 if (this._currentStep >= this._length + this._startStep) {
                     if (this._loop) {
                         this._currentStep = this._startStep
@@ -18054,62 +18115,62 @@ Module(function iOSDevices() {
                 this._totalStep += this._beatSubscription;
                 this._currentStep += this._beatSubscription
             }
-            ;
-            Pattern.prototype.update = function(currentStep, scheduleTime) {
+                ;
+            Pattern.prototype.update = function (currentStep, scheduleTime) {
                 if (this._state != PatternState.Stopped && currentStep % this._beatSubscription == 0) {
                     switch (this._state) {
-                    case PatternState.PrePlaying:
-                        if (this._activeUpbeat != -1) {
-                            var upbeat = this._upbeats[this._activeUpbeat];
-                            for (var ix = 0, len = upbeat.clips.length; ix < len; ix++) {
-                                var clip = upbeat.clips[ix];
-                                if (clip.step == upbeat.length - this._stepCount) {
-                                    if (clip.audio) {
-                                        clip.audio.play(scheduleTime)
-                                    } else {
-                                        clip.process.start(clip.args)
+                        case PatternState.PrePlaying:
+                            if (this._activeUpbeat != -1) {
+                                var upbeat = this._upbeats[this._activeUpbeat];
+                                for (var ix = 0, len = upbeat.clips.length; ix < len; ix++) {
+                                    var clip = upbeat.clips[ix];
+                                    if (clip.step == upbeat.length - this._stepCount) {
+                                        if (clip.audio) {
+                                            clip.audio.play(scheduleTime)
+                                        } else {
+                                            clip.process.start(clip.args)
+                                        }
                                     }
                                 }
                             }
-                        }
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            this._currentStep = this._startStep + this._syncStep % this._length;
-                            this._syncStep = 0;
-                            this.changeState(PatternState.Playing)
-                        }
-                        break;
-                    case PatternState.Playing:
-                        this.playStep(currentStep, scheduleTime);
-                        break;
-                    case PatternState.PreStopping:
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            if (!this._tail || this._forceFade) {
-                                this.stop(scheduleTime, false, this._fadeTime)
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                this._currentStep = this._startStep + this._syncStep % this._length;
+                                this._syncStep = 0;
+                                this.changeState(PatternState.Playing)
+                            }
+                            break;
+                        case PatternState.Playing:
+                            this.playStep(currentStep, scheduleTime);
+                            break;
+                        case PatternState.PreStopping:
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                if (!this._tail || this._forceFade) {
+                                    this.stop(scheduleTime, false, this._fadeTime)
+                                } else {
+                                    this.changeState(PatternState.Stopped);
+                                    this._currentStep = 0
+                                }
                             } else {
+                                this.playStep(currentStep, scheduleTime)
+                            }
+                            break;
+                        case PatternState.PostStop:
+                            this.playStep(currentStep, scheduleTime);
+                            this._stepCount -= this._beatSubscription;
+                            if (this._stepCount <= 0) {
+                                this._forceFade = false;
                                 this.changeState(PatternState.Stopped);
                                 this._currentStep = 0
                             }
-                        } else {
-                            this.playStep(currentStep, scheduleTime)
-                        }
-                        break;
-                    case PatternState.PostStop:
-                        this.playStep(currentStep, scheduleTime);
-                        this._stepCount -= this._beatSubscription;
-                        if (this._stepCount <= 0) {
-                            this._forceFade = false;
-                            this.changeState(PatternState.Stopped);
-                            this._currentStep = 0
-                        }
-                        break
+                            break
                     }
                 }
                 return this
             }
-            ;
-            Pattern.prototype.deschedule = function(steps) {
+                ;
+            Pattern.prototype.deschedule = function (steps) {
                 if (steps === undefined) {
                     steps = this._length
                 }
@@ -18131,41 +18192,41 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Pattern.prototype.fadeInAndPlay = function(duration, when) {
+                ;
+            Pattern.prototype.fadeInAndPlay = function (duration, when) {
                 return this
             }
-            ;
-            Pattern.prototype.fadeOutAndStop = function(duration, when) {
+                ;
+            Pattern.prototype.fadeOutAndStop = function (duration, when) {
                 when = when || Klang.Util.now();
                 this.stop(when, false, duration);
                 return this
             }
-            ;
-            Pattern.prototype.curvePlaybackRate = function(value, duration) {
+                ;
+            Pattern.prototype.curvePlaybackRate = function (value, duration) {
                 for (var i = 0, l = this._clips.length; i < l; i++) {
                     this._clips[i].audio.curvePlaybackRate(value, duration)
                 }
                 return this
             }
-            ;
-            Pattern.prototype.getNextBar = function(x) {
+                ;
+            Pattern.prototype.getNextBar = function (x) {
                 var nextBar = Math.ceil(this._currentStep / x);
                 if (this._currentStep > this._length - x) {
                     nextBar = 0
                 }
                 return nextBar
             }
-            ;
+                ;
             Object.defineProperty(Pattern.prototype, "forceFade", {
-                set: function(value) {
+                set: function (value) {
                     this._forceFade = value
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "playbackRate", {
-                set: function(value) {
+                set: function (value) {
                     for (var ix = 0, len = this._clips.length; ix < len; ix++) {
                         this._clips[ix].audio.playbackRate = value
                     }
@@ -18174,28 +18235,28 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "length", {
-                get: function() {
+                get: function () {
                     return this._length
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "loop", {
-                get: function() {
+                get: function () {
                     return this._loop
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "state", {
-                get: function() {
+                get: function () {
                     return this._state
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "playing", {
-                get: function() {
+                get: function () {
                     var _playing = false;
                     if (this._state === 1 || this._state === 1) {
                         _playing = true
@@ -18206,27 +18267,27 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "duration", {
-                get: function() {
+                get: function () {
                     return this._length * this._sequencer.getNoteTime(1)
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "playbackState", {
-                get: function() {
+                get: function () {
                     return 0
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Pattern.prototype, "currentStep", {
-                get: function() {
+                get: function () {
                     return this._currentStep
                 },
                 enumerable: true,
                 configurable: true
             });
-            Pattern.prototype.setData = function(data) {
+            Pattern.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 var reinit = false;
                 this._beatSubscription = data.beat_subscription !== undefined ? data.beat_subscription : 0.25;
@@ -18257,12 +18318,12 @@ Module(function iOSDevices() {
                     this.init()
                 }
             }
-            ;
+                ;
             return Pattern
         }(Klang.Model.Audio);
         return Klang.Model.Pattern = Pattern
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Effect(data) {
             this.active = true;
             this._type = data.type;
@@ -18272,30 +18333,30 @@ Module(function iOSDevices() {
                 this.active = false
             }
         }
-        Effect.prototype.connect = function(destination) {
+        Effect.prototype.connect = function (destination) {
             this._output.connect(destination);
             return this
         }
-        ;
-        Effect.prototype.disconnect = function() {
+            ;
+        Effect.prototype.disconnect = function () {
             this._output.disconnect();
             return this
         }
-        ;
-        Effect.prototype.setActive = function(state) {
+            ;
+        Effect.prototype.setActive = function (state) {
             Klang.warn("Effect: Invocation of abstract method: Effect.setActive in", this);
             return this
         }
-        ;
+            ;
         Object.defineProperty(Effect.prototype, "input", {
-            get: function() {
+            get: function () {
                 return this._input
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Effect.prototype, "output", {
-            get: function() {
+            get: function () {
                 return this._output
             },
             enumerable: true,
@@ -18303,8 +18364,8 @@ Module(function iOSDevices() {
         });
         return Klang.Model.Effect = Effect
     });
-    Module(function(Klang) {
-        var EffectSend = function(_super) {
+    Module(function (Klang) {
+        var EffectSend = function (_super) {
             Klang.Util.__extends(EffectSend, _super);
             function EffectSend(data) {
                 _super.call(this, data);
@@ -18315,14 +18376,14 @@ Module(function iOSDevices() {
                 this.destinationName = data.destination_name;
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            EffectSend.prototype.init = function() {
+            EffectSend.prototype.init = function () {
                 var destination = Klang.core.Core.instance.findInstance(this.destinationName);
                 if (destination) {
                     this._wet.connect(destination.input)
                 }
             }
-            ;
-            EffectSend.prototype.setActive = function(state) {
+                ;
+            EffectSend.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._wet);
@@ -18332,15 +18393,15 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(EffectSend.prototype, "wet", {
-                get: function() {
+                get: function () {
                     return this._wet.gain
                 },
                 enumerable: true,
                 configurable: true
             });
-            EffectSend.prototype.setData = function(data) {
+            EffectSend.prototype.setData = function (data) {
                 if (data.wet !== undefined) {
                     this.wet.value = data.wet
                 }
@@ -18350,13 +18411,13 @@ Module(function iOSDevices() {
                     this.init()
                 }
             }
-            ;
+                ;
             return EffectSend
         }(Klang.Model.Effect);
         return Klang.Model.EffectSend = EffectSend
     });
-    Module(function(Klang) {
-        var Equalizer = function(_super) {
+    Module(function (Klang) {
+        var Equalizer = function (_super) {
             Klang.Util.__extends(Equalizer, _super);
             function Equalizer(data) {
                 _super.call(this, data);
@@ -18394,7 +18455,7 @@ Module(function iOSDevices() {
                     this._filters[this._filters.length - 1].connect(this._output)
                 }
             }
-            Equalizer.prototype.addFilter = function(type, frequency, q, gain) {
+            Equalizer.prototype.addFilter = function (type, frequency, q, gain) {
                 var filter = Klang.context.createBiquadFilter();
                 filter.type = type;
                 filter.frequency.value = frequency;
@@ -18410,8 +18471,8 @@ Module(function iOSDevices() {
                 filter.connect(this.output);
                 this._filters.push(filter)
             }
-            ;
-            Equalizer.prototype.removeFilter = function(index) {
+                ;
+            Equalizer.prototype.removeFilter = function (index) {
                 this._filters[index].disconnect();
                 if (index == 0 && this._filters.length > 1) {
                     this._input.disconnect();
@@ -18432,8 +18493,8 @@ Module(function iOSDevices() {
                 }
                 this._filters.splice(index, 1)
             }
-            ;
-            Equalizer.prototype.setActive = function(state) {
+                ;
+            Equalizer.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     if (this._filters.length == 0) {
@@ -18446,15 +18507,15 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Equalizer.prototype, "filters", {
-                get: function() {
+                get: function () {
                     return this._filters
                 },
                 enumerable: true,
                 configurable: true
             });
-            Equalizer.prototype.setData = function(data) {
+            Equalizer.prototype.setData = function (data) {
                 for (var ix = 0, len = this._filters.length; ix < len; ix++) {
                     var filterData = data.bands[ix];
                     var filter = this._filters[ix];
@@ -18469,19 +18530,19 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
+                ;
             return Equalizer
         }(Klang.Model.Effect);
         return Klang.Model.Equalizer = Equalizer
     });
-    Module(function(Klang) {
-        var BiquadFilter = function(_super) {
+    Module(function (Klang) {
+        var BiquadFilter = function (_super) {
             Klang.Util.__extends(BiquadFilter, _super);
             function BiquadFilter(data) {
                 _super.call(this, data);
                 this.init(data)
             }
-            BiquadFilter.prototype.init = function(data) {
+            BiquadFilter.prototype.init = function (data) {
                 this._data = data;
                 this._filter = Klang.context.createBiquadFilter();
                 this._filter.type = Klang.Util.safeFilterType(data.filter_type);
@@ -18491,8 +18552,8 @@ Module(function iOSDevices() {
                 this._filter.Q.value = data.Q !== undefined ? data.Q : 1;
                 this._filter.gain.value = data.gain !== undefined ? data.gain : 0
             }
-            ;
-            BiquadFilter.prototype.setActive = function(state) {
+                ;
+            BiquadFilter.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._filter)
@@ -18501,29 +18562,29 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(BiquadFilter.prototype, "frequency", {
-                get: function() {
+                get: function () {
                     return this._filter.frequency
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(BiquadFilter.prototype, "Q", {
-                get: function() {
+                get: function () {
                     return this._filter.Q
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(BiquadFilter.prototype, "gain", {
-                get: function() {
+                get: function () {
                     return this._filter.gain
                 },
                 enumerable: true,
                 configurable: true
             });
-            BiquadFilter.prototype.refreshAudioNodes = function() {
+            BiquadFilter.prototype.refreshAudioNodes = function () {
                 var fValue = this._filter.frequency.value;
                 var qValue = this._filter.Q.value;
                 var gValue = this._filter.gain.value;
@@ -18536,8 +18597,8 @@ Module(function iOSDevices() {
                 this._filter.Q.value = qValue;
                 this._filter.gain.value = gValue
             }
-            ;
-            BiquadFilter.prototype.setData = function(data) {
+                ;
+            BiquadFilter.prototype.setData = function (data) {
                 if (data.filter_type === undefined) {
                     data.filter_type = "lowpass"
                 }
@@ -18548,31 +18609,31 @@ Module(function iOSDevices() {
                 this._filter.Q.value = data.Q === undefined ? 1 : data.Q;
                 this._filter.gain.value = data.gain === undefined ? 0 : data.gain
             }
-            ;
+                ;
             return BiquadFilter
         }(Klang.Model.Effect);
         return Klang.Model.BiquadFilter = BiquadFilter
     });
-    Module(function(Klang) {
-        var Bitcrusher = function(_super) {
+    Module(function (Klang) {
+        var Bitcrusher = function (_super) {
             Klang.Util.__extends(Bitcrusher, _super);
             function Bitcrusher(data) {
                 _super.call(this, data);
                 this._pro = Klang.context.createScriptProcessor(data.buffer_size || 4096, 2, 2);
                 var _this = this;
-                this._pro.onaudioprocess = function(e) {
+                this._pro.onaudioprocess = function (e) {
                     var inp = e.inputBuffer
-                      , out = e.outputBuffer
-                      , iL = inp.getChannelData(0)
-                      , iR = inp.getChannelData(1)
-                      , oL = out.getChannelData(0)
-                      , oR = out.getChannelData(1)
-                      , step = Math.pow(0.5, _this._bits)
-                      , len = inp.length
-                      , sample = 0
-                      , lastL = 0
-                      , lastR = 0
-                      , i = 0;
+                        , out = e.outputBuffer
+                        , iL = inp.getChannelData(0)
+                        , iR = inp.getChannelData(1)
+                        , oL = out.getChannelData(0)
+                        , oR = out.getChannelData(1)
+                        , step = Math.pow(0.5, _this._bits)
+                        , len = inp.length
+                        , sample = 0
+                        , lastL = 0
+                        , lastR = 0
+                        , i = 0;
                     for (; i < len; ++i) {
                         if ((sample += _this._reduction) >= 1) {
                             sample--;
@@ -18583,13 +18644,13 @@ Module(function iOSDevices() {
                         oR[i] = lastR
                     }
                 }
-                ;
+                    ;
                 this._bits = data.bits || 4;
                 this._reduction = data.reduction || 0.2;
                 this._input.connect(this._pro);
                 this._pro.connect(this._output)
             }
-            Bitcrusher.prototype.setActive = function(state) {
+            Bitcrusher.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._pro);
@@ -18599,38 +18660,38 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Bitcrusher.prototype, "bits", {
-                get: function() {
+                get: function () {
                     return this._bits
                 },
-                set: function(value) {
+                set: function (value) {
                     this._bits = value
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Bitcrusher.prototype, "reduction", {
-                get: function() {
+                get: function () {
                     return this._reduction
                 },
-                set: function(value) {
+                set: function (value) {
                     this._reduction = value
                 },
                 enumerable: true,
                 configurable: true
             });
-            Bitcrusher.prototype.setData = function(data) {
+            Bitcrusher.prototype.setData = function (data) {
                 this._bits = data.bits !== undefined ? data.bits : 4;
                 this._reduction = data.reduction !== undefined ? data.reduction : 0.2
             }
-            ;
+                ;
             return Bitcrusher
         }(Klang.Model.Effect);
         return Klang.Model.Bitcrusher = Bitcrusher
     });
-    Module(function(Klang) {
-        var Compressor = function(_super) {
+    Module(function (Klang) {
+        var Compressor = function (_super) {
             Klang.Util.__extends(Compressor, _super);
             function Compressor(data) {
                 _super.call(this, data);
@@ -18655,7 +18716,7 @@ Module(function iOSDevices() {
                 this._dynamicsCompressor.release.value = data.release || this._dynamicsCompressor.release.value;
                 this._makeUpGain.gain.value = data.make_up_gain || this._makeUpGain.gain.value
             }
-            Compressor.prototype.setActive = function(state) {
+            Compressor.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._dynamicsCompressor);
@@ -18667,57 +18728,57 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Compressor.prototype, "threshold", {
-                get: function() {
+                get: function () {
                     return this._dynamicsCompressor.threshold
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Compressor.prototype, "knee", {
-                get: function() {
+                get: function () {
                     return this._dynamicsCompressor.knee
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Compressor.prototype, "ratio", {
-                get: function() {
+                get: function () {
                     return this._dynamicsCompressor.ratio
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Compressor.prototype, "attack", {
-                get: function() {
+                get: function () {
                     return this._dynamicsCompressor.attack
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Compressor.prototype, "release", {
-                get: function() {
+                get: function () {
                     return this._dynamicsCompressor.release
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Compressor.prototype, "reduction", {
-                get: function() {
+                get: function () {
                     return this._dynamicsCompressor.reduction
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Compressor.prototype, "makeUpGain", {
-                get: function() {
+                get: function () {
                     return this._makeUpGain.gain
                 },
                 enumerable: true,
                 configurable: true
             });
-            Compressor.prototype.setData = function(data) {
+            Compressor.prototype.setData = function (data) {
                 if (data.threshold !== undefined) {
                     this.threshold.value = data.threshold
                 }
@@ -18737,13 +18798,13 @@ Module(function iOSDevices() {
                     this.makeUpGain.value = data.make_up_gain
                 }
             }
-            ;
+                ;
             return Compressor
         }(Klang.Model.Effect);
         return Klang.Model.Compressor = Compressor
     });
-    Module(function(Klang) {
-        var Convolver = function(_super) {
+    Module(function (Klang) {
+        var Convolver = function (_super) {
             Klang.Util.__extends(Convolver, _super);
             function Convolver(data) {
                 _super.call(this, data);
@@ -18760,13 +18821,13 @@ Module(function iOSDevices() {
                 this._convolver.connect(this._output);
                 Klang.core.Core.instance.pushToPostLoadInitStack(this)
             }
-            Convolver.prototype.dryWet = function(mix) {
+            Convolver.prototype.dryWet = function (mix) {
                 mix = Math.max(0, Math.min(1, mix));
                 this._wetGain.gain.value = mix;
                 this._dryGain.gain.value = 1 - mix
             }
-            ;
-            Convolver.prototype.setActive = function(state) {
+                ;
+            Convolver.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._convolver)
@@ -18775,39 +18836,39 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Convolver.prototype.init = function() {
+                ;
+            Convolver.prototype.init = function () {
                 var soundInstance = Klang.core.Core.instance.findInstance(this._soundName);
                 this._convolver.buffer = soundInstance.buffer
             }
-            ;
-            Convolver.prototype.setData = function(data) {
+                ;
+            Convolver.prototype.setData = function (data) {
                 if (data.sound && data.sound != this._soundName) {
                     this._soundName = data.sound;
                     this.init()
                 }
             }
-            ;
+                ;
             return Convolver
         }(Klang.Model.Effect);
         return Klang.Model.Convolver = Convolver
     });
-    Module(function(Klang) {
-        var DelayBase = function(_super) {
+    Module(function (Klang) {
+        var DelayBase = function (_super) {
             Klang.Util.__extends(DelayBase, _super);
             function DelayBase(data) {
                 _super.call(this, data);
                 this._sync = data.sync
             }
-            DelayBase.prototype.init = function() {
+            DelayBase.prototype.init = function () {
                 if (this._sync) {
                     var seq = Klang.core.Core.instance.findInstance(this._sync);
                     this.updateSync(seq.bpm);
                     seq.registerBPMSync(this)
                 }
             }
-            ;
-            DelayBase.prototype.setSync = function(sequencer, rate) {
+                ;
+            DelayBase.prototype.setSync = function (sequencer, rate) {
                 if (sequencer) {
                     this._sync = sequencer;
                     this._syncResolution = rate || 1;
@@ -18818,32 +18879,32 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            DelayBase.prototype.setSyncRate = function(rate) {
+                ;
+            DelayBase.prototype.setSyncRate = function (rate) {
                 if (this._sync) {
                     this._syncResolution = rate;
                     this.updateSync(Klang.core.Core.instance.findInstance(this._sync).bpm)
                 }
                 return this
             }
-            ;
-            DelayBase.prototype.updateSync = function(bpm) {
+                ;
+            DelayBase.prototype.updateSync = function (bpm) {
                 Klang.warn("DelayBase: Invocation of abstract method: DelayBase.updateSync in", this);
                 return this
             }
-            ;
+                ;
             Object.defineProperty(DelayBase.prototype, "sync", {
-                get: function() {
+                get: function () {
                     return this._sync
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(DelayBase.prototype, "syncResolution", {
-                get: function() {
+                get: function () {
                     return this._syncResolution
                 },
-                set: function(value) {
+                set: function (value) {
                     this._syncResolution = value
                 },
                 enumerable: true,
@@ -18853,8 +18914,8 @@ Module(function iOSDevices() {
         }(Klang.Model.Effect);
         return Klang.Model.DelayBase = DelayBase
     });
-    Module(function(Klang) {
-        var Delay = function(_super) {
+    Module(function (Klang) {
+        var Delay = function (_super) {
             Klang.Util.__extends(Delay, _super);
             function Delay(data) {
                 _super.call(this, data);
@@ -18883,7 +18944,7 @@ Module(function iOSDevices() {
                 this._feedback.gain.value = data.feedback || 0.3;
                 this._output.gain.value = data.output_vol || data.wet || 1
             }
-            Delay.prototype.setActive = function(state) {
+            Delay.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._delay)
@@ -18892,34 +18953,34 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Delay.prototype.updateSync = function(bpm) {
+                ;
+            Delay.prototype.updateSync = function (bpm) {
                 this._delay.delayTime.value = 60 / bpm * this.syncResolution;
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Delay.prototype, "delayTime", {
-                get: function() {
+                get: function () {
                     return this._delay.delayTime
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Delay.prototype, "feedback", {
-                get: function() {
+                get: function () {
                     return this._feedback.gain
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Delay.prototype, "filter", {
-                get: function() {
+                get: function () {
                     return this._filter
                 },
                 enumerable: true,
                 configurable: true
             });
-            Delay.prototype.setData = function(data) {
+            Delay.prototype.setData = function (data) {
                 if (data.feedback) {
                     this._feedback.gain.value = data.feedback
                 }
@@ -18958,13 +19019,13 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
+                ;
             return Delay
         }(Klang.Model.DelayBase);
         return Klang.Model.Delay = Delay
     });
-    Module(function(Klang) {
-        var StereoDelay = function(_super) {
+    Module(function (Klang) {
+        var StereoDelay = function (_super) {
             Klang.Util.__extends(StereoDelay, _super);
             function StereoDelay(data) {
                 _super.call(this, data);
@@ -18984,7 +19045,7 @@ Module(function iOSDevices() {
                 this._rightDelay.output.connect(this._merger, 0, 1);
                 this._merger.connect(this._output)
             }
-            StereoDelay.prototype.setActive = function(state) {
+            StereoDelay.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._splitter)
@@ -18993,38 +19054,38 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StereoDelay.prototype.updateSync = function(bpm) {
+                ;
+            StereoDelay.prototype.updateSync = function (bpm) {
                 this._leftDelay.updateSync(bpm);
                 this._rightDelay.updateSync(bpm);
                 return this
             }
-            ;
+                ;
             Object.defineProperty(StereoDelay.prototype, "leftDelay", {
-                get: function() {
+                get: function () {
                     return this._leftDelay
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(StereoDelay.prototype, "rightDelay", {
-                get: function() {
+                get: function () {
                     return this._rightDelay
                 },
                 enumerable: true,
                 configurable: true
             });
-            StereoDelay.prototype.setData = function(data) {
+            StereoDelay.prototype.setData = function (data) {
                 this._leftDelay.setData(data.left);
                 this._rightDelay.setData(data.right)
             }
-            ;
+                ;
             return StereoDelay
         }(Klang.Model.DelayBase);
         return Klang.Model.StereoDelay = StereoDelay
     });
-    Module(function(Klang) {
-        var PingPongDelay = function(_super) {
+    Module(function (Klang) {
+        var PingPongDelay = function (_super) {
             Klang.Util.__extends(PingPongDelay, _super);
             function PingPongDelay(data) {
                 _super.call(this, data);
@@ -19065,7 +19126,7 @@ Module(function iOSDevices() {
                 this._feedback.gain.value = data.feedback || 0.3;
                 this._output.gain.value = data.output_vol || data.wet || 1
             }
-            PingPongDelay.prototype.setActive = function(state) {
+            PingPongDelay.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._splitter)
@@ -19074,15 +19135,15 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            PingPongDelay.prototype.updateSync = function(bpm) {
+                ;
+            PingPongDelay.prototype.updateSync = function (bpm) {
                 this._leftDelay.delayTime.value = 60 / bpm * this.syncResolution;
                 this._rightDelay.delayTime.value = this._leftDelay.delayTime.value;
                 return this
             }
-            ;
+                ;
             Object.defineProperty(PingPongDelay.prototype, "delay_time", {
-                set: function(val) {
+                set: function (val) {
                     this._leftDelay.delayTime.value = val;
                     this._rightDelay.delayTime.value = val
                 },
@@ -19090,20 +19151,20 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(PingPongDelay.prototype, "feedback", {
-                get: function() {
+                get: function () {
                     return this._feedback.gain
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PingPongDelay.prototype, "filter", {
-                get: function() {
+                get: function () {
                     return this._filter
                 },
                 enumerable: true,
                 configurable: true
             });
-            PingPongDelay.prototype.setData = function(data) {
+            PingPongDelay.prototype.setData = function (data) {
                 if (data.feedback) {
                     this._feedback.gain.value = data.feedback
                 }
@@ -19147,13 +19208,13 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
+                ;
             return PingPongDelay
         }(Klang.Model.DelayBase);
         return Klang.Model.PingPongDelay = PingPongDelay
     });
-    Module(function(Klang) {
-        var Limiter = function(_super) {
+    Module(function (Klang) {
+        var Limiter = function (_super) {
             Klang.Util.__extends(Limiter, _super);
             function Limiter(data) {
                 _super.call(this, data);
@@ -19172,7 +19233,7 @@ Module(function iOSDevices() {
                 this._preGain.gain.value = data.pre_gain === undefined ? 1 : data.pre_gain;
                 this._postGain.gain.value = data.post_gain === undefined ? 1 : data.post_gain
             }
-            Limiter.prototype.setActive = function(state) {
+            Limiter.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._preGain)
@@ -19181,36 +19242,36 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Limiter.prototype, "threshold", {
-                get: function() {
+                get: function () {
                     return this._compressor.threshold
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Limiter.prototype, "preGain", {
-                get: function() {
+                get: function () {
                     return this._preGain.gain
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Limiter.prototype, "postGain", {
-                get: function() {
+                get: function () {
                     return this._postGain.gain
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Limiter.prototype, "reduction", {
-                get: function() {
+                get: function () {
                     return this._compressor.reduction
                 },
                 enumerable: true,
                 configurable: true
             });
-            Limiter.prototype.setData = function(data) {
+            Limiter.prototype.setData = function (data) {
                 if (data.threshold !== undefined) {
                     this._compressor.threshold.value = data.threshold
                 }
@@ -19221,13 +19282,13 @@ Module(function iOSDevices() {
                     this._postGain.gain.value = data.post_gain
                 }
             }
-            ;
+                ;
             return Limiter
         }(Klang.Model.Effect);
         return Klang.Model.Limiter = Limiter
     });
-    Module(function(Klang) {
-        var Panner = function(_super) {
+    Module(function (Klang) {
+        var Panner = function (_super) {
             Klang.Util.__extends(Panner, _super);
             function Panner(data) {
                 _super.call(this, data);
@@ -19269,7 +19330,7 @@ Module(function iOSDevices() {
             }
             Panner.panners = {};
             Panner._scale = 1;
-            Panner.prototype.setActive = function(state) {
+            Panner.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._panner)
@@ -19278,20 +19339,20 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Panner.prototype.setPosition = function(x, y, z) {
+                ;
+            Panner.prototype.setPosition = function (x, y, z) {
                 this._panner.setPosition(x * Panner.scale, y * Panner.scale, z * Panner.scale)
             }
-            ;
-            Panner.prototype.setOrientation = function(x, y, z) {
+                ;
+            Panner.prototype.setOrientation = function (x, y, z) {
                 this._panner.setOrientation(x, y, z)
             }
-            ;
-            Panner.prototype.setVelocity = function(x, y, z) {
+                ;
+            Panner.prototype.setVelocity = function (x, y, z) {
                 Klang.warn("setVelocity is removed from Klang and the WebAudio API")
             }
-            ;
-            Panner.prototype.setData = function(data) {
+                ;
+            Panner.prototype.setData = function (data) {
                 this._panner.setPosition(data.position[0], data.position[1], data.position[2]);
                 this._panner.setOrientation(data.position[0], data.position[1], data.position[2]);
                 if (data.panning_model !== undefined) {
@@ -19319,9 +19380,9 @@ Module(function iOSDevices() {
                     this._panner.coneOuterGain = data.cone_outer_gain
                 }
             }
-            ;
+                ;
             Object.defineProperty(Panner, "listener", {
-                get: function() {
+                get: function () {
                     return Klang.context.listener
                 },
                 enumerable: true,
@@ -19330,23 +19391,23 @@ Module(function iOSDevices() {
             Panner.setListenerPosition = function setListenerPosition(x, y, z) {
                 Klang.context.listener.setPosition(x * Panner.scale, y * Panner.scale, z * Panner.scale)
             }
-            ;
+                ;
             Panner.setListenerOrientation = function setListenerOrientation(x, y, z, xUp, yUp, zUp) {
                 Klang.context.listener.setOrientation(x, y, z, xUp, yUp, zUp)
             }
-            ;
+                ;
             Panner.setListenerVelocity = function setListenerVelocity(x, y, z) {
                 Klang.warn("setListenerVelocity is removed from Klang and the WebAudio API")
             }
-            ;
+                ;
             Panner.setDopplerFactor = function setDopplerFactor(factor) {
                 Klang.warn("setDopplerFactor is removed from Klang and the WebAudio API")
             }
-            ;
+                ;
             Panner.setSpeedOfSound = function setSpeedOfSound(speed) {
                 Klang.context.listener.speed = speed
             }
-            ;
+                ;
             Panner.setListenerData = function setListenerData(data) {
                 if (!data) {
                     return
@@ -19356,16 +19417,16 @@ Module(function iOSDevices() {
                 Panner.setListenerOrientation(data.orientation[0], data.orientation[1], data.orientation[2], data.orientation_up[0], data.orientation_up[1], data.orientation_up[2]);
                 Panner.setSpeedOfSound(data.speed_of_sound)
             }
-            ;
+                ;
             Panner.get = function get(name) {
                 return Panner.panners[name]
             }
-            ;
+                ;
             Object.defineProperty(Panner, "scale", {
-                get: function() {
+                get: function () {
                     return Panner._scale
                 },
-                set: function(scale) {
+                set: function (scale) {
                     Panner._scale = scale
                 },
                 enumerable: true,
@@ -19375,8 +19436,8 @@ Module(function iOSDevices() {
         }(Klang.Model.Effect);
         return Klang.Model.Panner = Panner
     });
-    Module(function(Klang) {
-        var Sidechain = function(_super) {
+    Module(function (Klang) {
+        var Sidechain = function (_super) {
             Klang.Util.__extends(Sidechain, _super);
             function Sidechain(data) {
                 _super.call(this, data);
@@ -19385,26 +19446,26 @@ Module(function iOSDevices() {
                 this._processor = Klang.context.createScriptProcessor(data.buffer_size || 0);
                 var _this = this;
                 var reductionIsAudioParameter = typeof this._source.reduction !== "number";
-                this._processor.onaudioprocess = function() {
+                this._processor.onaudioprocess = function () {
                     var reduction = reductionIsAudioParameter ? _this._source.reduction.value : _this._source.reduction;
                     _this._gain.gain.value = reduction === 0 ? 1 : Math.pow(10, reduction / 20)
                 }
-                ;
+                    ;
                 this._input.connect(this._gain);
                 this._input.connect(this._processor);
                 this._processor.connect(Klang.context.destination);
                 this._gain.connect(this._output);
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            Sidechain.prototype.init = function() {
+            Sidechain.prototype.init = function () {
                 if (!this._source || !this._source.bus || this._source.index === undefined) {
                     Klang.warn("Sidechain: No source specified")
                 }
                 var bus = Klang.core.Core.instance.findInstance(this._source.bus);
                 this._source = bus._effects[this._source.index]
             }
-            ;
-            Sidechain.prototype.setActive = function(state) {
+                ;
+            Sidechain.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._gain);
@@ -19414,13 +19475,13 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             return Sidechain
         }(Klang.Model.Effect);
         return Klang.Model.Sidechain = Sidechain
     });
-    Module(function(Klang) {
-        var StereoPannerPolyfill = function(_super) {
+    Module(function (Klang) {
+        var StereoPannerPolyfill = function (_super) {
             Klang.Util.__extends(StereoPannerPolyfill, _super);
             function StereoPannerPolyfill(data) {
                 _super.call(this, data);
@@ -19436,7 +19497,7 @@ Module(function iOSDevices() {
                 this._merger.connect(this._output);
                 this.pan = data.pan
             }
-            StereoPannerPolyfill.prototype.setActive = function(state) {
+            StereoPannerPolyfill.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._splitter)
@@ -19445,19 +19506,19 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StereoPannerPolyfill.prototype.getGainValue = function(value) {
+                ;
+            StereoPannerPolyfill.prototype.getGainValue = function (value) {
                 return (value + 1) / 2
             }
-            ;
-            StereoPannerPolyfill.prototype.setPanTo = function(value, when) {
+                ;
+            StereoPannerPolyfill.prototype.setPanTo = function (value, when) {
                 var gainValue = this.getGainValue(value);
                 this._left.gain.setValueAtTime(1 - gainValue, when || 0);
                 this._right.gain.setValueAtTime(gainValue, when || 0);
                 return this
             }
-            ;
-            StereoPannerPolyfill.prototype.linPanTo = function(value, duration, when) {
+                ;
+            StereoPannerPolyfill.prototype.linPanTo = function (value, duration, when) {
                 when = when || Klang.context.currentTime;
                 var gainValue = this.getGainValue(value);
                 this._left.gain.setValueAtTime(this._left.gain.value, when);
@@ -19466,8 +19527,8 @@ Module(function iOSDevices() {
                 this._right.gain.linearRampToValueAtTime(gainValue, when + duration);
                 return this
             }
-            ;
-            StereoPannerPolyfill.prototype.expPanTo = function(value, duration, when) {
+                ;
+            StereoPannerPolyfill.prototype.expPanTo = function (value, duration, when) {
                 when = when || Klang.context.currentTime;
                 var gainValue = this.getGainValue(value);
                 this._left.gain.setValueAtTime(this._left.gain.value == 0 ? Klang.Util.EXP_MIN_VALUE : this._left.gain.value, when);
@@ -19476,12 +19537,12 @@ Module(function iOSDevices() {
                 this._right.gain.exponentialRampToValueAtTime(gainValue, when + duration);
                 return this
             }
-            ;
+                ;
             Object.defineProperty(StereoPannerPolyfill.prototype, "pan", {
-                get: function() {
+                get: function () {
                     return this._right.gain.value
                 },
-                set: function(value) {
+                set: function (value) {
                     var gainValue = this.getGainValue(value);
                     this._left.gain.value = 1 - gainValue;
                     this._right.gain.value = gainValue
@@ -19489,15 +19550,15 @@ Module(function iOSDevices() {
                 enumerable: true,
                 configurable: true
             });
-            StereoPannerPolyfill.prototype.setData = function(data) {
+            StereoPannerPolyfill.prototype.setData = function (data) {
                 if (data.pan !== undefined) {
                     this.pan = data.pan
                 }
             }
-            ;
+                ;
             return StereoPannerPolyfill
         }(Klang.Model.Effect);
-        var StereoPanner = function(_super) {
+        var StereoPanner = function (_super) {
             if (typeof (window.AudioContext || window.webkitAudioContext).prototype.createStereoPanner === "undefined") {
                 return StereoPannerPolyfill
             }
@@ -19509,7 +19570,7 @@ Module(function iOSDevices() {
                 this._input.connect(this._panner);
                 this._panner.connect(this._output)
             }
-            StereoPanner.prototype.setActive = function(state) {
+            StereoPanner.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._splitter)
@@ -19518,35 +19579,35 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StereoPanner.prototype.getGainValue = function(value) {
+                ;
+            StereoPanner.prototype.getGainValue = function (value) {
                 return value
             }
-            ;
-            StereoPanner.prototype.setPanTo = function(value, when) {
+                ;
+            StereoPanner.prototype.setPanTo = function (value, when) {
                 when = Math.max(when || 0, Klang.context.currentTime);
                 this._panner.pan.cancelScheduledValues(when);
                 this._panner.pan.setValueAtTime(value, when);
                 return this
             }
-            ;
-            StereoPanner.prototype.linPanTo = function(value, duration, when) {
+                ;
+            StereoPanner.prototype.linPanTo = function (value, duration, when) {
                 when = Math.max(when || 0, Klang.context.currentTime);
                 this._panner.pan.cancelScheduledValues(when);
                 this._panner.pan.setValueAtTime(this._panner.pan.value, when);
                 this._panner.pan.linearRampToValueAtTime(value, when + duration);
                 return this
             }
-            ;
-            StereoPanner.prototype.expPanTo = function(value, duration, when) {
+                ;
+            StereoPanner.prototype.expPanTo = function (value, duration, when) {
                 when = when || Klang.context.currentTime;
                 value = Klang.Util.clamp(value, -0.99, 0.99);
                 this._panner.pan.setValueAtTime(this._panner.pan.value == 0 ? Klang.Util.EXP_MIN_VALUE : this._panner.pan.value, when);
                 this._panner.pan.exponentialRampToValueAtTime(value, when + duration);
                 return this
             }
-            ;
-            StereoPanner.prototype.refreshAudioNodes = function() {
+                ;
+            StereoPanner.prototype.refreshAudioNodes = function () {
                 var panValue = this._panner.pan.value;
                 this._panner.pan.cancelScheduledValues(Klang.context.currentTime);
                 this._panner.disconnect();
@@ -19555,29 +19616,29 @@ Module(function iOSDevices() {
                 this._input.connect(this._panner);
                 this._panner.connect(this._output)
             }
-            ;
+                ;
             Object.defineProperty(StereoPanner.prototype, "pan", {
-                get: function() {
+                get: function () {
                     return this._panner.pan.value
                 },
-                set: function(value) {
+                set: function (value) {
                     this._panner.pan.value = value
                 },
                 enumerable: true,
                 configurable: true
             });
-            StereoPanner.prototype.setData = function(data) {
+            StereoPanner.prototype.setData = function (data) {
                 if (data.pan !== undefined) {
                     this.pan = data.pan
                 }
             }
-            ;
+                ;
             return StereoPanner
         }(Klang.Model.Effect);
         return Klang.Model.StereoPanner = StereoPanner
     });
-    Module(function(Klang) {
-        var Tremolo = function(_super) {
+    Module(function (Klang) {
+        var Tremolo = function (_super) {
             Klang.Util.__extends(Tremolo, _super);
             function Tremolo(data, startTime) {
                 _super.call(this, data);
@@ -19596,15 +19657,15 @@ Module(function iOSDevices() {
                 this._oscillator.start(startTime);
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            Tremolo.prototype.init = function() {
+            Tremolo.prototype.init = function () {
                 if (this._sync) {
                     var seq = Klang.core.Core.instance.findInstance(this._sync);
                     this.updateSync(seq.bpm);
                     seq.registerBPMSync(this)
                 }
             }
-            ;
-            Tremolo.prototype.setActive = function(state) {
+                ;
+            Tremolo.prototype.setActive = function (state) {
                 if (state) {
                     this._amplitude.connect(this._output.gain)
                 } else {
@@ -19612,27 +19673,27 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Tremolo.prototype.updateSync = function(bpm) {
+                ;
+            Tremolo.prototype.updateSync = function (bpm) {
                 this._oscillator.frequency.value = bpm / 60 / this._rate;
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Tremolo.prototype, "frequency", {
-                get: function() {
+                get: function () {
                     return this._oscillator.frequency
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Tremolo.prototype, "amplitude", {
-                get: function() {
+                get: function () {
                     return this._amplitude.gain
                 },
                 enumerable: true,
                 configurable: true
             });
-            Tremolo.prototype.setData = function(data) {
+            Tremolo.prototype.setData = function (data) {
                 if (data.amplitude !== undefined) {
                     this.amplitude.value = data.amplitude
                 }
@@ -19649,13 +19710,13 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
+                ;
             return Tremolo
         }(Klang.Model.Effect);
         return Klang.Model.Tremolo = Tremolo
     });
-    Module(function(Klang) {
-        var Distortion = function(_super) {
+    Module(function (Klang) {
+        var Distortion = function (_super) {
             Klang.Util.__extends(Distortion, _super);
             function Distortion(data) {
                 _super.call(this, data);
@@ -19675,90 +19736,90 @@ Module(function iOSDevices() {
                 this._inputDrive.gain.value = data.drive || 0.5;
                 this._outputDrive.gain.value = data.outputGain || 0.5
             }
-            Distortion.prototype.createWSCurve = function(type, amount) {
+            Distortion.prototype.createWSCurve = function (type, amount) {
                 switch (type) {
-                case 0:
-                    var amount = Math.min(amount, 0.9999);
-                    var k = 2 * amount / (1 - amount), i, x;
-                    for (i = 0; i < this._samples; i++) {
-                        x = i * 2 / this._samples - 1;
-                        this._ws_table[i] = (1 + k) * x / (1 + k * Math.abs(x))
-                    }
-                    break;
-                case 1:
-                    var i, x, y;
-                    for (i = 0; i < this._samples; i++) {
-                        x = i * 2 / this._samples - 1;
-                        y = (0.5 * Math.pow(x + 1.4, 2) - 1) * y >= 0 ? 5.8 : 1.2;
-                        this._ws_table[i] = this.tanh(y)
-                    }
-                    break;
-                case 2:
-                    var i, x, y, a = 1 - amount;
-                    for (i = 0; i < this._samples; i++) {
-                        x = i * 2 / this._samples - 1;
-                        y = x < 0 ? -Math.pow(Math.abs(x), a + 0.04) : Math.pow(x, a);
-                        this._ws_table[i] = this.tanh(y * 2)
-                    }
-                    break;
-                case 3:
-                    var i, x, y, abx, a = 1 - amount > 0.99 ? 0.99 : 1 - amount;
-                    for (i = 0; i < this._samples; i++) {
-                        x = i * 2 / this._samples - 1;
-                        abx = Math.abs(x);
-                        if (abx < a) {
-                            y = abx
-                        } else {
-                            if (abx > a) {
-                                y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2))
+                    case 0:
+                        var amount = Math.min(amount, 0.9999);
+                        var k = 2 * amount / (1 - amount), i, x;
+                        for (i = 0; i < this._samples; i++) {
+                            x = i * 2 / this._samples - 1;
+                            this._ws_table[i] = (1 + k) * x / (1 + k * Math.abs(x))
+                        }
+                        break;
+                    case 1:
+                        var i, x, y;
+                        for (i = 0; i < this._samples; i++) {
+                            x = i * 2 / this._samples - 1;
+                            y = (0.5 * Math.pow(x + 1.4, 2) - 1) * y >= 0 ? 5.8 : 1.2;
+                            this._ws_table[i] = this.tanh(y)
+                        }
+                        break;
+                    case 2:
+                        var i, x, y, a = 1 - amount;
+                        for (i = 0; i < this._samples; i++) {
+                            x = i * 2 / this._samples - 1;
+                            y = x < 0 ? -Math.pow(Math.abs(x), a + 0.04) : Math.pow(x, a);
+                            this._ws_table[i] = this.tanh(y * 2)
+                        }
+                        break;
+                    case 3:
+                        var i, x, y, abx, a = 1 - amount > 0.99 ? 0.99 : 1 - amount;
+                        for (i = 0; i < this._samples; i++) {
+                            x = i * 2 / this._samples - 1;
+                            abx = Math.abs(x);
+                            if (abx < a) {
+                                y = abx
                             } else {
-                                if (abx > 1) {
-                                    y = abx
+                                if (abx > a) {
+                                    y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2))
+                                } else {
+                                    if (abx > 1) {
+                                        y = abx
+                                    }
+                                }
+                            }
+                            this._ws_table[i] = this.sign(x) * y * (1 / ((a + 1) / 2))
+                        }
+                        break;
+                    case 4:
+                        var i, x;
+                        for (i = 0; i < this._samples; i++) {
+                            x = i * 2 / this._samples - 1;
+                            if (x < -0.08905) {
+                                this._ws_table[i] = -3 / 4 * (1 - Math.pow(1 - (Math.abs(x) - 0.032857), 12) + 1 / 3 * (Math.abs(x) - 0.032847)) + 0.01
+                            } else {
+                                if (x >= -0.08905 && x < 0.320018) {
+                                    this._ws_table[i] = -6.153 * (x * x) + 3.9375 * x
+                                } else {
+                                    this._ws_table[i] = 0.630035
                                 }
                             }
                         }
-                        this._ws_table[i] = this.sign(x) * y * (1 / ((a + 1) / 2))
-                    }
-                    break;
-                case 4:
-                    var i, x;
-                    for (i = 0; i < this._samples; i++) {
-                        x = i * 2 / this._samples - 1;
-                        if (x < -0.08905) {
-                            this._ws_table[i] = -3 / 4 * (1 - Math.pow(1 - (Math.abs(x) - 0.032857), 12) + 1 / 3 * (Math.abs(x) - 0.032847)) + 0.01
-                        } else {
-                            if (x >= -0.08905 && x < 0.320018) {
-                                this._ws_table[i] = -6.153 * (x * x) + 3.9375 * x
-                            } else {
-                                this._ws_table[i] = 0.630035
-                            }
+                        break;
+                    case 5:
+                        var a = 2 + Math.round(amount * 14), bits = Math.round(Math.pow(2, a - 1)), i, x;
+                        for (i = 0; i < this._samples; i++) {
+                            x = i * 2 / this._samples - 1;
+                            this._ws_table[i] = Math.round(x * bits) / bits
                         }
-                    }
-                    break;
-                case 5:
-                    var a = 2 + Math.round(amount * 14), bits = Math.round(Math.pow(2, a - 1)), i, x;
-                    for (i = 0; i < this._samples; i++) {
-                        x = i * 2 / this._samples - 1;
-                        this._ws_table[i] = Math.round(x * bits) / bits
-                    }
-                    break
+                        break
                 }
                 this._waveshaper.curve = this._ws_table
             }
-            ;
-            Distortion.prototype.tanh = function(n) {
+                ;
+            Distortion.prototype.tanh = function (n) {
                 return (Math.exp(n) - Math.exp(-n)) / (Math.exp(n) + Math.exp(-n))
             }
-            ;
-            Distortion.prototype.sign = function(x) {
+                ;
+            Distortion.prototype.sign = function (x) {
                 if (x === 0) {
                     return 1
                 } else {
                     return Math.abs(x) / x
                 }
             }
-            ;
-            Distortion.prototype.setActive = function(state) {
+                ;
+            Distortion.prototype.setActive = function (state) {
                 this._input.disconnect();
                 if (state) {
                     this._input.connect(this._inputDrive)
@@ -19767,12 +19828,12 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Distortion.prototype, "amount", {
-                get: function() {
+                get: function () {
                     return this._amount
                 },
-                set: function(val) {
+                set: function (val) {
                     this._amount = val;
                     this.createWSCurve(this._distortionType, this._amount)
                 },
@@ -19780,10 +19841,10 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Distortion.prototype, "distortionType", {
-                get: function() {
+                get: function () {
                     return this._distortionType
                 },
-                set: function(val) {
+                set: function (val) {
                     this._distortionType = val;
                     this.createWSCurve(this._distortionType, this._amount)
                 },
@@ -19791,20 +19852,20 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Distortion.prototype, "drive", {
-                get: function() {
+                get: function () {
                     return this._inputDrive.gain
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Distortion.prototype, "outputGain", {
-                get: function() {
+                get: function () {
                     return this._outputDrive.gain
                 },
                 enumerable: true,
                 configurable: true
             });
-            Distortion.prototype.setData = function(data) {
+            Distortion.prototype.setData = function (data) {
                 if (data.amount !== undefined) {
                     this.amount = data.amount
                 }
@@ -19818,12 +19879,12 @@ Module(function iOSDevices() {
                     this._outputDrive.gain.value = data.outputGain
                 }
             }
-            ;
+                ;
             return Distortion
         }(Klang.Model.Effect);
         return Klang.Model.Distortion = Distortion
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Synth(data, name) {
             this._arpCounter = 0;
             this._arpNoteLength = 0.5;
@@ -19852,26 +19913,26 @@ Module(function iOSDevices() {
             this._beatSubscription = data.beat_subscription || 0.25;
             this.data = data
         }
-        Synth.prototype.connect = function(destination) {
+        Synth.prototype.connect = function (destination) {
             this._output.connect(destination);
             return this
         }
-        ;
-        Synth.prototype.disconnect = function() {
+            ;
+        Synth.prototype.disconnect = function () {
             this._output.disconnect();
             return this
         }
-        ;
-        Synth.prototype.handleMidiEvent = function(event, when, transpose, bypassArp) {
+            ;
+        Synth.prototype.handleMidiEvent = function (event, when, transpose, bypassArp) {
             Klang.warn("Synth: Invocation of abstract method: Synth.handleMidiEvent in", this);
             return this
         }
-        ;
-        Synth.prototype.stop = function() {
+            ;
+        Synth.prototype.stop = function () {
             Klang.warn("Synth: Invocation of abstract method: Synth.stop in", this)
         }
-        ;
-        Synth.prototype.handleArpModes = function(midiEvent) {
+            ;
+        Synth.prototype.handleArpModes = function (midiEvent) {
             this._arpVoices = [];
             if (this._octaves > 1) {
                 var octaves = [];
@@ -19922,8 +19983,8 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        Synth.prototype.sortVoices = function(a, b) {
+            ;
+        Synth.prototype.sortVoices = function (a, b) {
             if (a.midiEvent.noteNumber < b.midiEvent.noteNumber) {
                 return -1
             }
@@ -19932,8 +19993,8 @@ Module(function iOSDevices() {
             }
             return 0
         }
-        ;
-        Synth.prototype.arpActive = function(active) {
+            ;
+        Synth.prototype.arpActive = function (active) {
             if (active) {
                 if (this._sync) {
                     var seq = Klang.core.Core.instance.findInstance(this._sync);
@@ -19950,8 +20011,8 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        Synth.prototype.update = function(currentStep, scheduleTime) {
+            ;
+        Synth.prototype.update = function (currentStep, scheduleTime) {
             if (currentStep % this._beatSubscription == 0) {
                 this._arpPatternStep = currentStep * 4 % this._arpPattern.length;
                 if (this._arpVoices.length === 0) {
@@ -19979,51 +20040,51 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        Synth.prototype.deschedule = function() {
+            ;
+        Synth.prototype.deschedule = function () {
             Klang.warn("Synth: Invocation of abstract method: Synth.deschedule in", this);
             return this
         }
-        ;
+            ;
         Object.defineProperty(Synth.prototype, "arpCounter", {
-            get: function() {
+            get: function () {
                 return this._arpCounter
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Synth.prototype, "arpLength", {
-            get: function() {
+            get: function () {
                 return this._arpVoices.length
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Synth.prototype, "output", {
-            get: function() {
+            get: function () {
                 return this._output
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Synth.prototype, "arpPattern", {
-            get: function() {
+            get: function () {
                 return this._arpPattern
             },
-            set: function(pattern) {
+            set: function (pattern) {
                 this._arpPattern = pattern
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Synth.prototype, "arpPatternStep", {
-            get: function() {
+            get: function () {
                 return this._arpPatternStep
             },
             enumerable: true,
             configurable: true
         });
-        Synth.prototype.setData = function(data) {
+        Synth.prototype.setData = function (data) {
             if (data.volume !== undefined) {
                 this.output.gain.value = data.volume
             }
@@ -20053,10 +20114,10 @@ Module(function iOSDevices() {
             }
             this.data = data
         }
-        ;
+            ;
         return Klang.Model.Synth = Synth
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function LFO(data, startTime) {
             startTime = startTime || 0;
             this._targets = data.targets;
@@ -20075,7 +20136,7 @@ Module(function iOSDevices() {
             this._oscillator.start(startTime);
             Klang.core.Core.instance.pushToPreLoadInitStack(this)
         }
-        LFO.prototype.init = function() {
+        LFO.prototype.init = function () {
             if (this._sync) {
                 var seq = Klang.core.Core.instance.findInstance(this._sync);
                 this.updateSync(seq.bpm);
@@ -20094,14 +20155,14 @@ Module(function iOSDevices() {
                 this._amplitude.connect(effect[t.param])
             }
         }
-        ;
-        LFO.prototype.updateSync = function(bpm) {
+            ;
+        LFO.prototype.updateSync = function (bpm) {
             this._oscillator.frequency.value = bpm / 60 / this._rate;
             this._phase.delayTime.value = this._phaseVal * (1 / this._oscillator.frequency.value);
             return this
         }
-        ;
-        LFO.prototype.setData = function(data) {
+            ;
+        LFO.prototype.setData = function (data) {
             this._oscillator.type = data.wave;
             this._oscillator.frequency.value = data.rate;
             this._phase.delayTime.value = data.phase * (1 / this._oscillator.frequency.value);
@@ -20115,11 +20176,11 @@ Module(function iOSDevices() {
                 this.init()
             }
         }
-        ;
+            ;
         return Klang.Model.LFO = LFO
     });
-    Module(function(Klang) {
-        var generateNoiseBuffer = function(frames, alg) {
+    Module(function (Klang) {
+        var generateNoiseBuffer = function (frames, alg) {
             if (alg < 0 || alg > 3) {
                 Klang.warn("Synth: Invalid noise algorithm: " + alg)
             }
@@ -20131,29 +20192,29 @@ Module(function iOSDevices() {
             }
             for (var i = 0; i < sampleFrames; i++) {
                 switch (alg) {
-                case 0:
-                    bufferData[i] = Math.random() * 2 - 1;
-                    break;
-                case 1:
-                    bufferData[i] = Math.random();
-                    break;
-                case 2:
-                    bufferData[i] = Math.random() - 1;
-                    break;
-                case 3:
-                    bufferData[i] = i / sampleFrames;
-                    break;
-                default:
-                    break
+                    case 0:
+                        bufferData[i] = Math.random() * 2 - 1;
+                        break;
+                    case 1:
+                        bufferData[i] = Math.random();
+                        break;
+                    case 2:
+                        bufferData[i] = Math.random() - 1;
+                        break;
+                    case 3:
+                        bufferData[i] = i / sampleFrames;
+                        break;
+                    default:
+                        break
                 }
             }
             return buffer
         };
         Klang.engines.webAudio.Util.generateNoiseBuffer = generateNoiseBuffer
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var audioUtil = Klang.engines.webAudio.Util;
-        var SympleVoice = function() {
+        var SympleVoice = function () {
             function SympleVoice(data, voiceType, filterData, startTime, noiseBuffer) {
                 this.filterStartFreq = -1;
                 this._filterEnabled = true;
@@ -20179,7 +20240,7 @@ Module(function iOSDevices() {
                 }
                 this._filterData = filterData
             }
-            SympleVoice.prototype.noteOn = function(noteNumber, velocity, when, gainEG, filterEG, pitchEG, transpose) {
+            SympleVoice.prototype.noteOn = function (noteNumber, velocity, when, gainEG, filterEG, pitchEG, transpose) {
                 if (!this.enabled) {
                     return
                 }
@@ -20291,8 +20352,8 @@ Module(function iOSDevices() {
                 this.source.startTime = when;
                 Klang.safari ? this.source.noteOn(when) : this.source.start(when)
             }
-            ;
-            SympleVoice.prototype.noteOff = function(noteNumber, when, gainEG, filterEG) {
+                ;
+            SympleVoice.prototype.noteOff = function (noteNumber, when, gainEG, filterEG) {
                 if (!this.enabled) {
                     return
                 }
@@ -20333,8 +20394,8 @@ Module(function iOSDevices() {
                 this.source.offTime = when;
                 Klang.safari ? this.source.noteOff(when + gainEG.release * 5) : this.source.stop(when + gainEG.release * 5)
             }
-            ;
-            SympleVoice.prototype.stop = function() {
+                ;
+            SympleVoice.prototype.stop = function () {
                 this.filter.frequency.cancelScheduledValues(0);
                 this._envelope.gain.cancelScheduledValues(0);
                 this._envelope.gain.setValueAtTime(0, 0);
@@ -20347,8 +20408,8 @@ Module(function iOSDevices() {
                     this._envelope.disconnect()
                 }
             }
-            ;
-            SympleVoice.prototype.stopSoft = function(when, gainEG, filterEG) {
+                ;
+            SympleVoice.prototype.stopSoft = function (when, gainEG, filterEG) {
                 this.active = false;
                 this._envelope.gain.cancelScheduledValues(when);
                 if (Klang.safari) {
@@ -20359,7 +20420,7 @@ Module(function iOSDevices() {
                 var offTime = when + gainEG.release * 5;
                 Klang.safari ? this.source.noteOff(offTime) : this.source.stop(offTime);
                 var _this = this;
-                setTimeout(function() {
+                setTimeout(function () {
                     _this.source.disconnect();
                     if (_this.filter) {
                         _this.filter.disconnect()
@@ -20369,22 +20430,22 @@ Module(function iOSDevices() {
                     }
                 }, (offTime - Klang.Util.now()) * 1000)
             }
-            ;
+                ;
             Object.defineProperty(SympleVoice.prototype, "enabled", {
-                get: function() {
+                get: function () {
                     return this._enabled
                 },
-                set: function(state) {
+                set: function (state) {
                     this._enabled = state
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(SympleVoice.prototype, "filterEnabled", {
-                get: function() {
+                get: function () {
                     return this._filterEnabled
                 },
-                set: function(state) {
+                set: function (state) {
                     this._filterEnabled = state;
                     if (!this.source) {
                         return
@@ -20404,7 +20465,7 @@ Module(function iOSDevices() {
             });
             return SympleVoice
         }();
-        var SympleOsc = function() {
+        var SympleOsc = function () {
             function SympleOsc(data, poly, filterData, startTime) {
                 this._enabled = true;
                 this.nextVoice = 0;
@@ -20417,7 +20478,7 @@ Module(function iOSDevices() {
                 this.voices = [];
                 this._noiseBuffer = audioUtil.generateNoiseBuffer(this._data._frames, this._data._algorithm)
             }
-            SympleOsc.prototype.noteOn = function(noteNumber, velocity, when, gainEG, filterEG, pitchEG, transpose) {
+            SympleOsc.prototype.noteOn = function (noteNumber, velocity, when, gainEG, filterEG, pitchEG, transpose) {
                 if (!this.enabled) {
                     return
                 }
@@ -20428,9 +20489,9 @@ Module(function iOSDevices() {
                 noteNumber += this.octave * 12;
                 var v;
                 if (this._data.wave == "noise") {
-                    v = new SympleVoice(this._data,0,this._filterData,when,this._noiseBuffer)
+                    v = new SympleVoice(this._data, 0, this._filterData, when, this._noiseBuffer)
                 } else {
-                    v = new SympleVoice(this._data,0,this._filterData,when,null)
+                    v = new SympleVoice(this._data, 0, this._filterData, when, null)
                 }
                 v.gain.connect(this.output);
                 v.noteOn(noteNumber, velocity, when, gainEG, filterEG, pitchEG, transpose);
@@ -20442,8 +20503,8 @@ Module(function iOSDevices() {
                 }
                 this.voices.push(v)
             }
-            ;
-            SympleOsc.prototype.noteOff = function(noteNumber, when, gainEG, filterEG) {
+                ;
+            SympleOsc.prototype.noteOff = function (noteNumber, when, gainEG, filterEG) {
                 if (!this.enabled) {
                     return
                 }
@@ -20456,22 +20517,22 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            SympleOsc.prototype.stopSoft = function(when, gainEG, filterEG) {
+                ;
+            SympleOsc.prototype.stopSoft = function (when, gainEG, filterEG) {
                 for (var ix = 0; ix < this.voices.length; ix++) {
                     this.voices[ix].stopSoft(when, gainEG, filterEG)
                 }
                 this.voices = []
             }
-            ;
-            SympleOsc.prototype.stop = function() {
+                ;
+            SympleOsc.prototype.stop = function () {
                 for (var ix = 0, len = this.voices.length; ix < len; ix++) {
                     this.voices[ix].stop()
                 }
                 this.voices = []
             }
-            ;
-            SympleOsc.prototype.deschedule = function() {
+                ;
+            SympleOsc.prototype.deschedule = function () {
                 for (var ix = 0, len = this.voices.length; ix < len; ix++) {
                     if (this.voices[ix]) {
                         var source = this.voices[ix].source;
@@ -20483,8 +20544,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            SympleOsc.prototype.setDetune = function(detune, when) {
+                ;
+            SympleOsc.prototype.setDetune = function (detune, when) {
                 if (this._data) {
                     this._data.detune = detune;
                     for (var ix = 0, len = this.voices.length; ix < len; ix++) {
@@ -20492,19 +20553,19 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
+                ;
             Object.defineProperty(SympleOsc.prototype, "enabled", {
-                get: function() {
+                get: function () {
                     return this._enabled
                 },
-                set: function(state) {
+                set: function (state) {
                     this._enabled = state
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(SympleOsc.prototype, "detune", {
-                get: function() {
+                get: function () {
                     return this._detune
                 },
                 enumerable: true,
@@ -20512,7 +20573,7 @@ Module(function iOSDevices() {
             });
             return SympleOsc
         }();
-        var SympleLFO = function() {
+        var SympleLFO = function () {
             function SympleLFO(data, startTime) {
                 this.osc = Klang.context.createOscillator();
                 this.phaseDelay = Klang.context.createDelay();
@@ -20534,15 +20595,15 @@ Module(function iOSDevices() {
                 this.phaseDelay.connect(this.filterAmplitude);
                 Klang.safari ? this.osc.noteOn(startTime) : this.osc.start(startTime)
             }
-            SympleLFO.prototype.updateSync = function(bpm) {
+            SympleLFO.prototype.updateSync = function (bpm) {
                 this.osc.frequency.value = bpm / 60 / this.syncResolution;
                 this.phaseDelay.delayTime.value = this.phase * (1 / this.osc.frequency.value);
                 return this
             }
-            ;
+                ;
             return SympleLFO
         }();
-        var Symple = function(_super) {
+        var Symple = function (_super) {
             Klang.Util.__extends(Symple, _super);
             function Symple(data, name) {
                 _super.call(this, data, name);
@@ -20573,7 +20634,7 @@ Module(function iOSDevices() {
                 this._oscs = [];
                 this._poly = data.poly;
                 for (var ix = 0, len = data.oscillators.length; ix < len; ix++) {
-                    var o = new SympleOsc(data.oscillators[ix],data.poly,data.filter,startTime);
+                    var o = new SympleOsc(data.oscillators[ix], data.poly, data.filter, startTime);
                     o.output.connect(this.output);
                     this._oscs.push(o)
                 }
@@ -20597,7 +20658,7 @@ Module(function iOSDevices() {
                     }
                 }
                 if (data.LFO) {
-                    this._LFO = new SympleLFO(data.LFO,startTime);
+                    this._LFO = new SympleLFO(data.LFO, startTime);
                     for (var ix = 0, len = this._oscs.length; ix < len; ix++) {
                         var osc = this._oscs[ix];
                         if (this._LFO.oscVolumeAmplitude) {
@@ -20618,7 +20679,7 @@ Module(function iOSDevices() {
                     Klang.core.Core.instance.pushToPreLoadInitStack(this)
                 }
             }
-            Symple.prototype.init = function() {
+            Symple.prototype.init = function () {
                 if (this._LFO && this._LFO.sync) {
                     var seq = Klang.core.Core.instance.findInstance(this._LFO.sync);
                     this._LFO.updateSync(seq.bpm);
@@ -20632,8 +20693,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            Symple.prototype.handleMidiEvent = function(midiEvent, when, transpose, bypassArp) {
+                ;
+            Symple.prototype.handleMidiEvent = function (midiEvent, when, transpose, bypassArp) {
                 when = when || Klang.context.currentTime;
                 bypassArp = bypassArp || false;
                 transpose = transpose || 0;
@@ -20684,8 +20745,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Symple.prototype.glideTo = function(midiNotes, when, duration, transpose) {
+                ;
+            Symple.prototype.glideTo = function (midiNotes, when, duration, transpose) {
                 var now = Klang.Util.now();
                 when = when || now;
                 if (duration === undefined) {
@@ -20705,8 +20766,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Symple.prototype.stop = function(when) {
+                ;
+            Symple.prototype.stop = function (when) {
                 when = when || Klang.Util.now();
                 for (var ix = 0, len = this._oscs.length; ix < len; ix++) {
                     this._oscs[ix].stopSoft(when, this._gainEG, this._filterEG)
@@ -20716,16 +20777,16 @@ Module(function iOSDevices() {
                 }
                 this._arpVoices = []
             }
-            ;
-            Symple.prototype.deschedule = function() {
+                ;
+            Symple.prototype.deschedule = function () {
                 for (var o = 0, len = this._oscs.length; o < len; o++) {
                     this._oscs[o].deschedule()
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(Symple.prototype, "filterFrequency", {
-                set: function(val) {
+                set: function (val) {
                     for (var o = 0, len = this._oscs.length; o < len; o++) {
                         var osc = this._oscs[o];
                         osc._filterData.frequency = val;
@@ -20742,7 +20803,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "filterQ", {
-                set: function(val) {
+                set: function (val) {
                     for (var o = 0, len = this._oscs.length; o < len; o++) {
                         var osc = this._oscs[o];
                         osc._filterData.Q = val;
@@ -20759,7 +20820,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "filterType", {
-                set: function(val) {
+                set: function (val) {
                     for (var o = 0, len = this._oscs.length; o < len; o++) {
                         var osc = this._oscs[o];
                         osc._filterData.filter_type = val;
@@ -20773,7 +20834,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc1Wave", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc._data.wave = val;
                     for (var v = 0, vlen = osc.voices.length; v < vlen; v++) {
@@ -20787,7 +20848,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc1Vol", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc.output.gain.value = val
                 },
@@ -20795,7 +20856,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc1Detune", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc._detune = val;
                     for (var v = 0, vlen = osc.voices.length; v < vlen; v++) {
@@ -20809,7 +20870,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc1Octave", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc.octave = val
                 },
@@ -20817,7 +20878,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc2Wave", {
-                set: function(val) {
+                set: function (val) {
                     if (this._oscs.length < 2) {
                         return
                     }
@@ -20834,7 +20895,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc2Vol", {
-                set: function(val) {
+                set: function (val) {
                     if (this._oscs.length < 2) {
                         return
                     }
@@ -20845,7 +20906,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc2Detune", {
-                set: function(val) {
+                set: function (val) {
                     if (this._oscs.length < 2) {
                         return
                     }
@@ -20862,7 +20923,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "osc2Octave", {
-                set: function(val) {
+                set: function (val) {
                     if (this._oscs.length < 2) {
                         return
                     }
@@ -20873,7 +20934,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "pitchDecay", {
-                set: function(val) {
+                set: function (val) {
                     if (this._pitchEG) {
                         this._pitchEG.decay = val
                     }
@@ -20882,7 +20943,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "pitchContour", {
-                set: function(val) {
+                set: function (val) {
                     if (this._pitchEG) {
                         this._pitchEG.contour = val
                     }
@@ -20891,7 +20952,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "lfoWave", {
-                set: function(val) {
+                set: function (val) {
                     if (this._LFO) {
                         this._LFO.osc.type = val
                     }
@@ -20900,7 +20961,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "lfoRate", {
-                set: function(val) {
+                set: function (val) {
                     if (this._LFO) {
                         this._LFO.osc.frequency.value = val
                     }
@@ -20909,7 +20970,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "lfoPhase", {
-                set: function(val) {
+                set: function (val) {
                     if (this._LFO) {
                         this._LFO.phase = val
                     }
@@ -20918,7 +20979,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "lfoOscVol", {
-                set: function(val) {
+                set: function (val) {
                     if (this._LFO) {
                         this._LFO.oscVolumeAmplitude.gain.value = val
                     }
@@ -20927,7 +20988,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "lfoPitch", {
-                set: function(val) {
+                set: function (val) {
                     if (this._LFO) {
                         this._LFO.pitchAmplitude.gain.value = val
                     }
@@ -20936,7 +20997,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "lfoFilter", {
-                set: function(val) {
+                set: function (val) {
                     if (this._LFO) {
                         this._LFO.filterAmplitude.gain.value = val
                     }
@@ -20945,20 +21006,20 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "arpMode", {
-                set: function(val) {
+                set: function (val) {
                     this._arpMode = val
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Symple.prototype, "arpOctaves", {
-                set: function(val) {
+                set: function (val) {
                     this._octaves = val
                 },
                 enumerable: true,
                 configurable: true
             });
-            Symple.prototype.setData = function(data) {
+            Symple.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 this._poly = data.poly;
                 this._gainEG = data.gain_eg ? data.gain_eg : undefined;
@@ -21016,14 +21077,14 @@ Module(function iOSDevices() {
                     this._LFO.filterAmplitude.gain.value = 0
                 }
             }
-            ;
+                ;
             return Symple
         }(Klang.Model.Synth);
         return Klang.Model.Symple = Symple
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var audioUtil = Klang.engines.webAudio.Util;
-        var MonoSynth = function(_super) {
+        var MonoSynth = function (_super) {
             Klang.Util.__extends(MonoSynth, _super);
             function MonoSynth(data, name) {
                 _super.call(this, data, name);
@@ -21035,7 +21096,7 @@ Module(function iOSDevices() {
                     Klang.core.Core.instance.pushToPreLoadInitStack(this)
                 }
             }
-            MonoSynth.prototype.init = function() {
+            MonoSynth.prototype.init = function () {
                 if (this._sync) {
                     var seq = Klang.core.Core.instance.findInstance(this._sync);
                     seq.registerSynth(this);
@@ -21044,8 +21105,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            MonoSynth.prototype.trigger = function(note) {
+                ;
+            MonoSynth.prototype.trigger = function (note) {
                 var midiEvent = {
                     noteNumber: note,
                     when: Klang.context.currentTime
@@ -21053,8 +21114,8 @@ Module(function iOSDevices() {
                 this.noteOn(midiEvent.noteNumber, midiEvent.when);
                 this.noteOff(midiEvent.noteNumber, midiEvent.when)
             }
-            ;
-            MonoSynth.prototype.noteOn = function(noteNumber, velocity, when, transpose) {
+                ;
+            MonoSynth.prototype.noteOn = function (noteNumber, velocity, when, transpose) {
                 when = Math.max(when || 0, Klang.context.currentTime);
                 transpose = transpose || 0;
                 if (!this._osc) {
@@ -21084,15 +21145,15 @@ Module(function iOSDevices() {
                 this._adEndTime = when + decayVal;
                 return this
             }
-            ;
-            MonoSynth.prototype.noteOff = function(noteNumber, when) {
+                ;
+            MonoSynth.prototype.noteOff = function (noteNumber, when) {
                 when = Math.max(when || 0, this._adEndTime + 0.0001);
                 var attackVal = this.smoothingTime + this._gainEG.attack + 0.01;
                 var release = attackVal + this.smoothingTime + this._gainEG.release;
                 this._oscGain.gain.linearRampToValueAtTime(0, when + release)
             }
-            ;
-            MonoSynth.prototype.handleMidiEvent = function(midiEvent, when, transpose, bypassArp) {
+                ;
+            MonoSynth.prototype.handleMidiEvent = function (midiEvent, when, transpose, bypassArp) {
                 when = when || Klang.context.currentTime;
                 transpose = transpose || 0;
                 if (midiEvent.type == "channel") {
@@ -21121,8 +21182,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            MonoSynth.prototype.glideTo = function(midiNotes, when, duration, transpose) {
+                ;
+            MonoSynth.prototype.glideTo = function (midiNotes, when, duration, transpose) {
                 var now = Klang.Util.now();
                 when = when || now;
                 if (duration === undefined) {
@@ -21142,19 +21203,19 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            MonoSynth.prototype.stop = function(when) {
+                ;
+            MonoSynth.prototype.stop = function (when) {
                 when = when || Klang.Util.now();
                 this._osc.stop();
                 this._osc.disconnect();
                 this._oscGain.disconnect();
                 this._osc = null
             }
-            ;
-            MonoSynth.prototype.deschedule = function() {}
-            ;
+                ;
+            MonoSynth.prototype.deschedule = function () { }
+                ;
             Object.defineProperty(MonoSynth.prototype, "osc1Wave", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc._data.wave = val;
                     for (var v = 0, vlen = osc.voices.length; v < vlen; v++) {
@@ -21168,7 +21229,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MonoSynth.prototype, "osc1Vol", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc.output.gain.value = val
                 },
@@ -21176,7 +21237,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MonoSynth.prototype, "osc1Detune", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc._detune = val;
                     for (var v = 0, vlen = osc.voices.length; v < vlen; v++) {
@@ -21190,7 +21251,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MonoSynth.prototype, "osc1Octave", {
-                set: function(val) {
+                set: function (val) {
                     var osc = this._oscs[0];
                     osc.octave = val
                 },
@@ -21198,7 +21259,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MonoSynth.prototype, "pitchDecay", {
-                set: function(val) {
+                set: function (val) {
                     if (this._pitchEG) {
                         this._pitchEG.decay = val
                     }
@@ -21207,7 +21268,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(MonoSynth.prototype, "pitchContour", {
-                set: function(val) {
+                set: function (val) {
                     if (this._pitchEG) {
                         this._pitchEG.contour = val
                     }
@@ -21215,7 +21276,7 @@ Module(function iOSDevices() {
                 enumerable: true,
                 configurable: true
             });
-            MonoSynth.prototype.setData = function(data) {
+            MonoSynth.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 this._poly = data.poly;
                 this._gainEG = data.gain_eg ? data.gain_eg : undefined;
@@ -21224,13 +21285,13 @@ Module(function iOSDevices() {
                     this._osc.type = data.oscillators[0].wave
                 }
             }
-            ;
+                ;
             return MonoSynth
         }(Klang.Model.Synth);
         return Klang.Model.MonoSynth = MonoSynth
     });
-    Module(function(Klang) {
-        var SamplePlayer = function(_super) {
+    Module(function (Klang) {
+        var SamplePlayer = function (_super) {
             Klang.Util.__extends(SamplePlayer, _super);
             function SamplePlayer(data, name) {
                 _super.call(this, data, name);
@@ -21256,7 +21317,7 @@ Module(function iOSDevices() {
                 this._currentPitch = 1;
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            SamplePlayer.prototype.init = function() {
+            SamplePlayer.prototype.init = function () {
                 this._envelope = Klang.context.createGain();
                 for (var ix = 0, len = this._content.length; ix < len; ix++) {
                     if (this._content[ix].value === "noteOff") {
@@ -21282,11 +21343,11 @@ Module(function iOSDevices() {
                 if (this._sync) {
                     var seq = Klang.core.Core.instance.findInstance(this._sync);
                     seq.registerSynth(this);
-                    if (!seq.started) {}
+                    if (!seq.started) { }
                 }
             }
-            ;
-            SamplePlayer.prototype.handleMidiEvent = function(midiEvent, when, transpose, bypassArp, insertBus) {
+                ;
+            SamplePlayer.prototype.handleMidiEvent = function (midiEvent, when, transpose, bypassArp, insertBus) {
                 when = when || Klang.Util.now();
                 bypassArp = bypassArp || false;
                 transpose = transpose || 0;
@@ -21331,27 +21392,27 @@ Module(function iOSDevices() {
                                     var controllerType = midiEvent.controllerType || midiEvent.noteNumber;
                                     var value = midiEvent.value === undefined ? midiEvent.velocity : midiEvent.value;
                                     switch (controllerType) {
-                                    case 1:
-                                        break;
-                                    case 64:
-                                        if (value < 64) {
-                                            this.pedalRelease(when);
-                                            if (when > this._pedalOnTime) {
-                                                this._pedalOnTime = -1
-                                            }
-                                            if (this._hasSustainOffSamples) {
-                                                this.noteOn(when, 0, 0, 127, "sustainOff")
-                                            }
-                                        } else {
-                                            if (value > 64) {
-                                                this._pedalOnTime = when;
-                                                if (this._hasSustainOnSamples) {
-                                                    this.noteOn(when, 0, 0, 127, "sustainOn")
+                                        case 1:
+                                            break;
+                                        case 64:
+                                            if (value < 64) {
+                                                this.pedalRelease(when);
+                                                if (when > this._pedalOnTime) {
+                                                    this._pedalOnTime = -1
+                                                }
+                                                if (this._hasSustainOffSamples) {
+                                                    this.noteOn(when, 0, 0, 127, "sustainOff")
+                                                }
+                                            } else {
+                                                if (value > 64) {
+                                                    this._pedalOnTime = when;
+                                                    if (this._hasSustainOnSamples) {
+                                                        this.noteOn(when, 0, 0, 127, "sustainOn")
+                                                    }
                                                 }
                                             }
-                                        }
-                                        break;
-                                    default:
+                                            break;
+                                        default:
                                     }
                                 }
                             }
@@ -21360,8 +21421,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            SamplePlayer.prototype.noteOn = function(when, midiNote, transpose, velocity, value, volume, insertBus) {
+                ;
+            SamplePlayer.prototype.noteOn = function (when, midiNote, transpose, velocity, value, volume, insertBus) {
                 for (var ix = 0; ix < this._allVoices.length; ix++) {
                     var v = this._allVoices[ix];
                     if (v.source._sources.length == 0 || v.source.lastSource.playbackState == 3) {
@@ -21376,7 +21437,7 @@ Module(function iOSDevices() {
                 if (note.root === -1) {
                     rate = 1
                 }
-                var copy = new Klang.Model.AudioSource(note.source.data,midiNote.toString());
+                var copy = new Klang.Model.AudioSource(note.source.data, midiNote.toString());
                 if (value === "noteOn") {
                     var newVoice = {
                         source: copy,
@@ -21429,8 +21490,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            SamplePlayer.prototype.adsr = function(attack, decay, sustain, release) {
+                ;
+            SamplePlayer.prototype.adsr = function (attack, decay, sustain, release) {
                 var eg = this._gainEG;
                 if (arguments.length === 0) {
                     return {
@@ -21447,8 +21508,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            SamplePlayer.prototype.noteOff = function(when, midiNote, velocity, value) {
+                ;
+            SamplePlayer.prototype.noteOff = function (when, midiNote, velocity, value) {
                 var note = this.getNote(midiNote, velocity, "noteOn");
                 for (var i = 0; i < this._playingVoices.length; i++) {
                     if (!midiNote || midiNote.toString() === this._playingVoices[i].source._name) {
@@ -21482,8 +21543,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            SamplePlayer.prototype.stop = function(when) {
+                ;
+            SamplePlayer.prototype.stop = function (when) {
                 var when = when || Klang.Util.now();
                 this.pedalRelease(when);
                 for (var i = 0; i < this._playingVoices.length; i++) {
@@ -21500,15 +21561,15 @@ Module(function iOSDevices() {
                 this._arpVoices = [];
                 return this
             }
-            ;
-            SamplePlayer.prototype.deschedule = function() {
+                ;
+            SamplePlayer.prototype.deschedule = function () {
                 for (var i = 0; i < this._allVoices.length; i++) {
                     this._allVoices[i].source.deschedule()
                 }
                 return this
             }
-            ;
-            SamplePlayer.prototype.pedalRelease = function(when) {
+                ;
+            SamplePlayer.prototype.pedalRelease = function (when) {
                 for (var i = 0; i < this._sustained.length; i++) {
                     if (when < Klang.Util.now()) {
                         when = Klang.Util.now()
@@ -21527,8 +21588,8 @@ Module(function iOSDevices() {
                 }
                 this._sustained = []
             }
-            ;
-            SamplePlayer.prototype.getNote = function(note, velocity, value) {
+                ;
+            SamplePlayer.prototype.getNote = function (note, velocity, value) {
                 var i = 0;
                 var val = this._content[i].value || "noteOn";
                 while (velocity > this._content[i].highVelocity || value !== this._content[i].value) {
@@ -21541,12 +21602,12 @@ Module(function iOSDevices() {
                 }
                 return this._content[velocityLayer].samples[j]
             }
-            ;
+                ;
             Object.defineProperty(SamplePlayer.prototype, "content", {
-                get: function() {
+                get: function () {
                     return this._content
                 },
-                set: function(value) {
+                set: function (value) {
                     this._content = value;
                     this.init()
                 },
@@ -21554,13 +21615,13 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(SamplePlayer.prototype, "callbackFunction", {
-                set: function(func) {
+                set: function (func) {
                     this._callback = func
                 },
                 enumerable: true,
                 configurable: true
             });
-            SamplePlayer.prototype.setData = function(data) {
+            SamplePlayer.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 if (data.eg_gain) {
                     this._gainEG = data.eg_gain
@@ -21573,13 +21634,13 @@ Module(function iOSDevices() {
                     this._volumeCurve = data.volumeCurve
                 }
             }
-            ;
+                ;
             return SamplePlayer
         }(Klang.Model.Synth);
         return Klang.Model.SamplePlayer = SamplePlayer
     });
-    Module(function(Klang) {
-        (function(SyncType) {
+    Module(function (Klang) {
+        (function (SyncType) {
             SyncType._map = [];
             SyncType._map[0] = "Restart";
             SyncType.Restart = 0;
@@ -21591,9 +21652,9 @@ Module(function iOSDevices() {
             SyncType.Continue = 3
         }(Klang.Model.SyncType || (Klang.Model.SyncType = {})))
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var SyncType = Klang.Model.SyncType;
-        var Sequencer = function(_super) {
+        var Sequencer = function (_super) {
             Klang.Util.__extends(Sequencer, _super);
             function Sequencer(data, name) {
                 _super.call(this);
@@ -21620,7 +21681,7 @@ Module(function iOSDevices() {
                 this._swingFactor = data.swing_factor || 0;
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            Sequencer.prototype.init = function() {
+            Sequencer.prototype.init = function () {
                 this._lookahead = Klang.core.Core.settings.sequencer_lookahead || 50;
                 this._scheduleAheadTime = Klang.core.Core.settings.sequencer_schedule_ahead || 0.2;
                 if (Klang.isIOS) {
@@ -21628,8 +21689,8 @@ Module(function iOSDevices() {
                 }
                 this._resolution = Klang.core.Core.settings.sequencer_resolution || 0.25
             }
-            ;
-            Sequencer.prototype.startScheduler = function() {
+                ;
+            Sequencer.prototype.startScheduler = function () {
                 if (!this._paused && Klang.context.currentTime !== 0) {
                     this._lastScheduleLoopTime = Klang.context.currentTime;
                     while (this._scheduleTime < Klang.context.currentTime + this._scheduleAheadTime) {
@@ -21660,12 +21721,12 @@ Module(function iOSDevices() {
                     }
                 }
                 var _this = this;
-                this._scheduler = setTimeout(function() {
+                this._scheduler = setTimeout(function () {
                     _this.startScheduler()
                 }, _this._lookahead)
             }
-            ;
-            Sequencer.prototype.start = function() {
+                ;
+            Sequencer.prototype.start = function () {
                 if (!this._started) {
                     this._started = true;
                     this._scheduleTime = Klang.context.currentTime;
@@ -21683,8 +21744,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.pause = function() {
+                ;
+            Sequencer.prototype.pause = function () {
                 this._paused = true;
                 this._pauseOffset = this._scheduleTime - Klang.Util.now();
                 for (var ix = 0, len = this._registeredPatterns.length; ix < len; ix++) {
@@ -21693,8 +21754,8 @@ Module(function iOSDevices() {
                 this.trigger("pause");
                 return this
             }
-            ;
-            Sequencer.prototype.unpause = function() {
+                ;
+            Sequencer.prototype.unpause = function () {
                 this._paused = false;
                 this._scheduleTime = Klang.Util.now() + this._pauseOffset;
                 for (var ix = 0, len = this._registeredPatterns.length; ix < len; ix++) {
@@ -21702,8 +21763,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.reschedule = function() {
+                ;
+            Sequencer.prototype.reschedule = function () {
                 clearTimeout(this._scheduler);
                 var scheduled = this._scheduleTime - Klang.context.currentTime;
                 var resolutionTime = this.getNoteTime(this._resolution);
@@ -21724,8 +21785,8 @@ Module(function iOSDevices() {
                 this.startScheduler();
                 return this
             }
-            ;
-            Sequencer.prototype.stop = function() {
+                ;
+            Sequencer.prototype.stop = function () {
                 this._started = false;
                 clearTimeout(this._scheduler);
                 this._scheduler = null;
@@ -21737,8 +21798,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.stopAll = function(params) {
+                ;
+            Sequencer.prototype.stopAll = function (params) {
                 var exceptions = [];
                 for (var _i = 0; _i < arguments.length - 1; _i++) {
                     exceptions[_i] = arguments[_i + 1]
@@ -21755,41 +21816,41 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.restart = function() {
+                ;
+            Sequencer.prototype.restart = function () {
                 this._currentStep = 0;
                 return this
             }
-            ;
-            Sequencer.prototype.registerPattern = function(pattern) {
+                ;
+            Sequencer.prototype.registerPattern = function (pattern) {
                 this._registeredPatterns.push(pattern);
                 return this
             }
-            ;
-            Sequencer.prototype.unregisterPattern = function(pattern) {
+                ;
+            Sequencer.prototype.unregisterPattern = function (pattern) {
                 var index = this._registeredPatterns.indexOf(pattern);
                 this._registeredPatterns.splice(index, 1);
                 return this
             }
-            ;
-            Sequencer.prototype.registerSynth = function(synth) {
+                ;
+            Sequencer.prototype.registerSynth = function (synth) {
                 if (this._registeredSynths.indexOf(synth) == -1) {
                     this._registeredSynths.push(synth)
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.unregisterSynth = function(synth) {
+                ;
+            Sequencer.prototype.unregisterSynth = function (synth) {
                 var index = this._registeredPatterns.indexOf(synth);
                 this._registeredSynths.splice(index, 1);
                 return this
             }
-            ;
-            Sequencer.prototype.sync = function(process, beatModifier, args) {
+                ;
+            Sequencer.prototype.sync = function (process, beatModifier, args) {
                 return this.syncInSteps(process, this.getStepsToNext(this.beatLength * beatModifier), args)
             }
-            ;
-            Sequencer.prototype.syncInSteps = function(process, steps, args) {
+                ;
+            Sequencer.prototype.syncInSteps = function (process, steps, args) {
                 if (!this._started) {
                     this.start()
                 }
@@ -21801,24 +21862,24 @@ Module(function iOSDevices() {
                         args.push(scheduleTime)
                     }
                 }
-                this._syncHandler.addSyncCountdown(new SyncCountdown(steps,process,args));
+                this._syncHandler.addSyncCountdown(new SyncCountdown(steps, process, args));
                 return this
             }
-            ;
-            Sequencer.prototype.quantizeDuration = function(duration, beat) {
+                ;
+            Sequencer.prototype.quantizeDuration = function (duration, beat) {
                 var bpm = this.bpm;
                 var spb = 60 / bpm;
                 var bps = bpm / 60;
                 var beatLen = Math.floor(duration / spb);
                 return beatLen * bps
             }
-            ;
-            Sequencer.prototype.syncCallback = function(cb, beatQuant, offset, minOffset) {
+                ;
+            Sequencer.prototype.syncCallback = function (cb, beatQuant, offset, minOffset) {
                 minOffset = minOffset || 0;
                 offset = offset || 0;
                 beatQuant = beatQuant || 1;
                 var _this = this;
-                var handler = function(scheduleBeat, _, scheduleTime) {
+                var handler = function (scheduleBeat, _, scheduleTime) {
                     var beatMod = scheduleBeat % beatQuant;
                     if (beatMod === offset && minOffset <= 0) {
                         _this.off("beforeNextBeat", handler);
@@ -21831,14 +21892,14 @@ Module(function iOSDevices() {
                 };
                 this.on("beforeNextBeat", handler, this._syncCallbackContext)
             }
-            ;
-            Sequencer.prototype.cancelCallbacks = function() {
+                ;
+            Sequencer.prototype.cancelCallbacks = function () {
                 if (this._syncCallbackContext) {
                     this.off("beforeNextBeat", null, this._syncCallbackContext)
                 }
             }
-            ;
-            Sequencer.prototype.syncPattern = function(params) {
+                ;
+            Sequencer.prototype.syncPattern = function (params) {
                 var patterns = [];
                 for (var _i = 0; _i < arguments.length - 1; _i++) {
                     patterns[_i] = arguments[_i + 1]
@@ -21950,59 +22011,59 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.registerBPMSync = function(obj) {
+                ;
+            Sequencer.prototype.registerBPMSync = function (obj) {
                 if (this._syncedObjects.indexOf(obj) == -1) {
                     this._syncedObjects.push(obj)
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.unregisterBPMSync = function(obj) {
+                ;
+            Sequencer.prototype.unregisterBPMSync = function (obj) {
                 var index = this._syncedObjects.indexOf(obj);
                 if (index != -1) {
                     this._syncedObjects.splice(index, 1)
                 }
                 return this
             }
-            ;
-            Sequencer.prototype.getStepsToNext = function(x) {
+                ;
+            Sequencer.prototype.getStepsToNext = function (x) {
                 if (x == 0) {
                     return 0
                 }
                 return x - this._currentStep % x
             }
-            ;
-            Sequencer.prototype.getNoteTime = function(note) {
+                ;
+            Sequencer.prototype.getNoteTime = function (note) {
                 if (note === undefined) {
                     note = 1
                 }
                 return 60 / this._bpm * note
             }
-            ;
-            Sequencer.prototype.getBeatTime = function(x) {
+                ;
+            Sequencer.prototype.getBeatTime = function (x) {
                 return this.getNoteTime(this.getStepsToNext(x)) + this._scheduleTime
             }
-            ;
+                ;
             Object.defineProperty(Sequencer.prototype, "started", {
-                get: function() {
+                get: function () {
                     return this._started
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "paused", {
-                get: function() {
+                get: function () {
                     return this._paused
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "bpm", {
-                get: function() {
+                get: function () {
                     return this._bpm
                 },
-                set: function(value) {
+                set: function (value) {
                     this._bpm = value;
                     for (var ix = 0, len = this._registeredPatterns.length; ix < len; ix++) {
                         if (this._registeredPatterns[ix]._type == "MidiPattern") {
@@ -22017,7 +22078,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "scale", {
-                set: function(scale) {
+                set: function (scale) {
                     for (var ix = 0, len = this._registeredPatterns.length; ix < len; ix++) {
                         if (this._registeredPatterns[ix]._type == "MidiPattern") {
                             this._registeredPatterns[ix].scale = scale
@@ -22028,7 +22089,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "customScale", {
-                set: function(obj) {
+                set: function (obj) {
                     for (var ix = 0, len = this._registeredPatterns.length; ix < len; ix++) {
                         if (this._registeredPatterns[ix]._type == "MidiPattern") {
                             this._registeredPatterns[ix].customScale = obj
@@ -22039,7 +22100,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "transpose", {
-                set: function(transpose) {
+                set: function (transpose) {
                     for (var ix = 0, len = this._registeredPatterns.length; ix < len; ix++) {
                         if (this._registeredPatterns[ix]._type == "MidiPattern") {
                             if (transpose === 0) {
@@ -22054,90 +22115,90 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "resolution", {
-                get: function() {
+                get: function () {
                     return this._resolution
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "barLength", {
-                get: function() {
+                get: function () {
                     return this._barLength
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "beatLength", {
-                get: function() {
+                get: function () {
                     return this._beatLength
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "currentStep", {
-                get: function() {
+                get: function () {
                     return this._currentStep
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Sequencer.prototype, "swingFactor", {
-                set: function(val) {
+                set: function (val) {
                     this._swingFactor = val
                 },
                 enumerable: true,
                 configurable: true
             });
-            Sequencer.prototype.setData = function(data) {
+            Sequencer.prototype.setData = function (data) {
                 this._bpm = data.bpm || 120;
                 this._barLength = data.measure_length || 4;
                 this._beatLength = data.beat_length || 1;
                 this._swingFactor = data.swing_factor || 0
             }
-            ;
+                ;
             return Sequencer
         }(Klang.core.EventEmitter);
         return Klang.Model.Sequencer = Sequencer
     });
-    Module(function(Klang) {
-        var Process = function() {
+    Module(function (Klang) {
+        var Process = function () {
             function Process(data) {
                 this._vars = data.vars;
                 Klang.core.Core.instance.pushToPreLoadInitStack(this)
             }
-            Process.prototype.init = function() {
+            Process.prototype.init = function () {
                 for (var ix = 0, len = this._vars.length; ix < len; ix++) {
                     var n = this._vars[ix];
                     this._destination = this._actionData[n] = Klang.core.Core.instance.findInstance(n)
                 }
                 this._vars = null
             }
-            ;
-            Process.prototype.start = function(args) {
+                ;
+            Process.prototype.start = function (args) {
                 Klang.warn("Process: Invocation of abstract method")
             }
-            ;
-            Process.prototype.destination = function() {
+                ;
+            Process.prototype.destination = function () {
                 return this._destination
             }
-            ;
-            Process.prototype.execute = function(action, args, noCache) {
+                ;
+            Process.prototype.execute = function (action, args, noCache) {
                 if (typeof action === "function") {
                     action(Klang.core.Core, Klang.Model, Klang.Util, this._actionData, args, Klang.Util.vars)
                 } else {
                     if (!this._func || noCache) {
-                        this._func = new Function("Core","Model","Util","me","args","vars",action)
+                        this._func = new Function("Core", "Model", "Util", "me", "args", "vars", action)
                     }
                     return this._func(Klang.core.Core, Klang.Model, Klang.Util, this._actionData, args, Klang.Util.vars)
                 }
             }
-            ;
+                ;
             return Process
         }();
         return Klang.core.Process = Process
     });
-    Module(function(Klang) {
-        var SimpleProcess = function(_super) {
+    Module(function (Klang) {
+        var SimpleProcess = function (_super) {
             Klang.Util.__extends(SimpleProcess, _super);
             function SimpleProcess(data, name) {
                 _super.call(this, data);
@@ -22147,25 +22208,25 @@ Module(function iOSDevices() {
                 this._action = data.action;
                 this._actionData = {}
             }
-            SimpleProcess.prototype.start = function(args) {
+            SimpleProcess.prototype.start = function (args) {
                 try {
                     this.execute(this._action, args)
                 } catch (ex) {
                     Klang.err("Klang: error in process '" + this._name + "': " + ex.name + ": " + ex.message)
                 }
             }
-            ;
-            SimpleProcess.prototype.setData = function(data) {
+                ;
+            SimpleProcess.prototype.setData = function (data) {
                 this._action = data.action;
                 this._vars = data.vars;
                 this.init();
-                this._func = new Function("Core","Model","Util","me","args","vars",this._action)
+                this._func = new Function("Core", "Model", "Util", "me", "args", "vars", this._action)
             }
-            ;
+                ;
             return SimpleProcess
         }(Klang.core.Process);
         Klang.Model.SimpleProcess = SimpleProcess;
-        var AdvancedProcess = function(_super) {
+        var AdvancedProcess = function (_super) {
             Klang.Util.__extends(AdvancedProcess, _super);
             function AdvancedProcess(data, name) {
                 _super.call(this, data);
@@ -22197,7 +22258,7 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            AdvancedProcess.prototype.start = function(args) {
+            AdvancedProcess.prototype.start = function (args) {
                 if (Klang.isIOS) {
                     return
                 }
@@ -22229,8 +22290,8 @@ Module(function iOSDevices() {
                     Klang.err("Klang: error in process '" + this._name + "': " + ex.name + ": " + ex.message)
                 }
             }
-            ;
-            AdvancedProcess.prototype.cont = function() {
+                ;
+            AdvancedProcess.prototype.cont = function () {
                 this._actionData.execTime = this._nextStartTime + this._waitOffset;
                 for (var len = this._actions.length; this._currentAction < len; this._currentAction++) {
                     if (!this._started) {
@@ -22269,45 +22330,45 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            AdvancedProcess.prototype.scheduleLoop = function(loopTime) {
+                ;
+            AdvancedProcess.prototype.scheduleLoop = function (loopTime) {
                 if (!this._started) {
                     return
                 }
                 this._nextStartTime += loopTime;
                 var timeTilNext = this._nextStartTime - Klang.context.currentTime;
                 var _this = this;
-                var loopTimeoutId = setTimeout(function() {
+                var loopTimeoutId = setTimeout(function () {
                     _this._waitOffset = 0;
                     _this._currentAction = 0;
                     _this.cont()
                 }, (timeTilNext - this.SCHEDULE_AHEAD_TIME / 2) * 1000)
             }
-            ;
-            AdvancedProcess.prototype.stop = function() {
+                ;
+            AdvancedProcess.prototype.stop = function () {
                 this._started = false;
                 TimeHandler.instance.removeMethodCallback(this, "cont")
             }
-            ;
+                ;
             Object.defineProperty(AdvancedProcess.prototype, "started", {
-                get: function() {
+                get: function () {
                     return this._started
                 },
                 enumerable: true,
                 configurable: true
             });
-            AdvancedProcess.prototype.setData = function(data) {
+            AdvancedProcess.prototype.setData = function (data) {
                 this._actions = data.actions;
                 this._vars = data.vars;
                 this.init()
             }
-            ;
+                ;
             return AdvancedProcess
         }(Klang.core.Process);
         return Klang.Model.AdvancedProcess = AdvancedProcess
     });
-    Module(function(Klang) {
-        Klang.engines.webAudio.Util.createAudioContext = function(desiredSampleRate) {
+    Module(function (Klang) {
+        Klang.engines.webAudio.Util.createAudioContext = function (desiredSampleRate) {
             var AudioCtor = window.AudioContext || window.webkitAudioContext;
             desiredSampleRate = typeof desiredSampleRate === "number" ? desiredSampleRate : 44100;
             var context = new AudioCtor();
@@ -22324,9 +22385,9 @@ Module(function iOSDevices() {
             return context
         }
     });
-    Module(function(Klang) {});
-    Module(function(Klang) {
-        var StreamingAudioSource = function(_super) {
+    Module(function (Klang) { });
+    Module(function (Klang) {
+        var StreamingAudioSource = function (_super) {
             Klang.Util.__extends(StreamingAudioSource, _super);
             function StreamingAudioSource(data, name) {
                 _super.call(this, data, name);
@@ -22366,7 +22427,7 @@ Module(function iOSDevices() {
                     this.init()
                 }
             }
-            StreamingAudioSource.prototype.init = function() {
+            StreamingAudioSource.prototype.init = function () {
                 var self = this;
                 this._audioElement.crossOrigin = "anonymous";
                 if (this._fileId) {
@@ -22389,14 +22450,14 @@ Module(function iOSDevices() {
                     return
                 }
                 if (!this._duration) {
-                    this._audioElement.addEventListener("loadedmetadata", function(_event) {
+                    this._audioElement.addEventListener("loadedmetadata", function (_event) {
                         self._duration = self._audioElement.duration;
                         console.log("got duration")
                     })
                 }
             }
-            ;
-            StreamingAudioSource.prototype.setLoopRegion = function(loopStart, loopEnd) {
+                ;
+            StreamingAudioSource.prototype.setLoopRegion = function (loopStart, loopEnd) {
                 this._loopStart = loopStart || this._loopStart;
                 this._loopEnd = loopEnd || this._loopEnd;
                 for (var ix = 0, len = this._sources.length; ix < len; ix++) {
@@ -22406,8 +22467,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.connect = function(destination, forceConnect) {
+                ;
+            StreamingAudioSource.prototype.connect = function (destination, forceConnect) {
                 console.log("connect");
                 if (!this._destination || forceConnect) {
                     this._destination = destination;
@@ -22420,8 +22481,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.disconnect = function() {
+                ;
+            StreamingAudioSource.prototype.disconnect = function () {
                 this._output.disconnect();
                 this._destination = null;
                 if (this._panner) {
@@ -22429,8 +22490,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.scheduleGrain = function() {
+                ;
+            StreamingAudioSource.prototype.scheduleGrain = function () {
                 if (!this._buffer) {
                     return
                 }
@@ -22473,8 +22534,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            StreamingAudioSource.prototype.play = function(when, offset, duration, resume) {
+                ;
+            StreamingAudioSource.prototype.play = function (when, offset, duration, resume) {
                 var now = Klang.context.currentTime;
                 clearTimeout(this._stopTimeout);
                 if (this._playing) {
@@ -22585,17 +22646,17 @@ Module(function iOSDevices() {
                 } else {
                     var whenDelta = when - now;
                     if (duration) {
-                        this._durationTimeout = setTimeout(function() {
+                        this._durationTimeout = setTimeout(function () {
                             this.stop(0)
                         }
-                        .bind(this), (whenDelta + duration) * 1000)
+                            .bind(this), (whenDelta + duration) * 1000)
                     }
                     if (whenDelta > 0) {
-                        this._playTimeout = setTimeout(function() {
+                        this._playTimeout = setTimeout(function () {
                             this._audioElement.currentTime = this._startOffset;
                             this._audioElement.play()
                         }
-                        .bind(this), whenDelta * 1000)
+                            .bind(this), whenDelta * 1000)
                     } else {
                         this._audioElement.currentTime = this._startOffset;
                         this._audioElement.play()
@@ -22609,12 +22670,12 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.getNumberOfSamples = function() {
+                ;
+            StreamingAudioSource.prototype.getNumberOfSamples = function () {
                 return this._buffer.length
             }
-            ;
-            StreamingAudioSource.prototype.stop = function(when) {
+                ;
+            StreamingAudioSource.prototype.stop = function (when) {
                 if (typeof when === "undefined") {
                     when = 0
                 }
@@ -22647,10 +22708,10 @@ Module(function iOSDevices() {
                 }
                 var whenDelta = when - Klang.context.currentTime;
                 if (whenDelta > 0) {
-                    this._stopTimeout = setTimeout(function() {
+                    this._stopTimeout = setTimeout(function () {
                         this._audioElement.pause()
                     }
-                    .bind(this), whenDelta * 1000);
+                        .bind(this), whenDelta * 1000);
                     this._stopping = true
                 } else {
                     this._audioElement.pause()
@@ -22658,8 +22719,8 @@ Module(function iOSDevices() {
                 this._playing = false;
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.deschedule = function() {
+                ;
+            StreamingAudioSource.prototype.deschedule = function () {
                 for (var ix = 0; ix < this._sources.length; ix++) {
                     var source = this._sources[ix];
                     if (source.startTime > Klang.context.currentTime) {
@@ -22672,8 +22733,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.pause = function() {
+                ;
+            StreamingAudioSource.prototype.pause = function () {
                 if (this._endTime > Klang.Util.now()) {
                     this._paused = true;
                     var pauseDelta = Klang.Util.now() - this._startTime;
@@ -22682,8 +22743,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.unpause = function() {
+                ;
+            StreamingAudioSource.prototype.unpause = function () {
                 if (this.paused) {
                     var realOffset = this._offset;
                     this._offset += this._pauseTime;
@@ -22693,8 +22754,8 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.createMediaElementSource = function() {
+                ;
+            StreamingAudioSource.prototype.createMediaElementSource = function () {
                 if (!this._connected) {
                     var source = Klang.context.createMediaElementSource(this._audioElement);
                     this._source = source
@@ -22703,8 +22764,8 @@ Module(function iOSDevices() {
                 }
                 return source
             }
-            ;
-            StreamingAudioSource.prototype.fadeInAndPlay = function(fadeDuration, when, offset, duration) {
+                ;
+            StreamingAudioSource.prototype.fadeInAndPlay = function (fadeDuration, when, offset, duration) {
                 if (typeof offset === "undefined") {
                     offset = 0
                 }
@@ -22748,8 +22809,8 @@ Module(function iOSDevices() {
                 this.output.gain.linearRampToValueAtTime(this._volume, when + fadeDuration);
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.fadeOutAndStop = function(duration, when) {
+                ;
+            StreamingAudioSource.prototype.fadeOutAndStop = function (duration, when) {
                 if (!this.playing) {
                     return
                 }
@@ -22765,11 +22826,11 @@ Module(function iOSDevices() {
                     this._sources[this._sources.length - 1].connect(fadeGain);
                     var _this = this;
                     if (this._sources[this._sources.length - 1].onended !== undefined) {
-                        this._sources[this._sources.length - 1].onended = function() {
+                        this._sources[this._sources.length - 1].onended = function () {
                             _this._stopping = false
                         }
                     } else {
-                        this._stoppingId = setTimeout(function() {
+                        this._stoppingId = setTimeout(function () {
                             _this._stopping = false
                         }, (duration + (when - Klang.Util.now()) - _this._scheduleAhead) * 10000)
                     }
@@ -22783,7 +22844,7 @@ Module(function iOSDevices() {
                         this.output.gain.setValueAtTime(this.output.gain.value || this._volume, when);
                         this.output.gain.linearRampToValueAtTime(0, when + duration);
                         var _this = this;
-                        this._stoppingId = setTimeout(function() {
+                        this._stoppingId = setTimeout(function () {
                             if (!_this._stopping) {
                                 return
                             }
@@ -22798,8 +22859,8 @@ Module(function iOSDevices() {
                 this._stopping = true;
                 return this
             }
-            ;
-            StreamingAudioSource.prototype.removeUnusedSources = function() {
+                ;
+            StreamingAudioSource.prototype.removeUnusedSources = function () {
                 for (var ix = 0; ix < this._sources.length; ix++) {
                     var source = this._sources[ix];
                     if (!source.buffer || !this.loop && source.startTime + source.buffer.duration < Klang.context.currentTime) {
@@ -22809,8 +22870,8 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
-            StreamingAudioSource.prototype.curvePlaybackRate = function(value, duration, when) {
+                ;
+            StreamingAudioSource.prototype.curvePlaybackRate = function (value, duration, when) {
                 if (this._lockPlaybackrate) {
                     return
                 }
@@ -22824,9 +22885,9 @@ Module(function iOSDevices() {
                 this._playbackRate = value;
                 return this
             }
-            ;
+                ;
             Object.defineProperty(StreamingAudioSource.prototype, "lastSource", {
-                get: function() {
+                get: function () {
                     var numSources = this._sources.length;
                     if (numSources == 0) {
                         return null
@@ -22837,20 +22898,20 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "loop", {
-                get: function() {
+                get: function () {
                     return this._loop
                 },
-                set: function(value) {
+                set: function (value) {
                     this._loop = value
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "offset", {
-                get: function() {
+                get: function () {
                     return this._offset
                 },
-                set: function(value) {
+                set: function (value) {
                     if (typeof value === "string" && value.indexOf("%") !== -1) {
                         value = this._duration * parseFloat(value)
                     }
@@ -22860,7 +22921,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "position", {
-                get: function() {
+                get: function () {
                     if (!this.playing || !this._duration) {
                         return 0
                     }
@@ -22880,27 +22941,27 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "duration", {
-                get: function() {
+                get: function () {
                     return this._duration
                 },
-                set: function(value) {
+                set: function (value) {
                     this._duration = value
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "paused", {
-                get: function() {
+                get: function () {
                     return this._paused
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "playbackRate", {
-                get: function() {
+                get: function () {
                     return this._playbackRate
                 },
-                set: function(value) {
+                set: function (value) {
                     if (this._lockPlaybackrate) {
                         return
                     }
@@ -22917,7 +22978,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "nextPlaybackRate", {
-                set: function(value) {
+                set: function (value) {
                     if (this._lockPlaybackrate) {
                         return
                     }
@@ -22927,7 +22988,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "playbackRateNode", {
-                get: function() {
+                get: function () {
                     var source = this.lastSource;
                     return source && source.playbackRate
                 },
@@ -22935,27 +22996,27 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "buffer", {
-                get: function() {
+                get: function () {
                     if (!this._buffer) {
                         this._buffer = FileHandler.instance.getFile(this._fileId)
                     }
                     return this._buffer
                 },
-                set: function(buffer) {
+                set: function (buffer) {
                     this._buffer = buffer
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "playing", {
-                get: function() {
+                get: function () {
                     return this._endTime == -1 || this._endTime > Klang.Util.now()
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "playbackState", {
-                get: function() {
+                get: function () {
                     var source = this.lastSource;
                     if (source) {
                         return source.playbackState
@@ -22966,7 +23027,7 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "output", {
-                get: function() {
+                get: function () {
                     if (this._panner) {
                         return this._panner.output
                     } else {
@@ -22977,25 +23038,25 @@ Module(function iOSDevices() {
                 configurable: true
             });
             Object.defineProperty(StreamingAudioSource.prototype, "panner", {
-                get: function() {
+                get: function () {
                     return this._panner
                 },
                 enumerable: true,
                 configurable: true
             });
-            StreamingAudioSource.prototype.freeBuffer = function() {
+            StreamingAudioSource.prototype.freeBuffer = function () {
                 this._buffer = null;
                 for (var ix = 0, len = this._sources.length; ix < len; ix++) {
                     try {
                         this._sources[ix].stop(0)
-                    } catch (ex) {}
+                    } catch (ex) { }
                     this._sources[ix].disconnect();
                     this._sources[ix] = null
                 }
                 this._sources = []
             }
-            ;
-            StreamingAudioSource.prototype.setData = function(data) {
+                ;
+            StreamingAudioSource.prototype.setData = function (data) {
                 _super.prototype.setData.call(this, data);
                 var reinit = false;
                 this._volumeStartRange = data.volume_start_range;
@@ -23073,40 +23134,40 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ;
+                ;
             return StreamingAudioSource
         }(Klang.Model.Audio);
         return Klang.Model.StreamingAudioSource = StreamingAudioSource
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         var idCounter = 0;
         var fileHandler = Klang.core.FileHandler.instance;
         var StreamingAudioSource = Klang.Model.StreamingAudioSource;
         var AudioSource = Klang.Model.AudioSource;
-        StreamingAudioSource.prototype.toMaster = function() {
+        StreamingAudioSource.prototype.toMaster = function () {
             var master = Klang.core.Core.instance.findInstance(core.Core.instance._masterBusId);
             this.connect(master.input);
             return this
         }
-        ;
-        Klang.createStreamingAudioSource = function(data) {
+            ;
+        Klang.createStreamingAudioSource = function (data) {
             return new StreamingAudioSource(data || {})
         }
-        ;
+            ;
         var as;
-        AudioSource.prototype.toMaster = function() {
+        AudioSource.prototype.toMaster = function () {
             var master = Klang.core.Core.instance.findInstance(core.Core.instance._masterBusId);
             this.connect(master.input);
             return this
         }
-        ;
-        AudioSource.prototype.clone = function() {
-            var clone = new AudioSource(this.data,this._name);
+            ;
+        AudioSource.prototype.clone = function () {
+            var clone = new AudioSource(this.data, this._name);
             clone.connect(Klang.core.Core.instance.findInstance(this.destinationName).input);
             return clone
         }
-        ;
-        Klang.createAudioSource = function(urlObjOrBuffer) {
+            ;
+        Klang.createAudioSource = function (urlObjOrBuffer) {
             var as;
             if (urlObjOrBuffer instanceof AudioBuffer) {
                 as = new AudioSource({
@@ -23130,8 +23191,8 @@ Module(function iOSDevices() {
             }
             return as
         }
-        ;
-        var __defaults = function(defaults, options) {
+            ;
+        var __defaults = function (defaults, options) {
             var extended = {};
             var prop;
             for (prop in defaults) {
@@ -23147,11 +23208,11 @@ Module(function iOSDevices() {
             return extended
         }
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         window.Klang = Klang;
         return window.Klang
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Core() {
             this._initComplete = false;
             this._blurFadeOut = false;
@@ -23173,16 +23234,16 @@ Module(function iOSDevices() {
             }
             return Core.inst._initComplete
         }
-        ;
+            ;
         Object.defineProperty(Core.prototype, "initComplete", {
-            get: function() {
+            get: function () {
                 return this._initComplete
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Core, "instance", {
-            get: function() {
+            get: function () {
                 if (Core.inst == null) {
                     Core.inst = new Core()
                 }
@@ -23191,12 +23252,12 @@ Module(function iOSDevices() {
             enumerable: true,
             configurable: true
         });
-        Core.prototype.setCallbacks = function(callbacks) {
+        Core.prototype.setCallbacks = function (callbacks) {
             this._callbacks = callbacks
         }
-        ;
+            ;
         Object.defineProperty(Core, "callbacks", {
-            get: function() {
+            get: function () {
                 return Core.instance._callbacks
             },
             enumerable: true,
@@ -23205,8 +23266,8 @@ Module(function iOSDevices() {
         Core.deinit = function deinit() {
             Core.inst = null
         }
-        ;
-        Core.prototype.stopAll = function() {
+            ;
+        Core.prototype.stopAll = function () {
             if (window.KlangVisual) {
                 KlangVisual.stop()
             }
@@ -23214,15 +23275,15 @@ Module(function iOSDevices() {
                 if (this._objectTable[p].stop) {
                     try {
                         this._objectTable[p].stop()
-                    } catch (ex) {}
+                    } catch (ex) { }
                 }
             }
         }
-        ;
-        Core.prototype.loadJSON = function(options, readyCallback, progressCallback, url) {
-            this._readyCallback = readyCallback;
-            this._progressCallback = progressCallback || function() {}
             ;
+        Core.prototype.loadJSON = function (options, readyCallback, progressCallback, url) {
+            this._readyCallback = readyCallback;
+            this._progressCallback = progressCallback || function () { }
+                ;
             if (typeof options === "object") {
                 Klang.log("Loading config (editor)");
                 var data = this.createConfigNode(options);
@@ -23237,7 +23298,7 @@ Module(function iOSDevices() {
                     var request = new XMLHttpRequest();
                     request.open("GET", options, true);
                     var _this = this;
-                    request.onreadystatechange = function() {
+                    request.onreadystatechange = function () {
                         if (request.readyState == 4 && request.status == 200) {
                             var configText = request.responseText;
                             var data = _this.parseConfigJSON(configText);
@@ -23256,23 +23317,23 @@ Module(function iOSDevices() {
                             }
                         }
                     }
-                    ;
+                        ;
                     request.send(null)
                 } else {
                     throw "Klang exception: unrecognized options: '" + options + "'"
                 }
             }
         }
-        ;
-        Core.prototype.parseConfigJSON = function(jsonString) {
+            ;
+        Core.prototype.parseConfigJSON = function (jsonString) {
             if (typeof jsonString === "string") {
-                return JSON.parse(jsonString, function(key, value) {
+                return JSON.parse(jsonString, function (key, value) {
                     if (value && typeof value === "object" && typeof value.type === "string") {
                         if (!Klang.Model[value.type]) {
                             Klang.warn("Core: Type not found: " + value.type);
                             return null
                         }
-                        return new Klang.Model[value.type](value,key)
+                        return new Klang.Model[value.type](value, key)
                     }
                     return value
                 })
@@ -23283,12 +23344,12 @@ Module(function iOSDevices() {
                         Klang.warn("Core: Type not found: " + value.type);
                         return null
                     }
-                    return new Klang.Model[value.type](value,key)
+                    return new Klang.Model[value.type](value, key)
                 }
             }
         }
-        ;
-        Core.prototype.createConfigNode = function(node) {
+            ;
+        Core.prototype.createConfigNode = function (node) {
             if (typeof node === "object") {
                 for (var key in node) {
                     var prop = node[key];
@@ -23300,7 +23361,7 @@ Module(function iOSDevices() {
                             continue
                         }
                         node[key] = this.createConfigNode(prop);
-                        node[key] = new Klang.Model[prop.type](prop,key)
+                        node[key] = new Klang.Model[prop.type](prop, key)
                     } else {
                         node[key] = this.createConfigNode(prop)
                     }
@@ -23308,8 +23369,8 @@ Module(function iOSDevices() {
             }
             return node
         }
-        ;
-        Core.prototype.createObject = function(name, data, options) {
+            ;
+        Core.prototype.createObject = function (name, data, options) {
             if (!options) {
                 options = {}
             }
@@ -23320,7 +23381,7 @@ Module(function iOSDevices() {
             if (!options.excludeFromTable && this._objectTable[name]) {
                 Klang.warn("Core: Duplicate object: " + name)
             }
-            var obj = new Klang.Model[data.type](data,name);
+            var obj = new Klang.Model[data.type](data, name);
             if (!options.excludeFromTable) {
                 this._objectTable[name] = obj
             }
@@ -23343,8 +23404,8 @@ Module(function iOSDevices() {
             }
             return obj
         }
-        ;
-        Core.prototype.updateObject = function(object, data) {
+            ;
+        Core.prototype.updateObject = function (object, data) {
             var obj = typeof object == "string" ? this._objectTable[object] : object;
             if (obj._type == "SimpleProcess" && data.type == "AdvancedProcess") {
                 var advancedProcess = newAdvancedProcess(data, object);
@@ -23362,15 +23423,15 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        Core.prototype.createEvent = function(name, target) {
+            ;
+        Core.prototype.createEvent = function (name, target) {
             if (this._eventTable[name]) {
                 Klang.warn("Core: Duplicate event: " + name)
             }
             this._eventTable[name] = target
         }
-        ;
-        Core.prototype.visChange = function(fadeTime) {
+            ;
+        Core.prototype.visChange = function (fadeTime) {
             if (this.isHidden()) {
                 if (this._blurFadeOut) {
                     Klang.Util.curveParamLin(this._superMasterOutput.gain, 0, fadeTime)
@@ -23379,8 +23440,8 @@ Module(function iOSDevices() {
                 Klang.Util.curveParamLin(this._superMasterOutput.gain, 1, fadeTime)
             }
         }
-        ;
-        Core.prototype.initContent = function(data, files, url) {
+            ;
+        Core.prototype.initContent = function (data, files, url) {
             var relativePath = data.settings.relative_path;
             var baseURL;
             var filePath = data.settings.file_path || "";
@@ -23409,7 +23470,7 @@ Module(function iOSDevices() {
                 var visProp = this.getHiddenProp();
                 if (visProp) {
                     var evtname = "visibilitychange";
-                    document.addEventListener(evtname, function() {
+                    document.addEventListener(evtname, function () {
                         _this.visChange(fadeTime)
                     })
                 }
@@ -23464,21 +23525,21 @@ Module(function iOSDevices() {
             for (var ix = 0, len = this._connectStack.length; ix < len; ix++) {
                 var element = this._connectStack[ix];
                 switch (element.destinationName) {
-                case "$OUT":
-                    element.connect(this._superMasterOutput);
-                    break;
-                case "$PARENT":
-                    break;
-                default:
-                    var destination = this.findInstance(element.destinationName);
-                    if (!destination) {
-                        Klang.warn("Core: Destination not found: " + element.destinationName)
-                    }
-                    if (destination._type != "Bus") {
-                        Klang.warn("Core: Destination is not a bus: " + element.destinationName)
-                    }
-                    element.connect(destination.input);
-                    break
+                    case "$OUT":
+                        element.connect(this._superMasterOutput);
+                        break;
+                    case "$PARENT":
+                        break;
+                    default:
+                        var destination = this.findInstance(element.destinationName);
+                        if (!destination) {
+                            Klang.warn("Core: Destination not found: " + element.destinationName)
+                        }
+                        if (destination._type != "Bus") {
+                            Klang.warn("Core: Destination is not a bus: " + element.destinationName)
+                        }
+                        element.connect(destination.input);
+                        break
                 }
             }
             Klang.log("Nodes connected");
@@ -23494,29 +23555,29 @@ Module(function iOSDevices() {
                 setTimeout(Core.soundsLoaded, 4)
             }
         }
-        ;
-        Core.prototype.isHidden = function() {
+            ;
+        Core.prototype.isHidden = function () {
             var prop = this.getHiddenProp();
             if (!prop) {
                 return false
             }
             return document[prop]
         }
-        ;
-        Core.prototype.getHiddenProp = function() {
+            ;
+        Core.prototype.getHiddenProp = function () {
             var prefixes = ["webkit", "moz", "ms", "o"];
-            if ("hidden"in document) {
+            if ("hidden" in document) {
                 return "hidden"
             }
             for (var i = 0; i < prefixes.length; i++) {
-                if (prefixes[i] + "Hidden"in document) {
+                if (prefixes[i] + "Hidden" in document) {
                     return prefixes[i] + "Hidden"
                 }
             }
             return null
         }
-        ;
-        Core.prototype.setVars = function(vars) {
+            ;
+        Core.prototype.setVars = function (vars) {
             if (vars) {
                 for (var key in vars) {
                     if (typeof vars[key] == "string" && vars[key].indexOf("me.") > -1) {
@@ -23537,14 +23598,14 @@ Module(function iOSDevices() {
                 Klang.Util.vars = vars
             }
         }
-        ;
-        Core.prototype.loadSoundFiles = function(name, callback, progressCallback, loadFailedCallback) {
+            ;
+        Core.prototype.loadSoundFiles = function (name, callback, progressCallback, loadFailedCallback) {
             var start = new Date().getTime();
             if (progressCallback) {
                 this._progressCallback = progressCallback
             }
             var _this = this;
-            Klang.core.FileHandler.instance.loadFiles(name, function(success, loadedFiles) {
+            Klang.core.FileHandler.instance.loadFiles(name, function (success, loadedFiles) {
                 for (var i = 0; i < loadedFiles.length; i++) {
                     var fileId = loadedFiles[i].id;
                     for (var j in _this._objectTable) {
@@ -23562,8 +23623,8 @@ Module(function iOSDevices() {
                 callback && callback(true)
             }, this._progressCallback, loadFailedCallback)
         }
-        ;
-        Core.prototype.freeSoundFiles = function(name) {
+            ;
+        Core.prototype.freeSoundFiles = function (name) {
             Klang.core.FileHandler.instance.freeSoundFiles(name);
             for (var p in this._objectTable) {
                 var obj = this._objectTable[p];
@@ -23575,7 +23636,7 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
+            ;
         Core.soundsLoaded = function soundsLoaded() {
             Klang.log("Post load initialization started");
             var _this = Core.instance;
@@ -23588,40 +23649,40 @@ Module(function iOSDevices() {
                 _this._readyCallback(true)
             }
         }
-        ;
-        Core.prototype.pushToPreLoadInitStack = function(instance) {
+            ;
+        Core.prototype.pushToPreLoadInitStack = function (instance) {
             if (this._preLoadInitStack) {
                 this._preLoadInitStack.push(instance);
                 return true
             }
             return false
         }
-        ;
-        Core.prototype.pushToPostLoadInitStack = function(instance) {
+            ;
+        Core.prototype.pushToPostLoadInitStack = function (instance) {
             if (this._postLoadInitStack) {
                 this._postLoadInitStack.push(instance);
                 return true
             }
             return false
         }
-        ;
-        Core.prototype.pushToConnectStack = function(instance) {
+            ;
+        Core.prototype.pushToConnectStack = function (instance) {
             if (this._connectStack) {
                 this._connectStack.push(instance);
                 return true
             }
             return false
         }
-        ;
-        Core.prototype.findInstance = function(name) {
+            ;
+        Core.prototype.findInstance = function (name) {
             var instance = this._objectTable[name];
             if (!instance) {
                 Klang.warn("Core: Unknown reference: '" + name + "'")
             }
             return instance
         }
-        ;
-        Core.prototype.triggerEvent = function(id) {
+            ;
+        Core.prototype.triggerEvent = function (id) {
             var eventArgs = [];
             for (var _i = 0; _i < arguments.length - 1; _i++) {
                 eventArgs[_i] = arguments[_i + 1]
@@ -23666,35 +23727,35 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        Core.prototype.getSymbolId = function(symbol) {
+            ;
+        Core.prototype.getSymbolId = function (symbol) {
             return this._exportedSymbols[symbol]
         }
-        ;
-        Core.prototype.initIOS = function() {
+            ;
+        Core.prototype.initIOS = function () {
             var src = Klang.context.createBufferSource();
             src.start(0)
         }
-        ;
+            ;
         Object.defineProperty(Core.prototype, "timeHandler", {
-            get: function() {
+            get: function () {
                 return this._timeHandler
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Core.prototype, "output", {
-            get: function() {
+            get: function () {
                 return this._superMasterOutput
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Core.prototype, "blurFadeOut", {
-            get: function() {
+            get: function () {
                 return this._blurFadeOut
             },
-            set: function(state) {
+            set: function (state) {
                 this._blurFadeOut = state
             },
             enumerable: true,
@@ -23702,7 +23763,7 @@ Module(function iOSDevices() {
         });
         return Klang.core.Core = Core
     });
-    Module(function() {
+    Module(function () {
         if (navigator.userAgent.indexOf("MSIE") != -1) {
             var ie = true;
             var ua = navigator.userAgent;
@@ -23713,14 +23774,14 @@ Module(function iOSDevices() {
             }
             if (ieVersion < 9) {
                 Object.oldDefineProperty = Object.defineProperty;
-                Object.defineProperty = function() {}
+                Object.defineProperty = function () { }
             }
         }
     });
-    Module(function() {
-        (function() {
+    Module(function () {
+        (function () {
             var AudioContext = window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
-            var browserInfo = function() {
+            var browserInfo = function () {
                 var ua = navigator.userAgent;
                 var temp;
                 var match = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
@@ -23760,7 +23821,7 @@ Module(function iOSDevices() {
             if (AudioContext) {
                 var acProto = AudioContext.prototype;
                 var tmpContext = new AudioContext();
-                var isStillOld = function(normative, old) {
+                var isStillOld = function (normative, old) {
                     return normative === undefined && old !== undefined
                 };
                 var bufferProto = tmpContext.createBufferSource().constructor.prototype;
@@ -23779,7 +23840,7 @@ Module(function iOSDevices() {
                         var nativeCreateOscillator = acProto.createOscillator;
                         acProto.createOscillator = function createOscillator() {
                             var returnNode = nativeCreateOscillator.call(this);
-                            returnNode.start = returnNode.start || function() {
+                            returnNode.start = returnNode.start || function () {
                                 if (returnNode.noteOn) {
                                     if (arguments.length > 1) {
                                         returnNode.noteGrainOn.apply(returnNode, arguments)
@@ -23788,7 +23849,7 @@ Module(function iOSDevices() {
                                     }
                                 }
                             }
-                            ;
+                                ;
                             returnNode.stop = returnNode.stop || returnNode.noteOff;
                             return returnNode
                         }
@@ -23810,7 +23871,7 @@ Module(function iOSDevices() {
                 } else {
                     if (!AudioContext.prototype.internal_createGain) {
                         AudioContext.prototype.internal_createGain = AudioContext.prototype.createGain;
-                        AudioContext.prototype.createGain = function() {
+                        AudioContext.prototype.createGain = function () {
                             var node = this.internal_createGain();
                             fixSetTarget(node.gain);
                             return node
@@ -23821,7 +23882,7 @@ Module(function iOSDevices() {
                     var AudioBufferSourceNodeProto = window.AudioBufferSourceNode.prototype;
                     if (!AudioBufferSourceNodeProto.internal_start) {
                         AudioBufferSourceNodeProto.internal_start = AudioBufferSourceNodeProto.start;
-                        AudioBufferSourceNodeProto.start = function(when, offset, duration) {
+                        AudioBufferSourceNodeProto.start = function (when, offset, duration) {
                             AudioBufferSourceNodeProto.internal_start.call(this, when)
                         }
                     }
@@ -23829,11 +23890,11 @@ Module(function iOSDevices() {
             }
         }())
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function touchLoad(e) {
             Klang.audioTagHandler.loadSoundFiles()
         }
-        var ATAudioFile = function() {
+        var ATAudioFile = function () {
             function ATAudioFile(url, fileData) {
                 this._url = url;
                 this.data = fileData;
@@ -23844,18 +23905,18 @@ Module(function iOSDevices() {
             ATAudioFile.STATE_NOT_LOADED = 0;
             ATAudioFile.STATE_LOADING = 1;
             ATAudioFile.STATE_LOADED = 2;
-            ATAudioFile.prototype._onCanPlayThrough = function() {
+            ATAudioFile.prototype._onCanPlayThrough = function () {
                 this.audioElement.removeEventListener("canplaythrough", this._onCanPlayThrough, false);
-                this._waitForReadyState(function() {
+                this._waitForReadyState(function () {
                     this.ready = true;
                     this.state = this.state = ATAudioFile.STATE_LOADED;
                     this._readyCallback && this._readyCallback();
                     this.audioElement.pause()
                 }
-                .bind(this))
+                    .bind(this))
             }
-            ;
-            ATAudioFile.prototype._waitForReadyState = function(cb) {
+                ;
+            ATAudioFile.prototype._waitForReadyState = function (cb) {
                 var _this = this;
                 (function wait() {
                     if (_this.audioElement.readyState) {
@@ -23865,8 +23926,8 @@ Module(function iOSDevices() {
                     }
                 }())
             }
-            ;
-            ATAudioFile.prototype.load = function(onDone) {
+                ;
+            ATAudioFile.prototype.load = function (onDone) {
                 if (this.state === ATAudioFile.STATE_NOT_LOADED) {
                     this.state = ATAudioFile.STATE_LOADING;
                     var el = this.audioElement = new Audio();
@@ -23877,9 +23938,9 @@ Module(function iOSDevices() {
                 }
                 this._readyCallback = onDone
             }
-            ;
-            ATAudioFile.prototype.clone = function() {
-                var clone = new ATAudioFile(this._url,this.data);
+                ;
+            ATAudioFile.prototype.clone = function () {
+                var clone = new ATAudioFile(this._url, this.data);
                 clone.state = this.state;
                 clone.audioElement = new Audio();
                 clone.ready = !!this.ready;
@@ -23888,11 +23949,11 @@ Module(function iOSDevices() {
                 clone.audioElement.play();
                 return clone
             }
-            ;
+                ;
             return ATAudioFile
         }();
         Klang.ATAudioFile = ATAudioFile;
-        var ATAudioSource = function() {
+        var ATAudioSource = function () {
             function ATAudioSource(data, file) {
                 this._xLoopTimer = 0;
                 this.state = ATAudioSource.STATE_STOPPED;
@@ -23907,13 +23968,13 @@ Module(function iOSDevices() {
                 }
                 this._priority = this._currentFile.data.audio_tag;
                 this._loop = !!this._data.loop;
-                this._gain = new ATGainNode(data.volume,this);
+                this._gain = new ATGainNode(data.volume, this);
                 this.beforeEnding = this.beforeEnding.bind(this)
             }
             ATAudioSource.STATE_PLAYING = 3;
             ATAudioSource.STATE_STOPPING = 3;
             ATAudioSource.STATE_STOPPED = 4;
-            ATAudioSource.prototype.beforeEnding = function() {
+            ATAudioSource.prototype.beforeEnding = function () {
                 if (this._playing && this._loop) {
                     var otherFile = this._currentFile;
                     this._currentFile = otherFile === this._files[0] ? this._files[1] : this._files[0];
@@ -23925,8 +23986,8 @@ Module(function iOSDevices() {
                     this._xLoopTimer = setTimeout(this.beforeEnding, (this._currentFile.audioElement.duration - this._loopStart - (this._loopEnd ? this._currentFile.audioElement.duration - this._loopEnd : 0)) * 1000)
                 }
             }
-            ;
-            ATAudioSource.prototype.play = function(when, offset, resume, keepVolume, loopTrigg) {
+                ;
+            ATAudioSource.prototype.play = function (when, offset, resume, keepVolume, loopTrigg) {
                 when = when || 0;
                 if (!this._currentFile.ready) {
                     return this
@@ -23936,15 +23997,15 @@ Module(function iOSDevices() {
                 }
                 if (when > 0) {
                     var _this = this;
-                    this._playTimeout = setTimeout(function() {
+                    this._playTimeout = setTimeout(function () {
                         _this.doPlay(offset, resume, keepVolume, loopTrigg)
                     }, when * 1000)
                 } else {
                     this.doPlay(offset, resume, keepVolume, loopTrigg)
                 }
             }
-            ;
-            ATAudioSource.prototype.doPlay = function(offset, resume, keepVolume, loopTrigg) {
+                ;
+            ATAudioSource.prototype.doPlay = function (offset, resume, keepVolume, loopTrigg) {
                 offset = offset || 0;
                 if (this.state == ATAudioSource.STATE_STOPPING && !this._retrig) {
                     this.getOutput().fadeVolume(this.getOutput().getVolume(), 0.5);
@@ -23966,12 +24027,12 @@ Module(function iOSDevices() {
                 this.state = ATAudioSource.STATE_PLAYING;
                 return this
             }
-            ;
-            ATAudioSource.prototype.fadeInAndPlay = function(targetValue, duration, when, offset) {
+                ;
+            ATAudioSource.prototype.fadeInAndPlay = function (targetValue, duration, when, offset) {
                 when = when || 0;
                 if (when > 0) {
                     var _this = this;
-                    this._playTimeout = setTimeout(function() {
+                    this._playTimeout = setTimeout(function () {
                         _this.doFadeInAndPlay(_this.getOutput().getVolume(), duration)
                     }, when * 1000)
                 } else {
@@ -23979,15 +24040,15 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            ATAudioSource.prototype.doFadeInAndPlay = function(targetValue, duration) {
+                ;
+            ATAudioSource.prototype.doFadeInAndPlay = function (targetValue, duration) {
                 this._gain.setVolume(this.state == ATAudioSource.STATE_PLAYING ? this._gain.getVolume() : 0);
                 this.play(0, 0, false, true);
                 this._gain.fadeVolume(targetValue, duration);
                 return this
             }
-            ;
-            ATAudioSource.prototype.stop = function(when) {
+                ;
+            ATAudioSource.prototype.stop = function (when) {
                 if (this._playTimeout) {
                     clearTimeout(this._playTimeout)
                 }
@@ -23997,8 +24058,8 @@ Module(function iOSDevices() {
                 clearTimeout(this._xLoopTimer);
                 return this
             }
-            ;
-            ATAudioSource.prototype.fadeOutAndStop = function(duration, when) {
+                ;
+            ATAudioSource.prototype.fadeOutAndStop = function (duration, when) {
                 if (this.state != ATAudioSource.STATE_PLAYING) {
                     return
                 }
@@ -24006,7 +24067,7 @@ Module(function iOSDevices() {
                     clearTimeout(this._playTimeout)
                 }
                 var _this = this;
-                this._gain.fadeVolume(0, duration, function() {
+                this._gain.fadeVolume(0, duration, function () {
                     if (_this.state == ATAudioSource.STATE_STOPPING) {
                         _this.stop()
                     }
@@ -24014,8 +24075,8 @@ Module(function iOSDevices() {
                 this.state = ATAudioSource.STATE_STOPPING;
                 return this
             }
-            ;
-            ATAudioSource.prototype.setVolume = function(value) {
+                ;
+            ATAudioSource.prototype.setVolume = function (value) {
                 value = value === undefined ? this.getOutput().getVolume() : value * this.getOutput().getVolume();
                 value = Math.max(0, Math.min(1, value * Klang.audioTagHandler.getGlobalVolume() * Klang.audioTagHandler.getFocusBlurVolume()));
                 if (this._currentFile.audioElement && isFinite(value)) {
@@ -24023,30 +24084,30 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            ATAudioSource.prototype.update = function() {
+                ;
+            ATAudioSource.prototype.update = function () {
                 this.setVolume(this._destination.calcVolume())
             }
-            ;
-            ATAudioSource.prototype.connect = function(bus) {
+                ;
+            ATAudioSource.prototype.connect = function (bus) {
                 this._destination = bus;
                 bus.addConnected(this);
                 this.update()
             }
-            ;
-            ATAudioSource.prototype.getOutput = function() {
+                ;
+            ATAudioSource.prototype.getOutput = function () {
                 return this._gain
             }
-            ;
+                ;
             Object.defineProperty(ATAudioSource.prototype, "position", {
-                get: function() {
+                get: function () {
                     return this.playing ? this._currentFile.audioElement.currentTime : 0
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(ATAudioSource.prototype, "playing", {
-                get: function() {
+                get: function () {
                     return this._playing
                 },
                 enumerable: true,
@@ -24055,7 +24116,7 @@ Module(function iOSDevices() {
             return ATAudioSource
         }();
         Klang.ATAudioSource = ATAudioSource;
-        var ATAudioGroup = function() {
+        var ATAudioGroup = function () {
             function ATAudioGroup(data, audioTagHandler) {
                 this._data = data;
                 this._content = [];
@@ -24066,15 +24127,15 @@ Module(function iOSDevices() {
                     }
                 }
             }
-            ATAudioGroup.prototype.play = function(when, audioSource, forcePlay) {
+            ATAudioGroup.prototype.play = function (when, audioSource, forcePlay) {
                 var index = typeof audioSource === "number" ? audioSource : Klang.Util.random(this._content.length - 1, 0);
                 if (this._content[index]) {
                     this._content[index].play(when)
                 }
                 return this
             }
-            ;
-            ATAudioGroup.prototype.stop = function() {
+                ;
+            ATAudioGroup.prototype.stop = function () {
                 for (var c in this._content) {
                     if (this._content[c]) {
                         this._content[c].stop()
@@ -24082,9 +24143,9 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
+                ;
             Object.defineProperty(ATAudioGroup.prototype, "playing", {
-                get: function() {
+                get: function () {
                     var playing = false;
                     for (var c in this._content) {
                         if (this._content[c]._playing) {
@@ -24096,24 +24157,24 @@ Module(function iOSDevices() {
                 enumerable: true,
                 configurable: true
             });
-            ATAudioGroup.prototype.update = function() {}
-            ;
-            ATAudioGroup.prototype.connect = function(bus) {}
-            ;
+            ATAudioGroup.prototype.update = function () { }
+                ;
+            ATAudioGroup.prototype.connect = function (bus) { }
+                ;
             return ATAudioGroup
         }();
         Klang.ATAudioGroup = ATAudioGroup;
-        var ATGainNode = function() {
+        var ATGainNode = function () {
             function ATGainNode(volume, owner) {
                 this._currentVolume = this._volume = volume !== undefined ? volume : 1;
                 this._currentVolume = Math.max(0, Math.min(this._currentVolume, 1));
                 this._owner = owner
             }
-            ATGainNode.prototype.getVolume = function() {
+            ATGainNode.prototype.getVolume = function () {
                 return this._volume
             }
-            ;
-            ATGainNode.prototype.setVolume = function(value) {
+                ;
+            ATGainNode.prototype.setVolume = function (value) {
                 value = Math.max(0, Math.min(1, value));
                 this._currentVolume = value;
                 if (this._owner && this._owner.setVolume) {
@@ -24121,15 +24182,15 @@ Module(function iOSDevices() {
                 }
                 return this
             }
-            ;
-            ATGainNode.prototype.fadeVolume = function(targetValue, duration, callback) {
+                ;
+            ATGainNode.prototype.fadeVolume = function (targetValue, duration, callback) {
                 if (this._fadeTimer) {
                     clearInterval(this._fadeTimer)
                 }
                 var _this = this;
                 this._fadeSteps = Math.round(duration * 1000) / 10;
                 this._volumeStep = (this._currentVolume - targetValue) / this._fadeSteps;
-                this._fadeTimer = setInterval(function() {
+                this._fadeTimer = setInterval(function () {
                     _this.setVolume(_this._currentVolume - _this._volumeStep);
                     _this._fadeSteps--;
                     if (_this._fadeSteps <= 0) {
@@ -24141,37 +24202,37 @@ Module(function iOSDevices() {
                 }, 10);
                 return this
             }
-            ;
-            ATGainNode.prototype.resetVolume = function(keepVolume) {
+                ;
+            ATGainNode.prototype.resetVolume = function (keepVolume) {
                 var volumeToSet = keepVolume ? this._currentVolume : this._volume;
                 clearInterval(this._fadeTimer);
                 this.setVolume(volumeToSet);
                 return this
             }
-            ;
+                ;
             return ATGainNode
         }();
         Klang.ATGainNode = ATGainNode;
-        var ATBus = function() {
+        var ATBus = function () {
             function ATBus(data, name, isMaster) {
                 this._isMaster = false;
                 this._connected = [];
                 this._isMaster = isMaster;
                 this._data = data;
                 this._name = name;
-                this._output = new ATGainNode(data.output_vol !== undefined ? data.output_vol : 1,this);
+                this._output = new ATGainNode(data.output_vol !== undefined ? data.output_vol : 1, this);
                 this._volume = data.output_vol !== undefined ? data.output_vol : 1;
                 this._destination_name = data.destination_name
             }
-            ATBus.prototype.getVolume = function() {
+            ATBus.prototype.getVolume = function () {
                 if (!this._isMaster) {
                     return this._volume
                 } else {
                     return this._volume
                 }
             }
-            ;
-            ATBus.prototype.calcVolume = function(vol) {
+                ;
+            ATBus.prototype.calcVolume = function (vol) {
                 if (typeof vol === "undefined") {
                     vol = 1
                 }
@@ -24181,37 +24242,37 @@ Module(function iOSDevices() {
                 }
                 return vol
             }
-            ;
-            ATBus.prototype.setVolume = function(volume) {
+                ;
+            ATBus.prototype.setVolume = function (volume) {
                 this._volume = volume;
                 for (var i = 0; i < this._connected.length; i++) {
                     this._connected[i].update()
                 }
             }
-            ;
-            ATBus.prototype.update = function() {
+                ;
+            ATBus.prototype.update = function () {
                 for (var i = 0; i < this._connected.length; i++) {
                     this._connected[i].update()
                 }
             }
-            ;
-            ATBus.prototype.getOutput = function() {
+                ;
+            ATBus.prototype.getOutput = function () {
                 return this._output
             }
-            ;
-            ATBus.prototype.addConnected = function(c) {
+                ;
+            ATBus.prototype.addConnected = function (c) {
                 this._connected.push(c)
             }
-            ;
-            ATBus.prototype.connect = function(bus) {
+                ;
+            ATBus.prototype.connect = function (bus) {
                 this._destination = bus;
                 bus.addConnected(this)
             }
-            ;
+                ;
             return ATBus
         }();
         Klang.ATBus = ATBus;
-        var ATProcess = function() {
+        var ATProcess = function () {
             function ATProcess(data, name, vars) {
                 this._data = data;
                 this._name = name;
@@ -24220,18 +24281,18 @@ Module(function iOSDevices() {
                     this._data.at_action = this._data.action
                 }
             }
-            ATProcess.prototype.start = function(args) {
+            ATProcess.prototype.start = function (args) {
                 try {
                     if (typeof this._data.at_action === "function") {
                         this._data.at_action(Util, this._vars, args)
                     } else {
-                        new Function("Util","me","args",this._data.at_action)(Util, this._vars, args)
+                        new Function("Util", "me", "args", this._data.at_action)(Util, this._vars, args)
                     }
                 } catch (ex) {
                     Klang.err("Klang: error in process '" + this._name + "': " + ex.name + ": " + ex.message)
                 }
             }
-            ;
+                ;
             return ATProcess
         }();
         Klang.ATProcess = ATProcess;
@@ -24244,7 +24305,7 @@ Module(function iOSDevices() {
                 var _this = this;
                 network.request({
                     url: config
-                }, function(data) {
+                }, function (data) {
                     try {
                         _this.init(JSON.parse(data), readyCallback, progressCallback, configURL)
                     } catch (ex) {
@@ -24253,7 +24314,7 @@ Module(function iOSDevices() {
                             readyCallback(false)
                         }
                     }
-                }, null, function(error) {
+                }, null, function (error) {
                     Klang.err(error)
                 })
             } else {
@@ -24264,7 +24325,7 @@ Module(function iOSDevices() {
                 }
             }
         }
-        AudioTagHandler.prototype.init = function(data, readyCallback, progressCallback, configURL) {
+        AudioTagHandler.prototype.init = function (data, readyCallback, progressCallback, configURL) {
             var _this = this;
             this._globalVolume = 1;
             this._focusBlurVolume = 1;
@@ -24295,13 +24356,13 @@ Module(function iOSDevices() {
                 var fileData = data.files[p];
                 var prio = fileData.audio_tag;
                 if (prio && (!this._limitSounds || prio == 1)) {
-                    this._audioFiles[fileData.id] = new ATAudioFile(baseURL + fileData.url + format,fileData)
+                    this._audioFiles[fileData.id] = new ATAudioFile(baseURL + fileData.url + format, fileData)
                 }
             }
             this._masterBus = data.masterBus;
             this._busses = {};
             for (var b in data.busses) {
-                this._busses[b] = new ATBus(data.busses[b],b,b == this._masterBus)
+                this._busses[b] = new ATBus(data.busses[b], b, b == this._masterBus)
             }
             this._audio = {};
             for (var a in data.audio) {
@@ -24310,11 +24371,11 @@ Module(function iOSDevices() {
                     if (audioData.type == "AudioSource") {
                         if (this._audioFiles[audioData.file_id]) {
                             var sprite = this._audioFiles[audioData.file_id];
-                            this._audio[a] = new ATAudioSource(audioData,this._audioFiles[audioData.file_id])
+                            this._audio[a] = new ATAudioSource(audioData, this._audioFiles[audioData.file_id])
                         }
                     } else {
                         if (audioData.type == "AudioGroup") {
-                            this._audio[a] = new ATAudioGroup(audioData,this)
+                            this._audio[a] = new ATAudioGroup(audioData, this)
                         }
                     }
                 }
@@ -24338,7 +24399,7 @@ Module(function iOSDevices() {
                         var processVarName = processData.vars[v];
                         processArgs[processVarName] = this._audio[processVarName] || this._busses[processVarName]
                     }
-                    this._processes[p] = new ATProcess(processData,p,processArgs)
+                    this._processes[p] = new ATProcess(processData, p, processArgs)
                 }
             }
             this.loadSoundFiles(["auto", "autotag"], readyCallback, progressCallback);
@@ -24353,8 +24414,8 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        AudioTagHandler.prototype.visChange = function() {
+            ;
+        AudioTagHandler.prototype.visChange = function () {
             if (this.isHidden()) {
                 if (this._blurFadeOut) {
                     this.setFocusBlurVolume(0)
@@ -24363,42 +24424,42 @@ Module(function iOSDevices() {
                 this.setFocusBlurVolume(1)
             }
         }
-        ;
-        AudioTagHandler.prototype.fadeBusVolume = function(bus, value, duration) {
+            ;
+        AudioTagHandler.prototype.fadeBusVolume = function (bus, value, duration) {
             var b = this._busses[bus._name];
             b.getOutput().fadeVolume(value, duration)
         }
-        ;
-        AudioTagHandler.prototype.isHidden = function() {
+            ;
+        AudioTagHandler.prototype.isHidden = function () {
             var prop = this.getHiddenProp();
             if (!prop) {
                 return false
             }
             return document[prop]
         }
-        ;
-        AudioTagHandler.prototype.getHiddenProp = function() {
+            ;
+        AudioTagHandler.prototype.getHiddenProp = function () {
             var prefixes = ["webkit", "moz", "ms", "o"];
-            if ("hidden"in document) {
+            if ("hidden" in document) {
                 return "hidden"
             }
             for (var i = 0; i < prefixes.length; i++) {
-                if (prefixes[i] + "Hidden"in document) {
+                if (prefixes[i] + "Hidden" in document) {
                     return prefixes[i] + "Hidden"
                 }
             }
             return null
         }
-        ;
-        AudioTagHandler.prototype.initIOS = function() {
+            ;
+        AudioTagHandler.prototype.initIOS = function () {
             if (Klang.isIOS || Klang.isMobile) {
                 for (var p in this._audioFiles) {
                     this._audioFiles[p].load()
                 }
             }
         }
-        ;
-        AudioTagHandler.prototype.loadSoundFiles = function(group, readyCallback, progressCallback, loadFailedCallback) {
+            ;
+        AudioTagHandler.prototype.loadSoundFiles = function (group, readyCallback, progressCallback, loadFailedCallback) {
             if (readyCallback) {
                 this._readyCallback = readyCallback
             }
@@ -24418,7 +24479,7 @@ Module(function iOSDevices() {
                     if (group === undefined || group.indexOf(loadGroup) != -1) {
                         if (audioFile.state === ATAudioFile.STATE_NOT_LOADED) {
                             this._numFiles++;
-                            audioFile.load(function() {
+                            audioFile.load(function () {
                                 _this.loadProgress()
                             })
                         }
@@ -24429,8 +24490,8 @@ Module(function iOSDevices() {
                 this._readyCallback(true)
             }
         }
-        ;
-        AudioTagHandler.prototype.getLoadGroups = function() {
+            ;
+        AudioTagHandler.prototype.getLoadGroups = function () {
             var i;
             var fileInfoArr = this._audioFiles || [];
             var groupTable = {};
@@ -24444,21 +24505,21 @@ Module(function iOSDevices() {
             }
             return listOfGroups
         }
-        ;
-        AudioTagHandler.prototype.loadProgress = function() {
+            ;
+        AudioTagHandler.prototype.loadProgress = function () {
             this._loadedFiles++;
             if (this._progressCallback) {
                 this._progressCallback(this._loadedFiles / this._numFiles * 100)
             }
             if (this._readyCallback && this._loadedFiles == this._numFiles) {
                 var _this = this;
-                setTimeout(function() {
+                setTimeout(function () {
                     _this._readyCallback(true)
                 }, 200)
             }
         }
-        ;
-        AudioTagHandler.prototype.triggerEvent = function(name, args) {
+            ;
+        AudioTagHandler.prototype.triggerEvent = function (name, args) {
             var str = "";
             for (var i = 0; i < args.length; i++) {
                 str += args[i] + ", "
@@ -24494,12 +24555,12 @@ Module(function iOSDevices() {
                 Klang.err("Klang: error when triggering event '" + name + "': " + ex.name + ": " + ex.message)
             }
         }
-        ;
-        AudioTagHandler.prototype.getFocusBlurVolume = function() {
+            ;
+        AudioTagHandler.prototype.getFocusBlurVolume = function () {
             return this._focusBlurVolume
         }
-        ;
-        AudioTagHandler.prototype.setFocusBlurVolume = function(value) {
+            ;
+        AudioTagHandler.prototype.setFocusBlurVolume = function (value) {
             value = Math.max(0, Math.min(value, 1));
             this._focusBlurVolume = value;
             for (var a in this._audio) {
@@ -24512,12 +24573,12 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        AudioTagHandler.prototype.getGlobalVolume = function() {
+            ;
+        AudioTagHandler.prototype.getGlobalVolume = function () {
             return this._globalVolume
         }
-        ;
-        AudioTagHandler.prototype.setGlobalVolume = function(value) {
+            ;
+        AudioTagHandler.prototype.setGlobalVolume = function (value) {
             value = Math.max(0, Math.min(value, 1));
             this._globalVolume = value;
             for (var a in this._audio) {
@@ -24530,8 +24591,8 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
-        AudioTagHandler.prototype.fadeGlobalVolume = function(value, duration) {
+            ;
+        AudioTagHandler.prototype.fadeGlobalVolume = function (value, duration) {
             value = Math.max(0, Math.min(value, 1));
             if (this._globalFadeTimer) {
                 clearInterval(this._globalFadeTimer)
@@ -24539,7 +24600,7 @@ Module(function iOSDevices() {
             var _this = this;
             var fadeSteps = Math.round(duration * 1000) / 10;
             var volumeStep = (this._globalVolume - value) / fadeSteps;
-            this._globalFadeTimer = setInterval(function() {
+            this._globalFadeTimer = setInterval(function () {
                 _this._globalVolume = _this._globalVolume - volumeStep;
                 fadeSteps--;
                 for (var a in _this._audio) {
@@ -24553,12 +24614,12 @@ Module(function iOSDevices() {
                 }
             }, 10)
         }
-        ;
-        AudioTagHandler.prototype.getLimitSounds = function() {
+            ;
+        AudioTagHandler.prototype.getLimitSounds = function () {
             return this._limitSounds
         }
-        ;
-        AudioTagHandler.prototype.stopAll = function(priority) {
+            ;
+        AudioTagHandler.prototype.stopAll = function (priority) {
             for (var a in this._audio) {
                 if (priority === undefined || this._audio[a]._priority == priority) {
                     this._audio[a].stop()
@@ -24567,40 +24628,40 @@ Module(function iOSDevices() {
             this.stopPeriodic();
             return this
         }
-        ;
-        AudioTagHandler.prototype.getObject = function(name) {
+            ;
+        AudioTagHandler.prototype.getObject = function (name) {
             return this._audioFiles[name] || this._audio[name]
         }
-        ;
-        AudioTagHandler.prototype.playPeriodic = function(obj, maxSec, minSec) {
+            ;
+        AudioTagHandler.prototype.playPeriodic = function (obj, maxSec, minSec) {
             clearTimeout(this._periodicTimer);
             var _this = this;
-            this._periodicTimer = setTimeout(function() {
+            this._periodicTimer = setTimeout(function () {
                 obj.play();
                 _this.playPeriodic(obj, maxSec, minSec)
             }, Klang.Util.random(maxSec * 1000, minSec * 1000))
         }
-        ;
-        AudioTagHandler.prototype.stopPeriodic = function() {
+            ;
+        AudioTagHandler.prototype.stopPeriodic = function () {
             clearTimeout(this._periodicTimer)
         }
-        ;
+            ;
         return Klang.AudioTagHandler = AudioTagHandler
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function Scheduler() {
             this._updateTime = 100;
             this._lookAHead = this._updateTime * 2;
             this._callbacks = []
         }
-        Scheduler.prototype.scheduleClose = function(callback) {
+        Scheduler.prototype.scheduleClose = function (callback) {
             var timeOffset = callback.targetTime - Klang.context.currentTime;
-            setTimeout(function() {
+            setTimeout(function () {
                 callback.func.apply(callback.ctx)
             }, timeOffset * 1000)
         }
-        ;
-        Scheduler.prototype.runScheduler = function() {
+            ;
+        Scheduler.prototype.runScheduler = function () {
             if (this._callbacks.length > 0) {
                 var currentTime = Klang.context.currentTime;
                 for (var ix = 0; ix < this._callbacks.length; ix++) {
@@ -24613,32 +24674,32 @@ Module(function iOSDevices() {
                 }
                 this._lastTime = currentTime;
                 var _this = this;
-                this._scheduler = setTimeout(function() {
+                this._scheduler = setTimeout(function () {
                     _this.runScheduler()
                 }, _this._updateTime)
             } else {
                 this.stop()
             }
         }
-        ;
-        Scheduler.prototype.start = function() {
+            ;
+        Scheduler.prototype.start = function () {
             this._started = true;
             this._lastTime = Klang.context.currentTime;
             clearTimeout(this._scheduler);
             this.runScheduler()
         }
-        ;
-        Scheduler.prototype.stop = function() {
+            ;
+        Scheduler.prototype.stop = function () {
             this._started = false;
             clearTimeout(this._scheduler);
             this._scheduler = null
         }
-        ;
-        Scheduler.prototype.delay = function(targetTime, func, ctx) {
+            ;
+        Scheduler.prototype.delay = function (targetTime, func, ctx) {
             return this.at(Klang.context.currentTime + targetTime, func, ctx)
         }
-        ;
-        Scheduler.prototype.at = function(targetTime, func, ctx) {
+            ;
+        Scheduler.prototype.at = function (targetTime, func, ctx) {
             if (targetTime < Klang.context.currentTime) {
                 return this
             }
@@ -24652,8 +24713,8 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
-        Scheduler.prototype.cancel = function(func) {
+            ;
+        Scheduler.prototype.cancel = function (func) {
             for (var i = 0; i < this._callbacks.length; i++) {
                 if (this._callbacks[i]["func"] && this._callbacks[i]["func"] === func) {
                     this._callbacks.splice(i, 1);
@@ -24662,30 +24723,30 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
+            ;
         return Klang.Model.Scheduler = Scheduler
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function SyncCountdown(targetStep, process, args) {
             this._currentStep = 0;
             this._targetStep = targetStep;
             this._process = process;
             this._args = args
         }
-        SyncCountdown.prototype.advance = function(step) {
+        SyncCountdown.prototype.advance = function (step) {
             this._currentStep += step
         }
-        ;
-        SyncCountdown.prototype.performAction = function() {
+            ;
+        SyncCountdown.prototype.performAction = function () {
             if (typeof this._process == "string") {
-                new Function("Core","Model","Util","args",this._process)(Core, Model, Util, this._args)
+                new Function("Core", "Model", "Util", "args", this._process)(Core, Model, Util, this._args)
             } else {
                 this._process.start(this._args)
             }
         }
-        ;
+            ;
         Object.defineProperty(SyncCountdown.prototype, "finished", {
-            get: function() {
+            get: function () {
                 return this._currentStep >= this._targetStep
             },
             enumerable: true,
@@ -24693,15 +24754,15 @@ Module(function iOSDevices() {
         });
         return SyncCountdown
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function SyncHandler() {
             this._timers = []
         }
-        SyncHandler.prototype.addSyncCountdown = function(countdown) {
+        SyncHandler.prototype.addSyncCountdown = function (countdown) {
             this._timers.push(countdown)
         }
-        ;
-        SyncHandler.prototype.update = function(step) {
+            ;
+        SyncHandler.prototype.update = function (step) {
             for (var ix = 0; ix < this._timers.length; ix++) {
                 var countdown = this._timers[ix];
                 countdown.advance(step);
@@ -24712,16 +24773,16 @@ Module(function iOSDevices() {
                 }
             }
         }
-        ;
+            ;
         return Klang.Model.SyncHandler = SyncHandler
     });
-    Module(function(Klang) {
+    Module(function (Klang) {
         function TimeHandler() {
             this._callbacks = []
         }
         TimeHandler.inst = null;
         Object.defineProperty(TimeHandler, "instance", {
-            get: function() {
+            get: function () {
                 if (TimeHandler.inst == null) {
                     TimeHandler.inst = new TimeHandler()
                 }
@@ -24730,7 +24791,7 @@ Module(function iOSDevices() {
             enumerable: true,
             configurable: true
         });
-        TimeHandler.prototype.startScheduler = function() {
+        TimeHandler.prototype.startScheduler = function () {
             if (this._callbacks.length > 0) {
                 var currentTime = Klang.context.currentTime;
                 var deltaTime = currentTime - this._lastTime;
@@ -24745,28 +24806,28 @@ Module(function iOSDevices() {
                 }
                 this._lastTime = currentTime;
                 var _this = this;
-                this._scheduler = setTimeout(function() {
+                this._scheduler = setTimeout(function () {
                     _this.startScheduler()
                 }, Klang.core.Core.settings.timehandler_lookahead)
             } else {
                 this.stop()
             }
         }
-        ;
-        TimeHandler.prototype.start = function() {
+            ;
+        TimeHandler.prototype.start = function () {
             this._started = true;
             this._lastTime = Klang.context.currentTime;
             clearTimeout(this._scheduler);
             this.startScheduler()
         }
-        ;
-        TimeHandler.prototype.stop = function() {
+            ;
+        TimeHandler.prototype.stop = function () {
             this._started = false;
             clearTimeout(this._scheduler);
             this._scheduler = null
         }
-        ;
-        TimeHandler.prototype.registerMethodCallback = function(obj, func, targetTime) {
+            ;
+        TimeHandler.prototype.registerMethodCallback = function (obj, func, targetTime) {
             this._callbacks.push({
                 obj: obj,
                 func: func,
@@ -24778,8 +24839,8 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
-        TimeHandler.prototype.removeMethodCallback = function(obj, func) {
+            ;
+        TimeHandler.prototype.removeMethodCallback = function (obj, func) {
             for (var ix = 0, len = this._callbacks.length; ix < len; ix++) {
                 var callback = this._callbacks[ix];
                 if (callback.obj == obj && callback.func == func) {
@@ -24789,13 +24850,13 @@ Module(function iOSDevices() {
             }
             return this
         }
-        ;
+            ;
         return Klang.Model.TimeHandler = TimeHandler
     });
-    Module(function(Klang) {});
+    Module(function (Klang) { });
     window.Klang = Klang;
     if (typeof define === "function" && define.amd) {
-        define("Klang", function() {
+        define("Klang", function () {
             return window.Klang
         })
     } else {
@@ -24818,7 +24879,7 @@ Class(function DeviceOrientation() {
     var _accelDelta = new Vector2();
     this.orientation = _orientation;
     this.delta = _delta;
-    Hydra.ready(function() {
+    Hydra.ready(function () {
         _delta.count = 0;
         Accel.capture();
         Accel.on("orientation", update)
@@ -24861,7 +24922,7 @@ Class(function ThrowMechanic() {
     var _fireAccel = -1;
     var _prevent, _timer;
     this.THROW = "throw";
-    Hydra.ready(function() {
+    Hydra.ready(function () {
         addListeners()
     });
     function update() {
@@ -24892,7 +24953,7 @@ Class(function ThrowMechanic() {
         _count = 0;
         _xyzDelta.clear();
         _xyz.clear();
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _prevent = false
         }, 1000)
     }
@@ -24965,33 +25026,33 @@ Class(function PinchMechanism() {
         Stage.unbind("touchmove", touchMove);
         _this.events.fire(HydraEvents.COMPLETE)
     }
-    this.set("percent", function(value) {
+    this.set("percent", function (value) {
         _percent = value
     });
-    this.get("percent", function() {
+    this.get("percent", function () {
         return _percent
     });
-    this.start = function() {
+    this.start = function () {
         addListeners()
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         removeListeners()
     }
-    ;
-    this.snapTo = function(to, time, callback) {
+        ;
+    this.snapTo = function (to, time, callback) {
         var d = new DynamicObject({
             v: _percent
         });
         d.tween({
             v: to
-        }, time, "linear", function() {
+        }, time, "linear", function () {
             _percent = d.v;
             _start = d.v
         }, callback)
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         removeListeners()
     }
 });
@@ -25002,14 +25063,14 @@ Module(function DefaultPlane() {
         try {
             location = Data.User.getLocation() || {};
             coords = Data.User.getCoords() || coords
-        } catch (e) {}
-        var address = location.address || location.city || "Planet Earth";
+        } catch (e) { }
+        var address = location.region || location.country_name || location.country || "Planet Earth";
         var country = (location.country || "").toUpperCase() || "US";
         var countryName = location.country_name || location.country || "";
         var pool = "world";
         try {
             pool = Data.User.getPool(location.country, coords)
-        } catch (e) {}
+        } catch (e) { }
         return {
             id: Utils.timestamp(),
             data: {
@@ -25039,7 +25100,7 @@ Module(function DefaultPlane() {
     this.exports = getPlane()
 });
 Class(function PlanesUtil() {
-    (function() {
+    (function () {
         initTweens()
     }
     )();
@@ -25059,7 +25120,7 @@ Class(function ScaleMechanic() {
     var _this = this;
     var _interaction, _active;
     var _config = [{
-        point: new Vector2(0.5,0.25),
+        point: new Vector2(0.5, 0.25),
         control: [{
             axis: "y",
             scale: "z",
@@ -25072,7 +25133,7 @@ Class(function ScaleMechanic() {
             limits: [0.6, 1.6],
         }]
     }, {
-        point: new Vector2(0.5,0.75),
+        point: new Vector2(0.5, 0.75),
         control: [{
             axis: "y",
             scale: "z",
@@ -25084,13 +25145,13 @@ Class(function ScaleMechanic() {
             distance: -300,
             limits: [0.6, 1.6],
         }]
-    }, ];
+    },];
     var _values = {
         x: 1,
         z: 1,
     };
     var _touchPerc = new Vector2();
-    (function() {
+    (function () {
         initInteraction()
     }
     )();
@@ -25102,19 +25163,19 @@ Class(function ScaleMechanic() {
     function onStart(e) {
         _touchPerc.set(e.x / Stage.width, e.y / Stage.height);
         var dist = 1000;
-        _config.forEach(function(config) {
+        _config.forEach(function (config) {
             var d = _touchPerc.distanceTo(config.point);
             if (d < dist) {
                 dist = d;
                 _active = config;
-                _active.control.forEach(function(c) {
+                _active.control.forEach(function (c) {
                     c.startValue = _values[c.scale]
                 })
             }
         })
     }
     function onUpdate(e) {
-        _active.control.forEach(function(c) {
+        _active.control.forEach(function (c) {
             _values[c.scale] = c.startValue + e[c.axis] / c.distance;
             _values[c.scale] = Math.max(c.limits[0], Math.min(c.limits[1], _values[c.scale]));
             if (typeof _this.onUpdate == "function") {
@@ -25126,7 +25187,7 @@ Class(function ScaleMechanic() {
 Class(function SDFFontLoader() {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function parse(data) {
         if (!data) {
@@ -25156,7 +25217,7 @@ Class(function SDFFontLoader() {
                 }
                 output.pages[lineData.data.id] = lineData.data.file
             } else {
-                if (lineData.key === "chars" || lineData.key === "kernings") {} else {
+                if (lineData.key === "chars" || lineData.key === "kernings") { } else {
                     if (lineData.key === "char") {
                         output.chars.push(lineData.data)
                     } else {
@@ -25184,7 +25245,7 @@ Class(function SDFFontLoader() {
         line = line.substring(space + 1);
         line = line.replace(/letter=[\'\"]\S+[\'\"]/gi, "");
         line = line.split("=");
-        line = line.map(function(str) {
+        line = line.map(function (str) {
             return str.trim().match((/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g))
         });
         var data = [];
@@ -25211,7 +25272,7 @@ Class(function SDFFontLoader() {
             key: key,
             data: {}
         };
-        data.forEach(function(v) {
+        data.forEach(function (v) {
             out.data[v.key] = v.data
         });
         return out
@@ -25229,12 +25290,12 @@ Class(function SDFFontLoader() {
         return parseInt(data, 10)
     }
     function parseIntList(data) {
-        return data.split(",").map(function(val) {
+        return data.split(",").map(function (val) {
             return parseInt(val, 10)
         })
     }
-    this.load = function(asset, callback) {
-        XHR.get(asset, function(data) {
+    this.load = function (asset, callback) {
+        XHR.get(asset, function (data) {
             if (typeof callback == "function") {
                 callback(parse(data))
             }
@@ -25249,7 +25310,7 @@ Class(function SwipeMechanic(_object) {
     var _progressTarget = 0;
     var _progressVel = 0;
     var _progress = 0;
-    (function() {
+    (function () {
         initInteraction();
         addHandlers();
         Render.start(loop)
@@ -25294,13 +25355,13 @@ Class(function SwipeMechanic(_object) {
     function onEnd() {
         _this.isTouching = false
     }
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         Render.stop(loop)
     }
 });
 Class(function Tests() {
     var _this = this;
-    this.RETURN_USER = function() {
+    this.RETURN_USER = function () {
         if (Hydra.HASH && Hydra.HASH.indexOf("return") !== -1) {
             return true
         }
@@ -25309,8 +25370,8 @@ Class(function Tests() {
         }
         return false
     }
-    ;
-    this.AT_IO = function() {
+        ;
+    this.AT_IO = function () {
         if (Hydra.HASH && Hydra.HASH.indexOf("io") !== -1) {
             return true
         }
@@ -25319,8 +25380,8 @@ Class(function Tests() {
         }
         return false
     }
-    ;
-    this.PEACE_DAY = function() {
+        ;
+    this.PEACE_DAY = function () {
         var today = new Date();
         var date = today.getDate();
         var month = today.getMonth() + 1;
@@ -25330,12 +25391,12 @@ Class(function Tests() {
         }
         return false
     }
-    ;
-    this.useDOF = function() {
+        ;
+    this.useDOF = function () {
         return false
     }
-    ;
-    this.getPlaneReduce = function() {
+        ;
+    this.getPlaneReduce = function () {
         if (GPU.eq(0) || GPU.mobileEq(0)) {
             return 0.5
         }
@@ -25344,8 +25405,8 @@ Class(function Tests() {
         }
         return 1
     }
-    ;
-    this.GET_TEST_RESULTS = function() {
+        ;
+    this.GET_TEST_RESULTS = function () {
         if (!_this.RESULT) {
             return 0
         }
@@ -25354,8 +25415,8 @@ Class(function Tests() {
         }
         return Utils.range(_this.RESULT, 9, 20, 0, 1, true)
     }
-    ;
-    this.getDPR = function() {
+        ;
+    this.getDPR = function () {
         if (GPU.OVERSIZED) {
             return 0.8
         }
@@ -25364,8 +25425,8 @@ Class(function Tests() {
         }
         return 2
     }
-    ;
-    this.retinaRender = function() {
+        ;
+    this.retinaRender = function () {
         if (GPU.lt(1)) {
             return false
         }
@@ -25374,19 +25435,19 @@ Class(function Tests() {
         }
         return true
     }
-    ;
-    this.slowMeshUpload = function() {
+        ;
+    this.slowMeshUpload = function () {
         if (Mobile.os == "Android" && GPU.mobileLT(1)) {
             return true
         }
         return false
     }
-    ;
-    this.useReflections = function() {
+        ;
+    this.useReflections = function () {
         return Config.BEAST
     }
-    ;
-    this.oceanAnimation = function() {
+        ;
+    this.oceanAnimation = function () {
         if (Config.BEAST) {
             return true
         }
@@ -25398,8 +25459,8 @@ Class(function Tests() {
         }
         return false
     }
-    ;
-    this.NO_CSS_BLEND = function() {
+        ;
+    this.NO_CSS_BLEND = function () {
         if (Hardware.SAMSUNGS6 || Device.detect("samsung") || GPU.mobileEq(0) || Mobile.os == "Android") {
             return true
         }
@@ -25424,19 +25485,19 @@ Class(function TiltShift() {
         },
         start: {
             type: "v2",
-            value: new THREE.Vector2(-200,Stage.height)
+            value: new THREE.Vector2(-200, Stage.height)
         },
         end: {
             type: "v2",
-            value: new THREE.Vector2(Stage.width,Stage.height + 200)
+            value: new THREE.Vector2(Stage.width, Stage.height + 200)
         },
         delta: {
             type: "v2",
-            value: new THREE.Vector2(30,30)
+            value: new THREE.Vector2(30, 30)
         },
         texSize: {
             type: "v2",
-            value: new THREE.Vector2(Stage.width,Stage.height)
+            value: new THREE.Vector2(Stage.width, Stage.height)
         },
         tDepth: {
             type: "t",
@@ -25453,7 +25514,7 @@ Class(function TiltShiftShader() {
     Inherit(this, Component);
     var _this = this;
     var _x, _y;
-    (function() {
+    (function () {
         initPasses()
     }
     )();
@@ -25463,35 +25524,35 @@ Class(function TiltShiftShader() {
         _this.x = _x;
         _this.y = _y
     }
-    this.set("blur", function(v) {
+    this.set("blur", function (v) {
         _x.set("blur", v);
         _y.set("blur", v)
     });
-    this.set("gradientBlur", function(v) {
+    this.set("gradientBlur", function (v) {
         _x.set("gradientBlur", v);
         _y.set("gradientBlur", v)
     });
-    this.set("start", function(v) {
+    this.set("start", function (v) {
         _x.set("start", v);
         _y.set("start", v);
         _x.update();
         _y.update()
     });
-    this.set("end", function(v) {
+    this.set("end", function (v) {
         _x.set("end", v);
         _y.set("end", v);
         _x.update();
         _y.update()
     });
-    this.set("depth", function(depth) {
+    this.set("depth", function (depth) {
         _x.set("tDepth", depth);
         _y.set("tDepth", depth)
     });
-    this.set("far", function(far) {
+    this.set("far", function (far) {
         _x.set("far", far);
         _y.set("far", far)
     });
-    this.set("earth", function(earth) {
+    this.set("earth", function (earth) {
         _x.set("earth", earth);
         _y.set("earth", earth)
     })
@@ -25499,7 +25560,7 @@ Class(function TiltShiftShader() {
 Class(function TiltShiftX() {
     Inherit(this, TiltShift);
     var _this = this;
-    (function() {
+    (function () {
         updateDelta()
     }
     )();
@@ -25515,7 +25576,7 @@ Class(function TiltShiftX() {
 Class(function TiltShiftY() {
     Inherit(this, TiltShift);
     var _this = this;
-    (function() {
+    (function () {
         updateDelta()
     }
     )();
@@ -25540,13 +25601,13 @@ Class(function WiggleBehavior(_position) {
     this.speed = 1;
     this.zMove = 2;
     this.enabled = true;
-    (function() {
+    (function () {
         if (_position) {
             _origin.copyFrom(_position)
         }
     }
     )();
-    this.update = function() {
+    this.update = function () {
         if (!_this.enabled || _this.disabled) {
             return
         }
@@ -25568,21 +25629,21 @@ Class(function WiggleBehavior(_position) {
             }
         }
     }
-    ;
-    this.copyOrigin = function() {
+        ;
+    this.copyOrigin = function () {
         _origin.copyFrom(_position)
     }
 });
 Class(function Data() {
     Inherit(this, Model);
     var _this = this;
-    (function() {}
+    (function () { }
     )()
 }, "static");
 Data.Class(function Notifications() {
     Inherit(this, Model);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function prepareMessage(plane) {
         if (!plane) {
@@ -25612,9 +25673,9 @@ Data.Class(function Notifications() {
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
-    this.getMessage = function(callback) {
-        _this.delayedCall(function() {
-            Data.Planes.refreshPlanes(function(planes) {
+    this.getMessage = function (callback) {
+        _this.delayedCall(function () {
+            Data.Planes.refreshPlanes(function (planes) {
                 var latestPlane;
                 if (planes && planes.length > 0) {
                     for (var i = 0; i < planes.length; i++) {
@@ -25643,10 +25704,10 @@ Data.Class(function WebNotifications() {
     Inherit(this, Model);
     var _this = this;
     var _registration, _subscription;
-    (function() {}
+    (function () { }
     )();
     function init() {
-        if (!("serviceWorker"in navigator)) {
+        if (!("serviceWorker" in navigator)) {
             return
         }
         _this.active = true;
@@ -25658,7 +25719,7 @@ Data.Class(function WebNotifications() {
     function handleReady() {
         uploadAssets()
     }
-    function handleError(e) {}
+    function handleError(e) { }
     function getAssets() {
         var assets = [];
         assets.push(Config.CDN + "assets/css/style.css");
@@ -25678,11 +25739,11 @@ Data.Class(function WebNotifications() {
             if (navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage(getAssets())
             } else {
-                navigator.serviceWorker.getRegistration().then(function(reg) {
+                navigator.serviceWorker.getRegistration().then(function (reg) {
                     if (reg && reg.active) {
                         reg.active.postMessage(getAssets())
                     }
-                }).catch(function() {})
+                }).catch(function () { })
             }
         } else {
             console.log("sw not available")
@@ -25700,8 +25761,8 @@ Data.Class(function WebNotifications() {
             return _registration.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: window.PUSH_PUBLIC_KEY || window.VAPID_PUBLIC_KEY
-            }).then(function(pushSubscription) {
-                return new Promise(function(resolve, reject) {
+            }).then(function (pushSubscription) {
+                return new Promise(function (resolve, reject) {
                     _subscription = pushSubscription;
                     var paths = _subscription.endpoint.split("/");
                     var id = paths[paths.length - 1];
@@ -25718,18 +25779,18 @@ Data.Class(function WebNotifications() {
     }
     function listen() {
         var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
+        channel.port1.onmessage = function (event) {
             if (event.data.error) {
                 reject(event.data.error)
             } else {
                 switch (event.data.type) {
-                case "push":
-                    prepareMessage();
-                    break
+                    case "push":
+                        prepareMessage();
+                        break
                 }
             }
         }
-        ;
+            ;
         if (_registration.active) {
             _registration.active.postMessage({
                 type: "register"
@@ -25737,22 +25798,22 @@ Data.Class(function WebNotifications() {
         }
     }
     function prepareMessage() {
-        if ("serviceWorker"in navigator) {
-            Data.Notifications.getMessage(function(message) {
+        if ("serviceWorker" in navigator) {
+            Data.Notifications.getMessage(function (message) {
                 _registration.active.postMessage(message)
             })
         }
     }
     function unsubscribe() {
-        _subscription.unsubscribe().then(function(event) {
+        _subscription.unsubscribe().then(function (event) {
             Data.User.setSubscriptionId(null)
         })
     }
-    this.init = function() {
+    this.init = function () {
         init()
     }
-    ;
-    this.subscribe = function() {
+        ;
+    this.subscribe = function () {
         if (!_this.active) {
             return
         }
@@ -25768,7 +25829,7 @@ Data.Class(function Planes() {
     var _myPlanes = Storage.get("myPlanes") || [];
     var _offline = Storage.get("uploadOffline") || [];
     this.count = 0;
-    (function() {
+    (function () {
         refreshCount();
         if (Device.mobile) {
             retrievePlanes()
@@ -25785,7 +25846,7 @@ Data.Class(function Planes() {
         }
         var queue = [];
         var myPlanes = [];
-        var load = function() {
+        var load = function () {
             var obj = queue.shift();
             if (!obj || !obj.id) {
                 _myPlanes = myPlanes;
@@ -25798,7 +25859,7 @@ Data.Class(function Planes() {
                 return
             }
             if (usesFirebaseBackend()) {
-                FirebasePlanesBridge.getPlane(obj.id).then(function(e) {
+                FirebasePlanesBridge.getPlane(obj.id).then(function (e) {
                     if (!e || !e.data) {
                         _myPlanes.push(obj);
                         load();
@@ -25809,7 +25870,7 @@ Data.Class(function Planes() {
                     plane.number = obj.number;
                     myPlanes.push(plane);
                     load()
-                }).catch(function() {
+                }).catch(function () {
                     _myPlanes.push(obj);
                     load()
                 });
@@ -25818,7 +25879,7 @@ Data.Class(function Planes() {
             var xhr = XHR.get(Config.APP_ENGINE + "/getData", {
                 type: "planes",
                 id: obj.id
-            }, function(e) {
+            }, function (e) {
                 if (!e.data) {
                     _myPlanes.push(obj);
                     load();
@@ -25831,7 +25892,7 @@ Data.Class(function Planes() {
                 load()
             })
         };
-        _createdPlanes.forEach(function(obj) {
+        _createdPlanes.forEach(function (obj) {
             queue.push(obj)
         });
         var planeTotal = Math.min(_createdPlanes.length, 5);
@@ -25847,13 +25908,13 @@ Data.Class(function Planes() {
         if (!usesFirebaseBackend()) {
             return
         }
-        FirebasePlanesBridge.getPlaneCount().then(function(count) {
+        FirebasePlanesBridge.getPlaneCount().then(function (count) {
             var current = Number(_this.count) || 0;
             if (count > current) {
                 _this.count = count;
                 Storage.set("lastCount", count)
             }
-        }).catch(function() {})
+        }).catch(function () { })
     }
     function addListeners() {
         if (Device.mobile) {
@@ -25863,7 +25924,7 @@ Data.Class(function Planes() {
     }
     function internetStatus(e) {
         if (e.connected) {
-            _offline.forEach(function(data) {
+            _offline.forEach(function (data) {
                 var id = data.__saveId;
                 delete data.__saveId;
                 XHR.post(Config.APP_ENGINE + "/setData", {
@@ -25883,7 +25944,7 @@ Data.Class(function Planes() {
         }
         Storage.set("handleNotification", Render.TIME);
         Mobile.PushNotifications.reload();
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             if (e.data === "new") {
                 location = location.protocol + location.pathname + "?new=true"
             } else {
@@ -25894,7 +25955,7 @@ Data.Class(function Planes() {
             }
         }, 250)
     }
-    this.createPlane = function(data, callback) {
+    this.createPlane = function (data, callback) {
         console.log("[PaperPlanes] Data.Planes.createPlane fired", { backend: usesFirebaseBackend() ? "firebase" : "legacy", mobile: !!Device.mobile });
         if (!Device.mobile) {
             return callback()
@@ -25912,7 +25973,7 @@ Data.Class(function Planes() {
         data.client = Mobile.isNative() ? "app" : "web";
         data.createdByClient = data.client;
         data.updatedByClient = data.client;
-        var handleData = function(e) {
+        var handleData = function (e) {
             console.log("[PaperPlanes] Data.Planes.createPlane handleData", e && e.count);
             var store = {};
             store.data = Utils.cloneObject(data);
@@ -25934,7 +25995,7 @@ Data.Class(function Planes() {
         };
         if (usesFirebaseBackend()) {
             console.log("[PaperPlanes] Data.Planes.createPlane saving via Firebase");
-            FirebasePlanesBridge.savePlane(data, id, true).then(handleData).catch(function() {
+            FirebasePlanesBridge.savePlane(data, id, true).then(handleData).catch(function () {
                 console.log("[PaperPlanes] Data.Planes.createPlane Firebase save failed, falling back to current count");
                 handleData({
                     count: _this.count || 0
@@ -25957,15 +26018,15 @@ Data.Class(function Planes() {
             uploadWhenOnline(data)
         }
     }
-    ;
-    this.throwPlane = function(data, rethrow) {
+        ;
+    this.throwPlane = function (data, rethrow) {
         console.log("[PaperPlanes] Data.Planes.throwPlane fired", { rethrow: !!rethrow });
         data.evt = rethrow ? "rethrow" : "throw_plane";
         data.atio = Data.User.isAtIO();
         Data.Socket.send(data)
     }
-    ;
-    this.updatePlane = function(stampData, callback) {
+        ;
+    this.updatePlane = function (stampData, callback) {
         console.log("[PaperPlanes] Data.Planes.updatePlane fired");
         if (!Device.mobile) {
             return
@@ -25986,12 +26047,12 @@ Data.Class(function Planes() {
         _caughtPlane.data.caughtAt = _caughtPlane.data.lastUpdated;
         _caughtPlane.data.stamps.push(stampData);
         if (usesFirebaseBackend()) {
-            FirebasePlanesBridge.savePlane(_caughtPlane.data, _caughtPlane.id, false).then(function(e) {
+            FirebasePlanesBridge.savePlane(_caughtPlane.data, _caughtPlane.id, false).then(function (e) {
                 _this.count = e.count;
                 Storage.set("lastCount", e.count);
                 _caughtPlane = null;
                 callback()
-            }).catch(function() {
+            }).catch(function () {
                 _caughtPlane = null;
                 callback()
             })
@@ -26000,7 +26061,7 @@ Data.Class(function Planes() {
                 type: "planes",
                 data: JSON.stringify(_caughtPlane.data),
                 id: _caughtPlane.id
-            }, function(e) {
+            }, function (e) {
                 _this.count = e.count;
                 Storage.set("lastCount", e.count);
                 _caughtPlane = null;
@@ -26008,20 +26069,20 @@ Data.Class(function Planes() {
             })
         }
     }
-    ;
-    this.refreshPlanes = function(callback) {
+        ;
+    this.refreshPlanes = function (callback) {
         retrievePlanes(callback)
     }
-    ;
-    this.getCreatedPlanes = function() {
+        ;
+    this.getCreatedPlanes = function () {
         return _myPlanes
     }
-    ;
-    this.getLatestPlane = function(callback) {
+        ;
+    this.getLatestPlane = function (callback) {
         if (_myPlanes && _myPlanes.length > 0) {
             var obj = _myPlanes[0];
             if (usesFirebaseBackend()) {
-                FirebasePlanesBridge.getPlane(obj.id).then(function(e) {
+                FirebasePlanesBridge.getPlane(obj.id).then(function (e) {
                     if (!e || !e.data) {
                         callback({
                             success: false
@@ -26033,7 +26094,7 @@ Data.Class(function Planes() {
                     plane.number = obj.number;
                     _myPlanes[0] = plane;
                     callback(plane)
-                }).catch(function() {
+                }).catch(function () {
                     callback({
                         success: false
                     })
@@ -26042,7 +26103,7 @@ Data.Class(function Planes() {
                 var xhr = XHR.get(Config.APP_ENGINE + "/getData", {
                     type: "planes",
                     id: obj.id
-                }, function(e) {
+                }, function (e) {
                     if (!e.data) {
                         callback({
                             success: false
@@ -26059,13 +26120,13 @@ Data.Class(function Planes() {
         }
         return null
     }
-    ;
-    this.catchPlane = function(callback) {
+        ;
+    this.catchPlane = function (callback) {
         console.log("[PaperPlanes] Data.Planes.catchPlane fired");
         if (!Device.mobile) {
             return
         }
-        var lookupPool = (function() {
+        var lookupPool = (function () {
             var pool = Data.User.getPool();
             if (pool == "world") {
                 return Utils.headsTails(0, 1) ? "east" : "west"
@@ -26079,7 +26140,7 @@ Data.Class(function Planes() {
         }
         )();
         if (usesFirebaseBackend()) {
-            FirebasePlanesBridge.selectPlane(lookupPool).then(function(e) {
+            FirebasePlanesBridge.selectPlane(lookupPool).then(function (e) {
                 if (!e || !e.data) {
                     callback(_defaultPlane.data);
                     _caughtPlane = null;
@@ -26089,14 +26150,14 @@ Data.Class(function Planes() {
                 _caughtPlane.id = e.id;
                 _caughtPlane.data = (typeof e.data === "string") ? JSON.parse(e.data) : (e.data || e);
                 callback(_caughtPlane.data)
-            }).catch(function() {
+            }).catch(function () {
                 callback(_defaultPlane.data);
                 _caughtPlane = null
             })
         } else {
             XHR.get(Config.APP_ENGINE + "/select", {
                 pool: lookupPool
-            }, function(e) {
+            }, function (e) {
                 if (e.fail || e.pool == "nopool") {
                     callback(_defaultPlane.data);
                     _caughtPlane = null;
@@ -26109,8 +26170,8 @@ Data.Class(function Planes() {
             })
         }
     }
-    ;
-    this.findPlaneByData = function(data) {
+        ;
+    this.findPlaneByData = function (data) {
         for (var i = 0; i < _myPlanes.length; i++) {
             if (data.id == _myPlanes[i].id) {
                 return _myPlanes[i]
@@ -26129,9 +26190,9 @@ Data.Class(function Socket() {
     this.MOBILE = false;
     this.DESKTOP = false;
     this.INITIAL_EVENT = {};
-    (function() {
+    (function () {
         HydraEvents.createLocalEmitter(_this);
-        Hydra.ready(function() {
+        Hydra.ready(function () {
             defer(loadIO);
             addListeners()
         })
@@ -26139,7 +26200,7 @@ Data.Class(function Socket() {
     )();
     function getActiveServers() {
         var url = activeServersURL();
-        XHR.get(url, function(data) {
+        XHR.get(url, function (data) {
             console.log(data)
         })
     }
@@ -26230,35 +26291,35 @@ Data.Class(function Socket() {
     function sideMessage(e) {
         _this.fire("side", e)
     }
-    function pipeReady() {}
-    this.set("experience", function(val) {
+    function pipeReady() { }
+    this.set("experience", function (val) {
         _exp = val
     });
-    this.send = function(data) {
+    this.send = function (data) {
         console.log("[PaperPlanes] Data.Socket.send fired", data && data.evt ? data.evt : "message");
         if (!_pipe) {
-            return nextFrame(function() {
+            return nextFrame(function () {
                 _this.send(data)
             })
         }
         _pipe.send(data)
     }
-    ;
-    this.emitToSide = function(data) {
+        ;
+    this.emitToSide = function (data) {
         console.log("[PaperPlanes] Data.Socket.emitToSide fired");
         if (!_pipe) {
-            return nextFrame(function() {
+            return nextFrame(function () {
                 _this.emitToSide(data)
             })
         }
         _pipe.emitToSide(data)
     }
-    ;
-    this.getActiveServers = function() {
+        ;
+    this.getActiveServers = function () {
         getActiveServers()
     }
-    ;
-    this.calculateDistance = function(lat1, lon1, lat2, lon2) {
+        ;
+    this.calculateDistance = function (lat1, lon1, lat2, lon2) {
         var R = 6378.1;
         var dLat = Utils.toRadians(lat2 - lat1);
         var dLon = Utils.toRadians(lon2 - lon1);
@@ -26266,13 +26327,13 @@ Data.Class(function Socket() {
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c
     }
-    ;
-    this.connect = function() {
+        ;
+    this.connect = function () {
         console.log("[PaperPlanes] Data.Socket.connect fired");
         init()
     }
-    ;
-    this.test = function() {
+        ;
+    this.test = function () {
         if (!_pipe) {
             return console.warn("no pipe!")
         }
@@ -26317,7 +26378,7 @@ Class(function SocketPipeIO(_type, _exp) {
     var _event = {};
     var _send = {};
     var _alerted = false;
-    (function() {
+    (function () {
         if (usesFirebaseBackend()) {
             _this.events.fire(HydraEvents.READY);
             return
@@ -26334,17 +26395,17 @@ Class(function SocketPipeIO(_type, _exp) {
         var port = start;
         var max = port + _config.totalPorts;
         for (var i = port; i < max; i++) {
-            (function(i) {
+            (function (i) {
                 var connection = io.connect(socketProtocol() + _config.host + ":" + i, {
                     transports: ["websocket"]
                 });
                 connection.on("r", receiveData);
-                connection.on("connect_error", function() {
+                connection.on("connect_error", function () {
                     if (!_alerted) {
                         _alerted = true
                     }
                 });
-                connection.on("connect", function() {
+                connection.on("connect", function () {
                     _alerted = true;
                     if (!_send[i]) {
                         connection.emit("i", {
@@ -26354,7 +26415,7 @@ Class(function SocketPipeIO(_type, _exp) {
                     }
                     _send[i] = true
                 });
-                connection.on("reconnect", function() {
+                connection.on("reconnect", function () {
                     if (!_send[i]) {
                         connection.emit("i", {
                             t: _type,
@@ -26363,7 +26424,7 @@ Class(function SocketPipeIO(_type, _exp) {
                     }
                     _send[i] = true
                 });
-                connection.on("disconnect", function() {
+                connection.on("disconnect", function () {
                     _send[i] = false
                 });
                 _connections.push(connection)
@@ -26378,7 +26439,7 @@ Class(function SocketPipeIO(_type, _exp) {
             transports: ["websocket"]
         });
         connection.on("sideMsg", sideMsg);
-        connection.on("connect", function() {
+        connection.on("connect", function () {
             _alerted = true;
             if (!_send[i]) {
                 connection.emit("i", {
@@ -26388,7 +26449,7 @@ Class(function SocketPipeIO(_type, _exp) {
             }
             _send[i] = true
         });
-        connection.on("reconnect", function() {
+        connection.on("reconnect", function () {
             if (!_send[i]) {
                 connection.emit("i", {
                     t: "side",
@@ -26397,7 +26458,7 @@ Class(function SocketPipeIO(_type, _exp) {
             }
             _send[i] = true
         });
-        connection.on("disconnect", function() {
+        connection.on("disconnect", function () {
             _send[i] = false
         })
     }
@@ -26407,20 +26468,20 @@ Class(function SocketPipeIO(_type, _exp) {
     function sideMsg(e) {
         _this.sideMessage && _this.sideMessage(e.d)
     }
-    this.send = function(data) {
+    this.send = function (data) {
         _event.t = _type;
         _event.x = _exp;
         _event.d = data;
-        _connections.forEach(function(conn) {
+        _connections.forEach(function (conn) {
             conn.emit("event", _event)
         })
     }
-    ;
-    this.emitToSide = function(data) {
+        ;
+    this.emitToSide = function (data) {
         _event.t = _type;
         _event.x = _exp;
         _event.d = data;
-        _connections.forEach(function(conn) {
+        _connections.forEach(function (conn) {
             conn.emit("side", _event)
         })
     }
@@ -26430,7 +26491,7 @@ Class(function SocketPipeReceiver(_type, _exp) {
     var _this = this;
     var _io, _send;
     var _alerted = false;
-    (function() {
+    (function () {
         if (usesFirebaseBackend()) {
             _this.events.fire(HydraEvents.READY);
             return
@@ -26444,12 +26505,12 @@ Class(function SocketPipeReceiver(_type, _exp) {
         });
         _io.on("r", receiveData);
         _io.on("ev", receiveEvent);
-        _io.on("connect_error", function() {
+        _io.on("connect_error", function () {
             if (!_alerted) {
                 _alerted = true
             }
         });
-        _io.on("connect", function() {
+        _io.on("connect", function () {
             _alerted = true;
             if (!_send) {
                 _io.emit("i", {
@@ -26459,11 +26520,11 @@ Class(function SocketPipeReceiver(_type, _exp) {
             }
             _send = true
         });
-        _io.on("disconnect", function() {
+        _io.on("disconnect", function () {
             _send = false
         });
         _this.events.fire(HydraEvents.READY);
-        _io.on("reconnected", function() {
+        _io.on("reconnected", function () {
             if (!_send) {
                 _io.emit("i", {
                     t: _type,
@@ -26479,20 +26540,20 @@ Class(function SocketPipeReceiver(_type, _exp) {
     function receiveEvent(e) {
         _this.onEvent && _this.onEvent(e.d)
     }
-    this.send = function() {}
-    ;
-    this.event = function() {}
+    this.send = function () { }
+        ;
+    this.event = function () { }
 });
 Class(function SocketPipeSelector() {
     Inherit(this, Component);
     var _this = this;
     var _active, _location, _server, _host, _port;
     var _config = require("SocketConfig");
-    (function() {}
+    (function () { }
     )();
     function getActiveServers(callback) {
         var url = activeServersURL();
-        XHR.get(url, function(data) {
+        XHR.get(url, function (data) {
             _active = data;
             setServer();
             callback()
@@ -26507,7 +26568,7 @@ Class(function SocketPipeSelector() {
             server.distFromUser = Data.Socket.calculateDistance(userCoords[0], userCoords[1], server.coords[0], server.coords[1]);
             servers.push(server)
         }
-        servers.sort(function(a, b) {
+        servers.sort(function (a, b) {
             return a.distFromUser - b.distFromUser
         });
         _server = servers[0];
@@ -26543,14 +26604,14 @@ Class(function SocketPipeSelector() {
                 conn: _server.ports[key]
             })
         }
-        array.sort(function(a, b) {
+        array.sort(function (a, b) {
             return a.conn - b.conn
         });
         return array[0].port
     }
-    this.select = function(callback) {
+    this.select = function (callback) {
         if (!_host) {
-            getActiveServers(function() {
+            getActiveServers(function () {
                 callback({
                     host: _host,
                     port: _port
@@ -26563,11 +26624,11 @@ Class(function SocketPipeSelector() {
             })
         }
     }
-    ;
-    this.selectDirect = function(callback) {
+        ;
+    this.selectDirect = function (callback) {
         var min = _config.io.directPortStart;
         var max = min + _config.io.totalPorts - 1;
-        defer(function() {
+        defer(function () {
             callback({
                 host: _config.io.host,
                 port: Utils.doRandom(min, max)
@@ -26581,7 +26642,7 @@ Class(function SocketPipeSender(_type, _exp, _atIO) {
     var _io, _sendEvent;
     var _alerted = false;
     var _send = {};
-    (function() {
+    (function () {
         if (usesFirebaseBackend()) {
             _this.events.fire(HydraEvents.READY);
             return
@@ -26600,15 +26661,15 @@ Class(function SocketPipeSender(_type, _exp, _atIO) {
         _io.on("r", receiveData);
         _io.on("ev", receiveEvent);
         _this.events.fire(HydraEvents.READY);
-        _io.on("connect_error", function() {
+        _io.on("connect_error", function () {
             if (!_alerted) {
                 _alerted = true
             }
         });
-        _io.on("disconnect", function() {
+        _io.on("disconnect", function () {
             _sendEvent = false
         });
-        _io.on("connect", function() {
+        _io.on("connect", function () {
             _alerted = true;
             if (!_sendEvent) {
                 _io.emit("i", {
@@ -26618,7 +26679,7 @@ Class(function SocketPipeSender(_type, _exp, _atIO) {
             }
             _sendEvent = true
         });
-        _io.on("reconnected", function() {
+        _io.on("reconnected", function () {
             if (!_sendEvent) {
                 _io.emit("i", {
                     t: _type,
@@ -26634,14 +26695,14 @@ Class(function SocketPipeSender(_type, _exp, _atIO) {
     function receiveEvent(e) {
         _this.onEvent && _this.onEvent(e.d)
     }
-    this.send = function(data) {
+    this.send = function (data) {
         _send.x = _exp;
         _send.t = _type;
         _send.d = data;
         _io && _io.emit("s", _send)
     }
-    ;
-    this.event = function(data) {}
+        ;
+    this.event = function (data) { }
 });
 function abbreviateRegion(region, country) {
     region = (region || "").toString().trim();
@@ -26720,37 +26781,234 @@ function abbreviateRegion(region, country) {
     if (normalized.length <= 3) {
         return normalized.toUpperCase()
     }
-    if (countryCode == "ca" || countryCode == "us") {
+    if (countryCode == "ca" || countryCode == "us" || countryCode == "canada" || countryCode == "usa") {
         return map[normalized] || region
     }
     return region
 }
 
+var KNOWN_COUNTRIES = [
+    "russia", "russian federation", "rus", "ru",
+    "canada", "can",
+    "united states", "united states of america", "usa", "us",
+    "united kingdom", "uk", "great britain", "gbr", "england", "scotland", "wales", "northern ireland",
+    "australia", "aus",
+    "germany", "deutschland", "deu",
+    "france", "fra",
+    "italy", "italia", "ita",
+    "japan", "jpn",
+    "china", "chn",
+    "india", "ind",
+    "brazil", "brasil", "bra",
+    "mexico", "mex",
+    "spain", "espana", "esp",
+    "netherlands", "nld", "holland",
+    "switzerland", "che",
+    "sweden", "swe",
+    "norway", "nor",
+    "finland", "fin",
+    "denmark", "dnk",
+    "poland", "polska", "pol",
+    "ukraine", "ukr",
+    "belgium", "bel",
+    "austria", "aut",
+    "ireland", "irl",
+    "portugal", "prt",
+    "greece", "grc",
+    "czech republic", "czechia", "cze",
+    "hungary", "hun",
+    "romania", "rou",
+    "new zealand", "nzl",
+    "south korea", "korea", "kor",
+    "argentina", "arg",
+    "chile", "chl",
+    "colombia", "col",
+    "south africa", "zaf",
+    "egypt", "egy",
+    "turkey", "turkiye", "tur",
+    "saudi arabia", "sau",
+    "singapore", "sgp",
+    "malaysia", "mys",
+    "indonesia", "idn",
+    "thailand", "tha",
+    "vietnam", "vnm",
+    "philippines", "phl",
+    "pakistan", "pak",
+    "bangladesh", "bgd",
+    "nigeria", "nga",
+    "kenya", "ken",
+    "israel", "isr",
+    "united arab emirates", "uae", "are"
+];
+function isCountryName(str) {
+    if (!str) return false;
+    var s = str.trim().toLowerCase();
+    return KNOWN_COUNTRIES.indexOf(s) !== -1;
+}
+
+var CITY_TO_REGION_MAP = {
+    "antigonish": { region: "Nova Scotia", country: "Canada" },
+    "halifax": { region: "Nova Scotia", country: "Canada" },
+    "truro": { region: "Nova Scotia", country: "Canada" },
+    "kentville": { region: "Nova Scotia", country: "Canada" },
+    "lunenburg": { region: "Nova Scotia", country: "Canada" },
+    "ottawa": { region: "Ontario", country: "Canada" },
+    "st. john's": { region: "Newfoundland and Labrador", country: "Canada" },
+    "surrey": { region: "British Columbia", country: "Canada" },
+    "montreal": { region: "Quebec", country: "Canada" },
+    "red deer": { region: "Alberta", country: "Canada" },
+    "cedar rapids": { region: "Iowa", country: "USA" },
+    "denver": { region: "Colorado", country: "USA" },
+    "seattle": { region: "Washington", country: "USA" },
+    "austin": { region: "Texas", country: "USA" },
+    "sheffield": { region: "England", country: "UK" },
+    "glasgow": { region: "Scotland", country: "UK" },
+    "florence": { region: "Tuscany", country: "Italy" },
+    "los angeles": { region: "California", country: "USA" },
+    "mountain view": { region: "California", country: "USA" },
+    "moscow": { region: "Moscow", country: "Russia" },
+    "saint petersburg": { region: "Saint Petersburg", country: "Russia" },
+    "st. petersburg": { region: "Saint Petersburg", country: "Russia" },
+    "novosibirsk": { region: "Novosibirsk Oblast", country: "Russia" },
+    "yekaterinburg": { region: "Sverdlovsk Oblast", country: "Russia" },
+    "nizhny novgorod": { region: "Nizhny Novgorod Oblast", country: "Russia" },
+    "kazan": { region: "Republic of Tatarstan", country: "Russia" },
+    "chelyabinsk": { region: "Chelyabinsk Oblast", country: "Russia" },
+    "omsk": { region: "Omsk Oblast", country: "Russia" },
+    "samara": { region: "Samara Oblast", country: "Russia" },
+    "rostov-on-don": { region: "Rostov Oblast", country: "Russia" },
+    "ufa": { region: "Republic of Bashkortostan", country: "Russia" },
+    "krasnoyarsk": { region: "Krasnoyarsk Krai", country: "Russia" },
+    "voronezh": { region: "Voronezh Oblast", country: "Russia" },
+    "perm": { region: "Perm Krai", country: "Russia" },
+    "volgograd": { region: "Volgograd Oblast", country: "Russia" },
+    "krasnodar": { region: "Krasnodar Krai", country: "Russia" },
+    "saratov": { region: "Saratov Oblast", country: "Russia" },
+    "tyumen": { region: "Tyumen Oblast", country: "Russia" },
+    "tolyatti": { region: "Samara Oblast", country: "Russia" },
+    "barnaul": { region: "Altai Krai", country: "Russia" },
+    "irkutsk": { region: "Irkutsk Oblast", country: "Russia" },
+    "vladivostok": { region: "Primorsky Krai", country: "Russia" },
+    "khabarovsk": { region: "Khabarovsk Krai", country: "Russia" },
+    "yaroslavl": { region: "Yaroslavl Oblast", country: "Russia" },
+    "sochi": { region: "Krasnodar Krai", country: "Russia" }
+};
+
+function resolveRegionFromText(text, fallbackCountry) {
+    if (!text || typeof text !== "string") {
+        return { region: "", country: fallbackCountry || "" };
+    }
+    var trimmed = text.trim();
+    if (trimmed.indexOf(",") !== -1) {
+        var parts = trimmed.split(",").map(function (p) { return p.trim(); });
+        var cityKey = parts[0].toLowerCase();
+        if (CITY_TO_REGION_MAP[cityKey]) {
+            return {
+                region: CITY_TO_REGION_MAP[cityKey].region,
+                country: parts[1] || CITY_TO_REGION_MAP[cityKey].country || fallbackCountry || ""
+            };
+        }
+        if (parts.length >= 3) {
+            return { region: parts[1], country: parts[2] };
+        }
+        if (parts.length === 2) {
+            if (!isCountryName(parts[1])) {
+                return { region: parts[1], country: fallbackCountry || "" };
+            }
+            return { region: parts[0], country: parts[1] };
+        }
+    }
+    var key = trimmed.toLowerCase();
+    if (CITY_TO_REGION_MAP[key]) {
+        return CITY_TO_REGION_MAP[key];
+    }
+    return { region: trimmed, country: fallbackCountry || "" };
+}
+
 function formatLocationText(city, region, countryName) {
+    var province = "";
+    var country = "";
+    if (arguments.length === 3) {
+        province = (region || "").toString().trim();
+        country = (countryName || "").toString().trim();
+        if (!province && city) {
+            var resolved = resolveRegionFromText(city, country);
+            province = resolved.region;
+            if (!country) country = resolved.country;
+        }
+    } else if (arguments.length === 2) {
+        province = (arguments[0] || "").toString().trim();
+        country = (arguments[1] || "").toString().trim();
+        if (province && !country) {
+            var resolved = resolveRegionFromText(province, "");
+            province = resolved.region;
+            country = resolved.country;
+        }
+    } else if (arguments.length === 1) {
+        var resolved = resolveRegionFromText(arguments[0], "");
+        province = resolved.region;
+        country = resolved.country;
+    }
     var parts = [];
-    city = (city || "").toString().trim();
-    region = abbreviateRegion(region, countryName);
-    countryName = (countryName || "").toString().trim();
-    if (city) {
-        parts.push(city)
+    if (province) {
+        parts.push(province);
     }
-    if (region) {
-        parts.push(region)
+    if (country) {
+        parts.push(country);
     }
-    if (countryName) {
-        parts.push(countryName)
-    }
-    return parts.join(", ")
+    return parts.join(", ") || "Planet Earth";
 }
 
 function formatLiveLocationText(city, region, countryName) {
-    city = (city || "").toString().trim();
-    region = abbreviateRegion(region, countryName);
+    var province = (region || "").toString().trim();
     countryName = (countryName || "").toString().trim();
-    if (city) {
-        return [city, countryName].filter(Boolean).join(", ")
+    if (!province && city) {
+        var resolved = resolveRegionFromText(city, countryName);
+        province = resolved.region;
+        if (!countryName) {
+            countryName = resolved.country;
+        }
     }
-    return [region, countryName].filter(Boolean).join(", ") || countryName || "Planet Earth"
+    if (province && countryName) {
+        return province + ", " + countryName;
+    }
+    return province || countryName || "Planet Earth";
+}
+
+function getStampProvinceText(data) {
+    if (!data) return "";
+    var region = (data.region || "").toString().trim();
+    if (region) {
+        return abbreviateRegion(region, data.country_name || data.country);
+    }
+    if (data.address && typeof data.address === "string") {
+        var addr = data.address.trim();
+        if (addr.indexOf(",") !== -1) {
+            var parts = addr.split(",").map(function (p) { return p.trim(); });
+            if (parts.length === 2) {
+                if (isCountryName(parts[1])) {
+                    var resolved = resolveRegionFromText(addr, data.country_name || data.country);
+                    return abbreviateRegion(resolved.region, resolved.country || data.country_name || parts[1] || data.country);
+                }
+                return abbreviateRegion(parts[1], data.country_name || data.country);
+            }
+            if (parts.length >= 3) {
+                return abbreviateRegion(parts[1], data.country_name || parts[2] || data.country);
+            }
+        }
+        var resolved = resolveRegionFromText(addr, data.country_name || data.country);
+        if (resolved.region) {
+            return abbreviateRegion(resolved.region, resolved.country || data.country_name || data.country);
+        }
+        return abbreviateRegion(addr, data.country_name || data.country);
+    }
+    if (data.city && typeof data.city === "string") {
+        var resolved = resolveRegionFromText(data.city, data.country_name || data.country);
+        if (resolved.region) {
+            return abbreviateRegion(resolved.region, resolved.country || data.country_name || data.country);
+        }
+    }
+    return "";
 }
 
 Data.Class(function User() {
@@ -26765,7 +27023,7 @@ Data.Class(function User() {
         ip: ""
     };
     var _subscriptionId;
-    (function() {
+    (function () {
         if (Mobile.isNative()) {
             getNativeGeo();
             _this.ready = true
@@ -26780,7 +27038,7 @@ Data.Class(function User() {
         if (!value) {
             return ""
         }
-        return value.split(/\s+/).map(function(part) {
+        return value.split(/\s+/).map(function (part) {
             if (!part.length) {
                 return part
             }
@@ -26795,13 +27053,19 @@ Data.Class(function User() {
         var country = (data.country_code || data.country || address.country_code || "").toString().toLowerCase();
         var countryName = data.country_name || data.country || address.country || "";
         countryName = (countryName || "").toString().trim();
+        if (countryName.toLowerCase() === "russian federation") {
+            countryName = "Russia";
+        }
+        if (country === "ru" && (!countryName || countryName.toLowerCase() === "ru")) {
+            countryName = "Russia";
+        }
         if (countryName && countryName.length === 2) {
             countryName = countryName.toUpperCase()
         }
         city = (city || "").toString().trim() || "Planet Earth";
         region = abbreviateRegion(region, country);
         var coords = data.coords || [data.latitude || 0, data.longitude || 0];
-        var address = formatLocationText(city, region);
+        var address = region || countryName || country || "Planet Earth";
         return {
             region: region,
             city: city,
@@ -26814,20 +27078,20 @@ Data.Class(function User() {
     }
     function getNativeGeo() {
         Mobile.Geolocation.accuracy = Mobile.Geolocation.NEAREST_TEN;
-        Mobile.Geolocation.events.add(Mobile.Events.GEOLOCATION_AUTH, function(e) {
+        Mobile.Geolocation.events.add(Mobile.Events.GEOLOCATION_AUTH, function (e) {
             if (e.status == "ALLOWED") {
                 Mobile.Geolocation.requestLocation()
             }
         });
-        Mobile.Geolocation.events.add(Mobile.Events.GEOLOCATION_UPDATE, function(e) {
+        Mobile.Geolocation.events.add(Mobile.Events.GEOLOCATION_UPDATE, function (e) {
             reverseGeocode(e.latitude, e.longitude)
         });
-        Mobile.Geolocation.events.add(Mobile.Events.GEOLOCATION_ERROR, function(e) {
-            _this.delayedCall(function() {
+        Mobile.Geolocation.events.add(Mobile.Events.GEOLOCATION_ERROR, function (e) {
+            _this.delayedCall(function () {
                 Mobile.Geolocation.requestLocation()
             }, 500)
         });
-        Mobile.Geolocation.checkPermission(function(e) {
+        Mobile.Geolocation.checkPermission(function (e) {
             if (e.enabled) {
                 Mobile.Geolocation.requestLocation()
             } else {
@@ -26846,7 +27110,7 @@ Data.Class(function User() {
         });
         _data = clearGeo;
         Storage.set("accurate_geo", null);
-        var applyGeo = function(data) {
+        var applyGeo = function (data) {
             data = normalizeGeo(data);
             if (!data || (!data.country && !data.city)) {
                 throw new Error("Geo lookup failed")
@@ -26855,8 +27119,8 @@ Data.Class(function User() {
             checkEmpty();
             Storage.set("accurate_geo", _data)
         };
-        var loadIpGeo = function() {
-            XHR.get("https://geolocation-db.com/json/", function(data) {
+        var loadIpGeo = function () {
+            XHR.get("https://geolocation-db.com/json/", function (data) {
                 try {
                     if (typeof data == "string") {
                         data = JSON.parse(data)
@@ -26876,14 +27140,14 @@ Data.Class(function User() {
                     checkEmpty();
                     Storage.set("accurate_geo", _data)
                 }
-            }).onError = function() {
+            }).onError = function () {
                 checkEmpty();
                 Storage.set("accurate_geo", _data)
             }
         };
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                XHR.get("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + position.coords.latitude + "&lon=" + position.coords.longitude, function(data) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                XHR.get("https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=en&lat=" + position.coords.latitude + "&lon=" + position.coords.longitude, function (data) {
                     try {
                         if (typeof data == "string") {
                             data = JSON.parse(data)
@@ -26903,10 +27167,10 @@ Data.Class(function User() {
                     } catch (e) {
                         loadIpGeo()
                     }
-                }).onError = function() {
+                }).onError = function () {
                     loadIpGeo()
                 }
-            }, function(error) {
+            }, function (error) {
                 loadIpGeo()
             }, {
                 enableHighAccuracy: true,
@@ -26936,13 +27200,13 @@ Data.Class(function User() {
             _data.city = _data.region || ""
         }
         if (!_data.address || _data.address == "") {
-            _data.address = formatLocationText(_data.city, _data.region, _data.country_name || _data.country)
+            _data.address = _data.region || _data.country_name || _data.country || "Planet Earth"
         }
     }
     function reverseGeocode(lat, lng) {
-        XHR.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true", function(data) {
+        XHR.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true", function (data) {
             try {
-                var findResult = function(search) {
+                var findResult = function (search) {
                     var components = data.results[0].address_components;
                     for (var i in components) {
                         var component = components[i];
@@ -26963,31 +27227,31 @@ Data.Class(function User() {
                 _data.coords = [lat, lng];
                 _data = normalizeGeo(_data);
                 Storage.set("accurate_geo", _data)
-            } catch (e) {}
+            } catch (e) { }
         })
     }
-    this.getLocation = function() {
+    this.getLocation = function () {
         var data = normalizeGeo(Storage.get("accurate_geo") || _data || {});
         return {
             country: data.country || "",
             region: data.region || "",
             city: data.city || "",
             country_name: data.country_name || "",
-            address: data.address || formatLocationText(data.city, data.region, data.country_name || data.country),
+            address: data.address || data.region || data.country_name || data.country || "Planet Earth",
             coords: data.coords || [0, 0]
         }
     }
-    ;
-    this.matchIP = function() {
+        ;
+    this.matchIP = function () {
         return false
     }
-    ;
-    this.getCoords = function() {
+        ;
+    this.getCoords = function () {
         var data = normalizeGeo(Storage.get("accurate_geo") || _data || {});
         return data.coords || [0, 0]
     }
-    ;
-    this.getPool = function(country, coords) {
+        ;
+    this.getPool = function (country, coords) {
         var data = _data || {};
         country = (country || data.country || "").toLowerCase();
         coords = coords || data.coords || [0, 0];
@@ -26997,22 +27261,22 @@ Data.Class(function User() {
             return coords[1] < -94.8558 ? "west" : "east"
         }
     }
-    ;
-    this.getSubscriptionId = function() {
+        ;
+    this.getSubscriptionId = function () {
         if (_subscriptionId) {
             return _subscriptionId
         }
         return null
     }
-    ;
-    this.setSubscriptionId = function(id) {
+        ;
+    this.setSubscriptionId = function (id) {
         _subscriptionId = id
     }
-    ;
+        ;
     if (Hydra.LOCAL) {
         _subscriptionId = 7
     }
-    this.isAtIO = function() {
+    this.isAtIO = function () {
         return false;
         if (!_data.ip.strpos(":")) {
             var array = _data.ip.split(".");
@@ -27038,8 +27302,8 @@ Data.Class(function User() {
         }
         return false
     }
-    ;
-    this.data = function(data) {
+        ;
+    this.data = function (data) {
         if (!data) {
             data = Storage.get("last_userData") || {}
         }
@@ -27047,41 +27311,41 @@ Data.Class(function User() {
         if (Mobile.isNative()) {
             Storage.set("last_userData", data)
         }
-        defer(function() {
+        defer(function () {
             checkEmpty()
         })
     }
-    ;
-    this.getAccurateGeo = function() {
+        ;
+    this.getAccurateGeo = function () {
         if (!Mobile.isNative()) {
             getAccurateGeo()
         }
     }
-    ;
-    this.usingAccurateGeo = function() {
+        ;
+    this.usingAccurateGeo = function () {
         return Mobile.isNative() || Storage.get("accurate_geo")
     }
 });
 Mobile.Class(function PushNotifications() {
     Inherit(this, Mobile.BaseModule);
     var _this = this;
-    (function() {
+    (function () {
         _this.init()
     }
     )();
-    function init() {}
+    function init() { }
     function handleId(subscriptionId) {
         Data.User.setSubscriptionId(subscriptionId)
     }
-    this.incoming = function(e) {
+    this.incoming = function (e) {
         switch (e.fn) {
-        case "subscriptionId":
-            handleId(e.subscriptionId);
-            break
+            case "subscriptionId":
+                handleId(e.subscriptionId);
+                break
         }
     }
-    ;
-    this.reload = function() {
+        ;
+    this.reload = function () {
         _this.send({
             fn: "reload"
         })
@@ -27090,7 +27354,7 @@ Mobile.Class(function PushNotifications() {
 Class(function AudioController() {
     Inherit(this, Component);
     var _this = this;
-    var disableAllAudio = (function() {
+    var disableAllAudio = (function () {
         if (Hydra.HASH.strpos("side")) {
             return true
         }
@@ -27111,7 +27375,7 @@ Class(function AudioController() {
     var _debugBox;
     var _lastEventTime = 0;
     var _volumes = [];
-    this.load = function(onComplete) {
+    this.load = function (onComplete) {
         if (disableAllAudio) {
             onComplete();
             return
@@ -27131,14 +27395,14 @@ Class(function AudioController() {
             }
         }
         var klangUrl = loadKlangLocally ? Config.CDN + "assets/audio/" + klangLocalUrl + "/config.js" : klangRemoteUrl;
-        Klang.init(klangUrl, function() {
+        Klang.init(klangUrl, function () {
             initWebAudio();
             if (Device.mobile) {
                 initMobile();
                 onComplete()
             } else {
                 var loadGroup = Tests.AT_IO() ? "io" : "home";
-                Klang.load(loadGroup, function() {
+                Klang.load(loadGroup, function () {
                     onComplete()
                 });
                 if (!disableMusic) {
@@ -27147,7 +27411,7 @@ Class(function AudioController() {
             }
         })
     }
-    ;
+        ;
     function initWebAudio() {
         document.addEventListener("click", function onClick() {
             if (Klang.context && Klang.context.resume) {
@@ -27162,18 +27426,18 @@ Class(function AudioController() {
             document.removeEventListener("touchend", onTouchEnd)
         })
     }
-    this.trigger = function() {
+    this.trigger = function () {
         if (!disableAllAudio) {
             Klang.triggerEvent.apply(Klang, arguments)
         }
     }
-    ;
-    this.setNumThreads = function(_numThreads) {
+        ;
+    this.setNumThreads = function (_numThreads) {
         _numberOfFlocks = _numThreads;
         init()
     }
-    ;
-    this.planeEnter = function(point) {
+        ;
+    this.planeEnter = function (point) {
         if (disablePlaneEnterSounds) {
             return
         }
@@ -27182,7 +27446,7 @@ Class(function AudioController() {
         var panVal = Math.min(0.8, Math.max(-0.8, pan.x));
         this.trigger("plane_enter", panVal, planeEnterPanning)
     }
-    ;
+        ;
     function init() {
         for (var i = 0; i < _numberOfFlocks; i++) {
             _flockIsAudible[i] = false;
@@ -27192,7 +27456,7 @@ Class(function AudioController() {
             }
         }
     }
-    this.updateFlock = function(index, pos, releasedPlanes) {
+    this.updateFlock = function (index, pos, releasedPlanes) {
         if (disableAllAudio || disablePlaneSounds || _numberOfFlocks === 0 || !pos) {
             return
         }
@@ -27202,14 +27466,14 @@ Class(function AudioController() {
         var x = pos.x;
         var y = pos.y;
         var z = pos.z;
-        var pos = new THREE.Vector3(x,y,z);
+        var pos = new THREE.Vector3(x, y, z);
         if (_debug) {
             if (!_debugMeshes[index]) {
-                var geometry = new THREE.BoxGeometry(10,10,10);
+                var geometry = new THREE.BoxGeometry(10, 10, 10);
                 var material = new THREE.MeshBasicMaterial({
                     color: 16776960
                 });
-                var mesh = new THREE.Mesh(geometry,material);
+                var mesh = new THREE.Mesh(geometry, material);
                 scene.add(mesh);
                 _debugMeshes[index] = mesh
             }
@@ -27218,20 +27482,20 @@ Class(function AudioController() {
                 _debugMeshes[index].material.color.setHex(16711680)
             }
         }
-        var halfExtent = new THREE.Vector3(-1,1,1).unproject(camera);
+        var halfExtent = new THREE.Vector3(-1, 1, 1).unproject(camera);
         halfExtent.x *= 0.25;
         halfExtent.y *= 0.25;
         halfExtent.z = 200;
-        var collisionCube = new THREE.Vector3(camera.position.x,camera.position.y,camera.position.z + 300);
+        var collisionCube = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z + 300);
         if (_debug) {
             if (!_debugBox) {
-                var geometry = new THREE.BoxGeometry(halfExtent.x * 2,halfExtent.y * 2,halfExtent.z * 2);
+                var geometry = new THREE.BoxGeometry(halfExtent.x * 2, halfExtent.y * 2, halfExtent.z * 2);
                 var material = new THREE.MeshBasicMaterial({
                     color: 16711680,
                     transparent: true,
                     opacity: 0.2
                 });
-                var mesh = new THREE.Mesh(geometry,material);
+                var mesh = new THREE.Mesh(geometry, material);
                 _debugBox = mesh;
                 scene.add(mesh)
             }
@@ -27273,8 +27537,8 @@ Class(function AudioController() {
             Klang.trigger("update_flock", index, panVal, vol)
         }
     }
-    ;
-    (function() {}
+        ;
+    (function () { }
     )()
 }, "static");
 Class(function Blocker() {
@@ -27283,7 +27547,7 @@ Class(function Blocker() {
     var $container, $logo, $subCopy;
     var _view, _earth, _title, _loader;
     var _reason = arguments[0] || "";
-    (function() {
+    (function () {
         initContainer();
         initLoader()
     }
@@ -27377,7 +27641,7 @@ Class(function World() {
     var _this = this;
     var _renderer, _scene, _camera, _controls, _fx;
     var _snapshot, _imageData;
-    (function() {
+    (function () {
         initWorld();
         addHandlers();
         Render.start(loop);
@@ -27390,9 +27654,9 @@ Class(function World() {
         _renderer.setSize(Stage.width, Stage.height);
         _renderer.setClearColor(16777215);
         _scene = new THREE.Scene();
-        _camera = new THREE.PerspectiveCamera(35,Stage.width / Stage.height,1,10000);
+        _camera = new THREE.PerspectiveCamera(35, Stage.width / Stage.height, 1, 10000);
         _camera.position.set(0, 0, -700);
-        _camera.positionTarget = new THREE.Vector3(0,0,-700);
+        _camera.positionTarget = new THREE.Vector3(0, 0, -700);
         _camera.target = new THREE.Vector3();
         _camera.lookAt(_camera.target);
         if (!Device.mobile) {
@@ -27417,18 +27681,18 @@ Class(function World() {
             _imageData = _renderer.domElement.toDataURL("image/png")
         }
     }
-    _this.get("renderer", function() {
+    _this.get("renderer", function () {
         return _renderer
     });
-    _this.get("scene", function() {
+    _this.get("scene", function () {
         return _scene
     });
-    _this.get("camera", function() {
+    _this.get("camera", function () {
         return _camera
     });
-    _this.getSnapshot = function(callback) {
+    _this.getSnapshot = function (callback) {
         _snapshot = true;
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             if (_imageData) {
                 callback(_imageData)
             } else {
@@ -27445,7 +27709,7 @@ Class(function ContainerDesktop() {
     var _this = this;
     var $container;
     var _flocking, _loader, _earth, _debug;
-    (function() {
+    (function () {
         initContainer();
         initLoader()
     }
@@ -27474,7 +27738,7 @@ Class(function ContainerDesktop() {
     function initExperience() {
         initRenderer();
         initViews();
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             initFlow()
         }, 2000)
     }
@@ -27509,19 +27773,19 @@ Class(function ContainerDesktop() {
             IOFlow.instance().init(_loader)
         } else {
             DesktopFlow.instance();
-            _loader.animateOut(function() {
+            _loader.animateOut(function () {
                 _loader = _loader.destroy()
             })
         }
     }
     function addListeners() {
         _this.events.subscribe(PlanesEvents.START_EXP, start);
-        _debug = function(e) {
+        _debug = function (e) {
             if (e.keyCode == 18) {
                 e.preventDefault()
             }
         }
-        ;
+            ;
         if (Tests.AT_IO()) {
             __window.bind("keydown", _debug)
         }
@@ -27537,7 +27801,7 @@ Class(function DesktopFlow() {
     Inherit(this, Component);
     var _this = this;
     var _intro, _stats, _outro;
-    (function() {
+    (function () {
         initViews();
         initIntro()
     }
@@ -27556,7 +27820,7 @@ Class(function DesktopFlow() {
             return
         }
         _intro.start();
-        _intro.onComplete = function() {
+        _intro.onComplete = function () {
             _intro = _intro.destroy();
             _this.events.fire(PlanesEvents.ALLOW_PLANES);
             initStats();
@@ -27578,7 +27842,7 @@ Class(function IOFlow() {
     Inherit(this, Component);
     var _this = this;
     var _intro, _stats, _outro, _loader;
-    (function() {
+    (function () {
         initViews()
     }
     )();
@@ -27587,7 +27851,7 @@ Class(function IOFlow() {
         _stats = _this.initClass(Stats);
         _outro = _this.initClass(OutroDesktop);
         if (Hydra.HASH && Hydra.HASH.indexOf("skip") !== -1) {
-            _loader.animateOut(function() {
+            _loader.animateOut(function () {
                 _loader = _loader.destroy()
             });
             _this.isIntroTriggered = true;
@@ -27626,11 +27890,11 @@ Class(function IOFlow() {
         });
         _this.events.fire(PlanesEvents.START_EXP);
         console.log("INTRO TRIGGERED");
-        _loader.animateOut(function() {
+        _loader.animateOut(function () {
             _loader = _loader.destroy()
         });
         _intro.start();
-        _intro.onComplete = function() {
+        _intro.onComplete = function () {
             _intro = _intro.destroy();
             _this.events.fire(PlanesEvents.ALLOW_PLANES);
             initStats()
@@ -27648,7 +27912,7 @@ Class(function IOFlow() {
         _this.events.fire(PlanesEvents.END_EXPERIENCE);
         _outro.start()
     }
-    this.init = function(loader) {
+    this.init = function (loader) {
         _loader = loader;
         addHandlers()
     }
@@ -27658,7 +27922,7 @@ Class(function IntroDesktop() {
     var _this = this;
     var $this, $log, $logo, $sub;
     var _camera, _view, _title, _throw;
-    (function() {
+    (function () {
         initHTML();
         if (!Tests.AT_IO()) {
             initViews()
@@ -27731,7 +27995,7 @@ Class(function IntroDesktop() {
                 opacity: 1,
                 scale: 1
             }, 2500, "easeOutQuart", 800);
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 _this.delayedCall(_throw.animateIn, 5500);
                 _this.delayedCall(_throw.animateOut, 10000);
                 $sub.tween({
@@ -27745,7 +28009,7 @@ Class(function IntroDesktop() {
                 }, 2000, "easeInCubic");
                 _title.element.tween({
                     opacity: 0
-                }, 2000, "easeOutSine", 300, function() {
+                }, 2000, "easeOutSine", 300, function () {
                     _title = _title.destroy()
                 })
             }, 4500)
@@ -27753,7 +28017,7 @@ Class(function IntroDesktop() {
         TweenManager.tween(_camera.positionTarget, {
             y: 0,
             z: -700
-        }, 15000, "easeInOutQuart", function() {
+        }, 15000, "easeInOutQuart", function () {
             if (typeof _this.onComplete == "function") {
                 _this.onComplete()
             }
@@ -27761,7 +28025,7 @@ Class(function IntroDesktop() {
         AudioController.trigger("music_start");
         AudioController.trigger("ambience")
     }
-    this.start = function() {
+    this.start = function () {
         defer(animateIn)
     }
 });
@@ -27770,7 +28034,7 @@ Class(function LoaderDesktop() {
     var _this = this;
     var $this;
     var _view, _loader;
-    (function() {
+    (function () {
         initHTML();
         initViews();
         style();
@@ -27797,7 +28061,7 @@ Class(function LoaderDesktop() {
         var paths = AssetUtil.loadAssets(["assets"]);
         _loader = _this.initClass(AssetLoader, paths, 3);
         _loader.add(1);
-        AudioController.load(function() {
+        AudioController.load(function () {
             _loader.trigger(1)
         });
         if (Tests.AT_IO()) {
@@ -27805,7 +28069,7 @@ Class(function LoaderDesktop() {
         }
         _loader.add(1);
         var test = _this.initClass(LoaderLoadTest);
-        test.onComplete = function(results) {
+        test.onComplete = function (results) {
             _loader.trigger(1);
             test = test.destroy()
         }
@@ -27817,10 +28081,10 @@ Class(function LoaderDesktop() {
         Data.Socket.connect();
         _this.events.fire(HydraEvents.COMPLETE)
     }
-    this.animateOut = function(callback) {
+    this.animateOut = function (callback) {
         $this.tween({
             opacity: 0
-        }, 1000, "easeOutCubic", function() {
+        }, 1000, "easeOutCubic", function () {
             if (typeof callback == "function") {
                 callback()
             }
@@ -27831,7 +28095,7 @@ Class(function LoaderLoadTest() {
     Inherit(this, Component);
     var _this = this;
     var _thread;
-    (function() {
+    (function () {
         initTest()
     }
     )();
@@ -27850,7 +28114,7 @@ Class(function LoaderLoadTest() {
     function initTest() {
         _thread = _this.initClass(Thread);
         _thread.loadFunction(calculate);
-        _thread.calculate({}, function(e) {
+        _thread.calculate({}, function (e) {
             Tests.RESULT = e.time;
             if (typeof _this.onComplete == "function") {
                 _this.onComplete()
@@ -27863,7 +28127,7 @@ Class(function OutroDesktop() {
     var _this = this;
     var $this;
     var _camera;
-    (function() {
+    (function () {
         initHTML();
         style();
         initViews()
@@ -27891,9 +28155,9 @@ Class(function OutroDesktop() {
             x: 0,
             y: 180,
             z: -50
-        }, 5000, "easeInOutCubic", function() {})
+        }, 5000, "easeInOutCubic", function () { })
     }
-    this.start = function() {
+    this.start = function () {
         Stage.add($this);
         animateIn()
     }
@@ -27902,11 +28166,11 @@ Class(function LocationPing() {
     Inherit(this, Component);
     var _this = this;
     var _currentPings = [];
-    (function() {}
+    (function () { }
     )();
     function getPing(coords) {
         var exists = false;
-        _currentPings.every(function(ping) {
+        _currentPings.every(function (ping) {
             if (ping.coords[0] !== coords[0]) {
                 return true
             }
@@ -27929,7 +28193,7 @@ Class(function LocationPing() {
         ping.coords = coords;
         LocationPing.POOL.push(ping)
     }
-    this.display = function(coords) {
+    this.display = function (coords) {
         var ping = getPing(coords);
         if (!ping) {
             return
@@ -27939,13 +28203,13 @@ Class(function LocationPing() {
         ping.group.rotation.z = coords[0] * Math.PI / 180;
         ping.animateIn();
         _this.delayedCall(ping.animateOut, 2000);
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             ping.stop();
             _currentPings.findAndRemove(ping);
             LocationPing.POOL.push(ping)
         }, 6000)
     }
-}, function() {
+}, function () {
     LocationPing.POOL = []
 });
 Class(function ThrownPlane() {
@@ -27961,7 +28225,7 @@ Class(function ThrownPlane() {
     var _colors = Config.STAMPS_COLORS;
     var _throttle = 0;
     var _throttleIO = 0;
-    (function() {
+    (function () {
         initViews();
         addHandlers();
         startDummyPlaneLoop();
@@ -27988,7 +28252,7 @@ Class(function ThrownPlane() {
         _this.events.subscribe(PlanesEvents.ALLOW_PLANES, listenToPlanes);
         _this.events.subscribe(PlanesEvents.END_EXPERIENCE, stopListeningToPlanes);
         _this.events.subscribe(PlanesEvents.END_EXPERIENCE, stopDummyPlaneLoop);
-        _debug = function(e) {
+        _debug = function (e) {
             if (e.keyCode == 32) {
                 var location = Config.LOCATIONS[Utils.doRandom(0, Config.LOCATIONS.length - 1)];
                 var coords = [location.coords.lat, location.coords.lng];
@@ -28004,7 +28268,7 @@ Class(function ThrownPlane() {
                 })
             }
         }
-        ;
+            ;
         if (Tests.AT_IO() || Config.BEAST) {
             __window.bind("keydown", _debug)
         }
@@ -28020,7 +28284,7 @@ Class(function ThrownPlane() {
             clearTimeout(_dummyPlaneTimer)
         }
         if (!_dummyPlaneVisibleHandler) {
-            _dummyPlaneVisibleHandler = function() {
+            _dummyPlaneVisibleHandler = function () {
                 if (document.hidden) {
                     stopDummyPlaneLoop()
                 } else {
@@ -28029,7 +28293,7 @@ Class(function ThrownPlane() {
             }
             document.addEventListener("visibilitychange", _dummyPlaneVisibleHandler)
         }
-        _dummyPlaneTimer = _this.delayedCall(function() {
+        _dummyPlaneTimer = _this.delayedCall(function () {
             createDummyPlane();
             startDummyPlaneLoop()
         }, 120000)
@@ -28062,7 +28326,7 @@ Class(function ThrownPlane() {
             return
         }
         _isListening = true;
-        _livePlane = function(e) {
+        _livePlane = function (e) {
             newPlane(e && e.d ? e.d : e, true)
         }
         Data.Socket.on("message", _livePlane)
@@ -28075,10 +28339,10 @@ Class(function ThrownPlane() {
     }
     function newPlane(e, isLive) {
         PlaneFlocking.instance().addPlane();
-        var createPlane = function() {
+        var createPlane = function () {
             var plane = _this.initClass(ThrownPlaneView, e);
             _this.group.add(plane.group);
-            plane.onComplete = function() {
+            plane.onComplete = function () {
                 _this.group.remove(plane.group);
                 if (!Tests.AT_IO()) {
                     plane = plane.destroy()
@@ -28123,7 +28387,7 @@ Class(function ThrownPlane() {
         }
         checkProximity(e)
     }
-    this.launchPlane = function(data) {
+    this.launchPlane = function (data) {
         newPlane(data, true)
     }
     function checkProximity(e) {
@@ -28131,9 +28395,9 @@ Class(function ThrownPlane() {
         var b = e.coords;
         var distance = getDistanceFromLatLonInMiles(a[0], a[1], b[0], b[1]);
         if (distance < 100) {
-            var locationText = e.location || e.address || e.city || "Planet Earth";
+            var locationText = formatLiveLocationText(e.city || e.location || e.address, e.region, e.country_name || e.country);
             _this.realTimeTimeout = true;
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 _this.realTimeTimeout = false
             }, 1000 * 60 * 5);
             console.log("realtime added:", e.location);
@@ -28165,7 +28429,7 @@ Class(function ThrownPlane() {
     function toMiles(value) {
         return value * 0.621371
     }
-    this.getDistance = function(stamps) {
+    this.getDistance = function (stamps) {
         var miles = 0;
         if (stamps.length > 0) {
             for (var i = 0; i < stamps.length; i++) {
@@ -28187,7 +28451,7 @@ Class(function Stats() {
     var _timeoutSet, _timeoutStat, _timeoutStat2;
     var _stats = [];
     var _realTimeQueue = [];
-    (function() {
+    (function () {
         initHTML();
         initViews();
         addHandlers()
@@ -28228,9 +28492,9 @@ Class(function Stats() {
         _movement.rotateToLocation(stat);
         _ping.highlightLocation(stat);
         _text.animateIn(stat, position);
-        _timeoutStat2 = _this.delayedCall(function() {
+        _timeoutStat2 = _this.delayedCall(function () {
             _movement.zoomOut();
-            _timeoutStat = _this.delayedCall(function() {
+            _timeoutStat = _this.delayedCall(function () {
                 if (_realTimeQueue.length === 0) {
                     _isRealTimeShowing = false;
                     return
@@ -28261,7 +28525,7 @@ Class(function Stats() {
         }
         showStat()
     }
-    this.start = function() {
+    this.start = function () {
         return
     }
 });
@@ -28328,10 +28592,10 @@ Class(function StatsMovement() {
             x: 0,
             z: 0
         }
-    }, ];
+    },];
     var _positionIndex = 0;
     var _lastPositionIndex = -1;
-    (function() {
+    (function () {
         initViews();
         Render.start(loop)
     }
@@ -28363,7 +28627,7 @@ Class(function StatsMovement() {
             _flocking.object3D.rotation.y += Math.PI * 2
         }
     }
-    this.zoomToLocation = function(stat, isFirst) {
+    this.zoomToLocation = function (stat, isFirst) {
         _tweenZoom && _tweenZoom.stop && _tweenZoom.stop();
         _this.isZoomed = true;
         var lat = stat.coords.lat;
@@ -28371,7 +28635,7 @@ Class(function StatsMovement() {
         if (_positionIndex === _lastPositionIndex) {
             _positionIndex += 1
         } else {
-            if (_positionIndex + 1 == _lastPositionIndex) {} else {
+            if (_positionIndex + 1 == _lastPositionIndex) { } else {
                 _positionIndex += Utils.doRandom(0, 1)
             }
         }
@@ -28387,8 +28651,8 @@ Class(function StatsMovement() {
         }, 10000, "easeInOutQuart");
         return pos
     }
-    ;
-    this.zoomOut = function() {
+        ;
+    this.zoomOut = function () {
         _this.isZoomed = false;
         _tweenZoom = TweenManager.tween(_camera.positionTarget, {
             x: 0,
@@ -28399,8 +28663,8 @@ Class(function StatsMovement() {
             strength: 1
         }, 10000, "easeInOutQuart")
     }
-    ;
-    this.rotateToLocation = function(stat) {
+        ;
+    this.rotateToLocation = function (stat) {
         var pos = _positions[_positionIndex];
         var x = -stat.coords.lat * Math.PI / 180 * 0.5 + pos.offset.x;
         var y = -stat.coords.lng * Math.PI / 180 - Math.PI + pos.offset.y;
@@ -28416,12 +28680,12 @@ Class(function StatsMovement() {
             x: x,
             y: y,
             z: 0
-        }, 10000, "easeInOutQuart", function() {
+        }, 10000, "easeInOutQuart", function () {
             _this.isAnimating = false
         })
     }
-    ;
-    this.stopStats = function() {
+        ;
+    this.stopStats = function () {
         _this.isAnimating = false;
         _this.isZoomed = false;
         if (_tweenZoom && _tweenZoom.stop) {
@@ -28442,7 +28706,7 @@ Class(function WorldFX(_scene, _camera, _renderer) {
     Inherit(this, Component);
     var _this = this;
     var _nuke, _dof;
-    (function() {
+    (function () {
         initNuke()
     }
     )();
@@ -28457,7 +28721,7 @@ Class(function WorldFX(_scene, _camera, _renderer) {
             _dof = _this.initClass(DOFPass, _nuke, _camera, _scene, _renderer)
         }
     }
-    this.update = function() {
+    this.update = function () {
         _dof && _dof.render();
         _nuke.render()
     }
@@ -28467,7 +28731,7 @@ Class(function ContainerMobile() {
     var _this = this;
     var $container;
     var _loader, _intro;
-    (function() {
+    (function () {
         initContainer();
         if (!Mobile.isNative() && Mobile.os == "Android" && !location.hostname.strpos("local") && (window.matchMedia && !window.matchMedia("(display-mode: standalone)").matches)) {
             Mobile.fullscreen()
@@ -28496,7 +28760,7 @@ Class(function ContainerMobile() {
         var planeID = Number(Utils.query("plane"));
         var deepLink = false;
         if (planeID > -1) {
-            Data.Planes.getCreatedPlanes().forEach(function(data) {
+            Data.Planes.getCreatedPlanes().forEach(function (data) {
                 if (data.id == planeID) {
                     deepLink = data
                 }
@@ -28505,7 +28769,7 @@ Class(function ContainerMobile() {
         if (deepLink) {
             var data = deepLink;
             if (_intro) {
-                _intro.animateOut(function() {
+                _intro.animateOut(function () {
                     _intro = _intro.destroy()
                 })
             }
@@ -28513,15 +28777,15 @@ Class(function ContainerMobile() {
             UIMobile.instance().toHomeScreen(true);
             CatchPlane.instance().init();
             PlaneFlocking.instance().init(300, 4);
-            MyPlanes.instance().showPrompt(function() {
-                _this.delayedCall(function() {
+            MyPlanes.instance().showPrompt(function () {
+                _this.delayedCall(function () {
                     _this.events.fire(PlanesEvents.MY_PLANES_SWIPE_PROGRESS, {
                         spring: 0
                     });
                     _this.events.fire(PlanesEvents.FORCE_MY_PLANES_SWIPE, {
                         force: true
                     });
-                    var waitToselect = function() {
+                    var waitToselect = function () {
                         if (!MyPlanes.instance().isOpen) {
                             _this.delayedCall(waitToselect, 100);
                             return
@@ -28529,9 +28793,9 @@ Class(function ContainerMobile() {
                         MyPlanes.instance().openDetail({
                             data: data
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             if (_loader && _loader.animateOut) {
-                                _loader.animateOut(function() {
+                                _loader.animateOut(function () {
                                     _loader = _loader.destroy()
                                 })
                             }
@@ -28544,7 +28808,7 @@ Class(function ContainerMobile() {
         }
         if (Utils.query("new") == "true") {
             if (_intro) {
-                _intro.animateOut(function() {
+                _intro.animateOut(function () {
                     _intro = _intro.destroy()
                 })
             }
@@ -28553,14 +28817,14 @@ Class(function ContainerMobile() {
             CatchPlane.instance().init();
             MyPlanes.instance().showPrompt();
             PlaneFlocking.instance().init(300, 4);
-            _this.delayedCall(function() {
-                _this.delayedCall(function() {
+            _this.delayedCall(function () {
+                _this.delayedCall(function () {
                     console.log("[PaperPlanes] firing PlanesEvents.NEW_PLANE");
                     _this.events.fire(PlanesEvents.NEW_PLANE)
                 }, 100);
-                _this.delayedCall(function() {
+                _this.delayedCall(function () {
                     if (_loader && _loader.animateOut) {
-                        _loader.animateOut(function() {
+                        _loader.animateOut(function () {
                             _loader = _loader.destroy()
                         })
                     }
@@ -28569,13 +28833,13 @@ Class(function ContainerMobile() {
             return
         }
         if (_loader && _loader.animateOut) {
-            _loader.animateOut(function() {
+            _loader.animateOut(function () {
                 _loader = _loader.destroy()
             })
         }
         if (Hydra.HASH.indexOf("skip") !== -1) {
             if (_intro) {
-                _intro.animateOut(function() {
+                _intro.animateOut(function () {
                     _intro = _intro.destroy()
                 })
             }
@@ -28603,7 +28867,7 @@ Class(function ContainerMobile() {
     function initExperience() {
         if (Tests.RETURN_USER()) {
             if (_intro) {
-                _intro.animateOut(function() {
+                _intro.animateOut(function () {
                     _intro = _intro.destroy()
                 })
             }
@@ -28620,15 +28884,15 @@ Class(function ContainerMobile() {
         _this.events.unsubscribe(PlanesEvents.CONFIRMATION_HIDDEN, initCatching);
         defer(CatchPlane.instance().init)
     }
-    this.newPlane = function() {}
-    ;
-    this.viewPlane = function(id) {}
+    this.newPlane = function () { }
+        ;
+    this.viewPlane = function (id) { }
 }, "singleton");
 Class(function CatchPlane() {
     Inherit(this, Component);
     var _this = this;
     var _net, _butteflies, _plane, _ui, _confirmation;
-    (function() {
+    (function () {
         initViews();
         addHandlers()
     }
@@ -28696,7 +28960,7 @@ Class(function CatchPlane() {
         _plane.init()
     }
     function endFlow() {
-        Data.Planes.updatePlane(PlaneStampTexture.DATA, function() {
+        Data.Planes.updatePlane(PlaneStampTexture.DATA, function () {
             replacePlane();
             initConfirmation()
         })
@@ -28705,14 +28969,14 @@ Class(function CatchPlane() {
         GATracker.trackEvent("catch plane", "click", "confirmation", 1);
         _confirmation = _this.initClass(ConfirmationView, false);
         _confirmation.animateIn();
-        _confirmation.onComplete = function() {
+        _confirmation.onComplete = function () {
             _this.events.fire(PlanesEvents.CONFIRMATION_HIDDEN);
             if (_confirmation) {
                 _confirmation = _confirmation.destroy()
             }
         }
     }
-    this.init = function() {
+    this.init = function () {
         _this.initialised = true;
         if (!_this.hasLoadedOnce) {
             UIMobile.instance().createCatchPrompt()
@@ -28728,7 +28992,7 @@ Class(function CreatePlane() {
     var _this = this;
     var $container;
     var _plane, _confirmation;
-    (function() {
+    (function () {
         initContainer();
         addHandlers();
         _this.isFirstPlane = !Tests.RETURN_USER()
@@ -28762,7 +29026,7 @@ Class(function CreatePlane() {
         console.log("[PaperPlanes] CreatePlane.endFlow fired");
         removePlane();
         var location = Data.User.getLocation();
-        var address = formatLocationText(location.city || "", location.region || "", location.country_name || location.country);
+        var address = location.region || location.country_name || location.country || "Planet Earth";
         var date = DateUtil.getDate();
         var data = {
             date: date.text,
@@ -28783,7 +29047,7 @@ Class(function CreatePlane() {
     function initConfirmation() {
         _confirmation = _this.initClass(ConfirmationView, true);
         _confirmation.animateIn();
-        _confirmation.onComplete = function() {
+        _confirmation.onComplete = function () {
             _this.events.fire(PlanesEvents.CONFIRMATION_HIDDEN);
             if (_confirmation) {
                 _confirmation = _confirmation.destroy()
@@ -28796,7 +29060,7 @@ Class(function MyPlanes() {
     var _this = this;
     var $container;
     var _swipePrompt, _list, _detail, _velocity;
-    (function() {
+    (function () {
         initContainer();
         style();
         initViews();
@@ -28862,7 +29126,7 @@ Class(function MyPlanes() {
     }
     function refresh() {
         if (_this.isDetail) {
-            _detail.fadeOut(function() {
+            _detail.fadeOut(function () {
                 _this.isDetail = false;
                 _detail = _detail.destroy()
             })
@@ -28881,7 +29145,7 @@ Class(function MyPlanes() {
         _this.isDetail = true;
         _list.animateShiftOut();
         GATracker.trackEvent("my planes", "click", "open detail", 1);
-        Data.Planes.refreshPlanes(function() {
+        Data.Planes.refreshPlanes(function () {
             var plane = Data.Planes.findPlaneByData(e.data.data) || e.data.data;
             _detail = _this.initClass(MyPlanesDetailView, plane);
             _this.delayedCall(_detail.animateIn, 100)
@@ -28891,22 +29155,22 @@ Class(function MyPlanes() {
         GATracker.trackEvent("my planes", "click", "close detail", 1);
         UIMobile.instance().closePrompt.animateIn();
         _list.animateShiftIn();
-        _detail.animateOut(function() {
+        _detail.animateOut(function () {
             _this.isDetail = false;
             _detail = _detail.destroy()
         })
     }
     this.showPrompt = showPrompt;
     this.openDetail = openDetail;
-    this.hide = function() {
+    this.hide = function () {
         $container.hide()
     }
-    ;
-    this.show = function() {
+        ;
+    this.show = function () {
         $container.show()
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         Render.stop(loop)
     }
 }, "singleton");
@@ -28915,7 +29179,7 @@ Class(function IntroMobile() {
     var _this = this;
     var $this;
     var _view, _earth, _flocking, _earthTween;
-    (function() {
+    (function () {
         initHTML();
         style();
         initViews();
@@ -28967,23 +29231,23 @@ Class(function IntroMobile() {
     function animateIn() {
         var delay = Tests.slowMeshUpload() ? 4000 : 0;
         _this.delayedCall(_view.animateIn, delay * 0.5);
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _this.events.fire(PlanesEvents.RESUME_FLOCKING)
         }, 2000 + delay);
         if (!Tests.RETURN_USER()) {
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 UIMobile.instance().newPrompt.animateIn()
             }, 4500 + delay)
         }
         _earthTween = TweenManager.tween(_earth.object3D.position, {
             z: -40,
             y: -35
-        }, 12000, "easeOutCubic", 500 + delay, function() {})
+        }, 12000, "easeOutCubic", 500 + delay, function () { })
     }
     function addHandlers() {
         if (Tests.RETURN_USER()) {
             var delay = Tests.slowMeshUpload() ? 4000 : 0;
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 Stage.bind("touchend", complete)
             }, delay + 4000)
         } else {
@@ -28993,7 +29257,7 @@ Class(function IntroMobile() {
     function complete() {
         if (Tests.RETURN_USER()) {
             Stage.unbind("touchend", complete);
-            hideElements(function() {
+            hideElements(function () {
                 _this.events.fire(HydraEvents.COMPLETE)
             })
         } else {
@@ -29010,17 +29274,17 @@ Class(function IntroMobile() {
             y: -50
         }, 1000, "easeInCubic", callback)
     }
-    this.animateOut = function(callback) {
+    this.animateOut = function (callback) {
         $this.tween({
             opacity: 0
-        }, 500, "easeOutCubic", function() {
+        }, 500, "easeOutCubic", function () {
             if (typeof callback == "function") {
                 callback()
             }
         })
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         if (_earthTween && _earthTween.stop) {
             _earthTween.stop()
         }
@@ -29036,7 +29300,7 @@ Class(function LoaderMobile() {
     var _view, _loader;
     var _completeTimeout, _geoTimeout;
     var _didComplete = false;
-    (function() {
+    (function () {
         initHTML();
         initViews();
         style();
@@ -29063,11 +29327,11 @@ Class(function LoaderMobile() {
         if (Mobile.isNative()) {
             if (Mobile.System.CONNECTIVITY) {
                 _loader.add(1);
-                _geoTimeout = _this.delayedCall(function() {
+                _geoTimeout = _this.delayedCall(function () {
                     Data.User.data(null);
                     _loader.trigger(1)
                 }, 6000);
-                XHR.get("assets/data/_geo.json", function(e) {
+                XHR.get("assets/data/_geo.json", function (e) {
                     if (_geoTimeout) {
                         clearTimeout(_geoTimeout)
                     }
@@ -29104,12 +29368,12 @@ Class(function LoaderMobile() {
         _this.events.fire(HydraEvents.COMPLETE);
         AssetUtil.clearExclude();
         AssetUtil.loadAllAssets();
-        AudioController.load(function() {})
+        AudioController.load(function () { })
     }
-    this.animateOut = function(callback) {
+    this.animateOut = function (callback) {
         $this.tween({
             opacity: 0
-        }, 1000, "easeOutCubic", 200, function() {
+        }, 1000, "easeOutCubic", 200, function () {
             if (typeof callback == "function") {
                 callback()
             }
@@ -29121,7 +29385,7 @@ Class(function OverlayMobile() {
     var _this = this;
     var $container, $bg;
     var _view;
-    (function() {
+    (function () {
         initContainer();
         initView()
     }
@@ -29139,7 +29403,7 @@ Class(function OverlayMobile() {
     function initView() {
         _view = _this.initClass(OverlayMobileView, Copy.INFO_TEXT)
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         var max = Stage.height * (1 + (Stage.width / Stage.height) * 0.5);
         $bg.size(max, max).css({
             borderRadius: max
@@ -29158,12 +29422,12 @@ Class(function OverlayMobile() {
         AudioController.trigger("tap");
         GATracker.trackEvent("about", "click", "about in", 1)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $container.tween({
             opacity: 0,
             scale: 1.15
-        }, 500, "easeOutSine", function() {
+        }, 500, "easeOutSine", function () {
             $container.hide().clearTransform();
             _view.element.invisible()
         });
@@ -29176,7 +29440,7 @@ Class(function UIMobile() {
     var _this = this;
     var $container;
     var _newPrompt, _closePrompt, _catchPrompt, _instructions, _scalePrompt, _pinchPrompt, _rotatePrompt, _throwPrompt, _flipPrompt;
-    (function() {
+    (function () {
         initContainer();
         initViews();
         style();
@@ -29227,7 +29491,7 @@ Class(function UIMobile() {
         if (skip) {
             return
         }
-        defer(function() {
+        defer(function () {
             _instructions.update("WAVE")
         })
     }
@@ -29238,7 +29502,7 @@ Class(function UIMobile() {
         return _scalePrompt
     }
     function removeScalePrompt() {
-        defer(function() {
+        defer(function () {
             if (_scalePrompt) {
                 _scalePrompt = _scalePrompt.destroy()
             }
@@ -29291,7 +29555,7 @@ Class(function UIMobile() {
     }
     function removeCatchPrompt() {
         if (_catchPrompt) {
-            _catchPrompt.animateOut(function() {
+            _catchPrompt.animateOut(function () {
                 _catchPrompt = _catchPrompt.destroy()
             })
         }
@@ -29308,20 +29572,20 @@ Class(function UIMobile() {
     this.removeFlipPrompt = removeFlipPrompt;
     this.createCatchPrompt = createCatchPrompt;
     this.removeCatchPrompt = removeCatchPrompt;
-    this.get("newPrompt", function() {
+    this.get("newPrompt", function () {
         return _newPrompt
     });
-    this.get("closePrompt", function() {
+    this.get("closePrompt", function () {
         return _closePrompt
     });
-    this.get("instructions", function() {
+    this.get("instructions", function () {
         return _instructions
     });
-    this.hide = function() {
+    this.hide = function () {
         $container.hide()
     }
-    ;
-    this.show = function() {
+        ;
+    this.show = function () {
         $container.show()
     }
 }, "singleton");
@@ -29330,7 +29594,7 @@ Class(function Playground() {
     var _this = this;
     var $container;
     var _scene, _renderer, _camera, _view, _controls;
-    (function() {
+    (function () {
         Global.PLAYGROUND = true;
         initContainer();
         initThree();
@@ -29348,7 +29612,7 @@ Class(function Playground() {
     }
     function initThree() {
         _scene = new THREE.Scene();
-        _camera = new THREE.PerspectiveCamera(45,Stage.width / Stage.height,10,100000);
+        _camera = new THREE.PerspectiveCamera(45, Stage.width / Stage.height, 10, 100000);
         _renderer = new THREE.WebGLRenderer({
             antialias: false
         });
@@ -29390,17 +29654,17 @@ Class(function Playground() {
             _camera.updateProjectionMatrix()
         }
     }
-    this.setScene = function(scene, camera) {
+    this.setScene = function (scene, camera) {
         _scene = scene;
         _camera = camera
     }
-    ;
-    this.setCamera = function(camera) {
+        ;
+    this.setCamera = function (camera) {
         _camera = camera;
         _camera.custom = true
     }
-    ;
-    this.removeRenderer = function() {
+        ;
+    this.removeRenderer = function () {
         $container.remove();
         Render.stop(loop)
     }
@@ -29410,7 +29674,7 @@ Class(function Sidescreen() {
     var _this = this;
     var $container;
     var _view, _loader, _flocking, _interval;
-    (function() {
+    (function () {
         initContainer();
         initView();
         addListeners()
@@ -29450,7 +29714,7 @@ Class(function Sidescreen() {
             opacity: 1
         }, 2000, "easeOutSine", 200);
         _this.delayedCall(_view.animateIn, 1500);
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _interval = setInterval(addPlane, 10000)
         }, 40000)
     }
@@ -29470,7 +29734,7 @@ Class(function Sidescreen() {
             opacity: 0
         }).tween({
             opacity: 1
-        }, 1000, "easeOutSine", 1000, function() {
+        }, 1000, "easeOutSine", 1000, function () {
             $ioLogo.tween({
                 opacity: 0
             }, 1000, "easeOutSine", 1000)
@@ -29491,14 +29755,14 @@ Class(function BackgroundView() {
         pink: "#d7b7ea",
     };
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initBackground();
         addHandlers();
         Render.start(loop)
     }
     )();
     function initBackground() {
-        var geometry = new THREE.PlaneBufferGeometry(2,2,1,1);
+        var geometry = new THREE.PlaneBufferGeometry(2, 2, 1, 1);
         _shader = _this.initClass(Shader, "BackgroundRaytrace", "BackgroundRaytrace");
         _shader.uniforms = {
             time: {
@@ -29507,7 +29771,7 @@ Class(function BackgroundView() {
             },
             resolution: {
                 type: "v2",
-                value: new THREE.Vector2(Stage.width,Stage.height)
+                value: new THREE.Vector2(Stage.width, Stage.height)
             },
             color0: {
                 type: "c",
@@ -29531,7 +29795,7 @@ Class(function BackgroundView() {
             }
         };
         _shader.material.depthTest = false;
-        var mesh = new THREE.Mesh(geometry,_shader.material);
+        var mesh = new THREE.Mesh(geometry, _shader.material);
         mesh.frustumCulled = false;
         _this.object3D.add(mesh);
         World.instance().scene.add(_this.object3D)
@@ -29553,29 +29817,29 @@ Class(function BackgroundView() {
     function loop(t, dt) {
         _shader.uniforms.time.value = dt
     }
-    this.toFront = function() {
+    this.toFront = function () {
         if (_timeoutOrder) {
             clearTimeout(_timeoutOrder)
         }
-        _timeoutOrder = _this.delayedCall(function() {
+        _timeoutOrder = _this.delayedCall(function () {
             _shader.material.depthTest = true
         }, 200)
     }
-    ;
-    this.toBack = function() {
+        ;
+    this.toBack = function () {
         if (_timeoutOrder) {
             clearTimeout(_timeoutOrder)
         }
-        _timeoutOrder = _this.delayedCall(function() {
+        _timeoutOrder = _this.delayedCall(function () {
             _shader.material.depthTest = false
         }, 100)
     }
-    ;
-    this.override = function(val) {
+        ;
+    this.override = function (val) {
         _shader.set("override", val)
     }
-    ;
-    this.reset = function() {
+        ;
+    this.reset = function () {
         Render.stop(loop);
         Render.start(loop)
     }
@@ -29586,7 +29850,7 @@ Class(function Earth() {
     var _land, _sea, _earth, _cube, _glow;
     var _time = 0;
     this.object3D = new THREE.Group();
-    (function() {
+    (function () {
         initCube();
         initMesh();
         Render.start(loop)
@@ -29594,7 +29858,7 @@ Class(function Earth() {
     )();
     function initCube() {
         if (Config.BEAST) {
-            _cube = new THREE.CubeCamera(10,10000,1024);
+            _cube = new THREE.CubeCamera(10, 10000, 1024);
             _this.object3D.add(_cube)
         }
     }
@@ -29610,7 +29874,7 @@ Class(function Earth() {
         _land.shader.uniforms = {
             light: {
                 type: "v3",
-                value: new THREE.Vector3(-5000,2000,-5000)
+                value: new THREE.Vector3(-5000, 2000, -5000)
             },
             ambient1: {
                 type: "c",
@@ -29654,7 +29918,7 @@ Class(function Earth() {
         _sea.shader.uniforms = {
             light: {
                 type: "v3",
-                value: new THREE.Vector3(-5000,2000,-5000)
+                value: new THREE.Vector3(-5000, 2000, -5000)
             },
             ambient1: {
                 type: "c",
@@ -29696,8 +29960,8 @@ Class(function Earth() {
             side: THREE.DoubleSide
         });
         img.opacity = 0;
-        var plane = new THREE.PlaneBufferGeometry(1800,1800);
-        _glow = new THREE.Mesh(plane,img);
+        var plane = new THREE.PlaneBufferGeometry(1800, 1800);
+        _glow = new THREE.Mesh(plane, img);
         _glow.frustumCulled = false;
         if (!Device.mobile) {
             TweenManager.tween(_glow.material, {
@@ -29754,25 +30018,25 @@ Class(function Earth() {
             speed[i] = Utils.doRandom(50, 150) / 150;
             radius[i] = Utils.doRandom(-10, 10) / 100
         }
-        geom.addAttribute("angle", new THREE.BufferAttribute(angle,1));
-        geom.addAttribute("speed", new THREE.BufferAttribute(speed,1));
-        geom.addAttribute("radius", new THREE.BufferAttribute(radius,1))
+        geom.addAttribute("angle", new THREE.BufferAttribute(angle, 1));
+        geom.addAttribute("speed", new THREE.BufferAttribute(speed, 1));
+        geom.addAttribute("radius", new THREE.BufferAttribute(radius, 1))
     }
-    this.halfVisible = function() {
+    this.halfVisible = function () {
         _land.shader.material.transparent = true;
         _sea.shader.material.transparent = true;
         _land.shader.uniforms.fadeOut.value = 1;
         _sea.shader.uniforms.fadeOut.value = 1
     }
-    ;
-    this.fullVisible = function() {
+        ;
+    this.fullVisible = function () {
         _land.shader.material.transparent = false;
         _sea.shader.material.transparent = false;
         _land.shader.uniforms.fadeOut.value = 0;
         _sea.shader.uniforms.fadeOut.value = 0
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         Render.stop(loop)
     }
 }, "singleton");
@@ -29782,7 +30046,7 @@ Class(function PlaneFlocking() {
     var _simulation, _planes, _numParticles, _numThreads;
     this.object3D = new THREE.Object3D();
     var _totalAdded = 0;
-    (function() {}
+    (function () { }
     )();
     function initPlanes() {
         var textureSize = 16;
@@ -29813,7 +30077,7 @@ Class(function PlaneFlocking() {
         _planes.geometry.attributes.released.needsUpdate = true
     }
     function addHandlers() {
-        var debug = function(e) {
+        var debug = function (e) {
             if (e.keyCode == 70) {
                 var numToAdd = 15;
                 numToAdd = Math.min(numToAdd, _numParticles - _totalAdded);
@@ -29824,7 +30088,7 @@ Class(function PlaneFlocking() {
             __window.bind("keydown", debug)
         }
     }
-    this.init = function(numParticles, numThreads) {
+    this.init = function (numParticles, numThreads) {
         _numParticles = Math.round(numParticles * Tests.getPlaneReduce());
         _numThreads = numThreads;
         AudioController.setNumThreads(_numThreads);
@@ -29833,18 +30097,18 @@ Class(function PlaneFlocking() {
             addHandlers()
         }
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _simulation.disperse();
         _planes.fadeOut()
     }
-    ;
-    this.animateIn = function() {
+        ;
+    this.animateIn = function () {
         _simulation.assemble();
         _planes.fadeIn()
     }
-    ;
-    this.addPlane = function() {
+        ;
+    this.addPlane = function () {
         if (_totalAdded >= _numParticles) {
             return "finished"
         }
@@ -29857,7 +30121,7 @@ Class(function PlaneFlockingCPU(_numParticles, _numThreads, _geometry) {
     Inherit(this, Component);
     var _this = this;
     var _chunks = [];
-    (function() {
+    (function () {
         initChunks();
         addHandlers()
     }
@@ -29873,24 +30137,24 @@ Class(function PlaneFlockingCPU(_numParticles, _numThreads, _geometry) {
         _this.events.subscribe(PlanesEvents.RESUME_FLOCKING, resume)
     }
     function pause() {
-        _chunks.forEach(function(chunk) {
+        _chunks.forEach(function (chunk) {
             chunk.pause()
         })
     }
     function resume() {
-        _chunks.forEach(function(chunk) {
+        _chunks.forEach(function (chunk) {
             chunk.resume()
         })
     }
-    this.disperse = function() {
-        _chunks.forEach(function(chunk) {
+    this.disperse = function () {
+        _chunks.forEach(function (chunk) {
             chunk.disperse()
         });
         _this.delayedCall(pause, 1000)
     }
-    ;
-    this.assemble = function() {
-        _chunks.forEach(function(chunk) {
+        ;
+    this.assemble = function () {
+        _chunks.forEach(function (chunk) {
             chunk.assemble()
         })
     }
@@ -29900,15 +30164,15 @@ Class(function FlockingAlignment(_neighborDist, _maxSpeed) {
     var _this = this;
     var _neighborSq = _neighborDist * _neighborDist;
     var _steer = new Vector3();
-    this.init = function(p) {
+    this.init = function (p) {
         p.aCount = 0;
         if (!p.aSum) {
             p.aSum = new Vector3()
         }
         p.aSum.clear()
     }
-    ;
-    this.compare = function(p, f, distSq, calc) {
+        ;
+    this.compare = function (p, f, distSq, calc) {
         if (!p.neighborSq) {
             p.neighborSq = Math.pow(_neighborDist * p.alignmentOffset, 2)
         }
@@ -29917,8 +30181,8 @@ Class(function FlockingAlignment(_neighborDist, _maxSpeed) {
             p.aCount++
         }
     }
-    ;
-    this.calculate = function(p) {
+        ;
+    this.calculate = function (p) {
         if (p.aCount > 0) {
             var sum = p.aSum;
             sum.divide(p.aCount).normalize().multiply(_maxSpeed);
@@ -29926,12 +30190,12 @@ Class(function FlockingAlignment(_neighborDist, _maxSpeed) {
             p.applyForce(_steer)
         }
     }
-    ;
-    this.set("neighborDist", function(value) {
+        ;
+    this.set("neighborDist", function (value) {
         _neighborDist = value;
         _neighborSq = _neighborDist * _neighborDist
     });
-    this.set("maxSpeed", function(value) {
+    this.set("maxSpeed", function (value) {
         _maxSpeed = value
     })
 });
@@ -29940,18 +30204,18 @@ Class(function FlockingAttract() {
     var _this = this;
     var _delta = new Vector3();
     var _points = [];
-    this.addPoint = function(pos, radius, strength) {
+    this.addPoint = function (pos, radius, strength) {
         pos.radius = radius;
         pos.strength = strength;
         pos.radiusSq = pos.radius * pos.radius;
         _points.push(pos)
     }
-    ;
-    this.removeLastPoint = function() {
+        ;
+    this.removeLastPoint = function () {
         _points.pop()
     }
-    ;
-    this.applyBehavior = function(p) {
+        ;
+    this.applyBehavior = function (p) {
         if (p.fixed) {
             return
         }
@@ -30006,7 +30270,7 @@ Class(function FlockingBehavior() {
         }
         p.location = lookup
     }
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         checkPosition(p);
         _separation.init(p);
         _align.init(p);
@@ -30032,28 +30296,28 @@ Class(function FlockingBehavior() {
             p.applyForce(_negate)
         }
     }
-    ;
-    this.set("separation", function(value) {
+        ;
+    this.set("separation", function (value) {
         _config.separation = value;
         _separation.separation = value
     });
-    this.set("separationMaxSpeed", function(value) {
+    this.set("separationMaxSpeed", function (value) {
         _config.separationMaxSpeed = value;
         _separation.maxSpeed = value
     });
-    this.set("alignmentNeighborDist", function(value) {
+    this.set("alignmentNeighborDist", function (value) {
         _config.alignmentNeighborDist = value;
         _align.neighborDist = value
     });
-    this.set("alignmentMaxSpeed", function(value) {
+    this.set("alignmentMaxSpeed", function (value) {
         _config.alignmentMaxSpeed = value;
         _align.maxSpeed = value
     });
-    this.set("cohesionNeighborDist", function(value) {
+    this.set("cohesionNeighborDist", function (value) {
         _config.cohesionNeighborDist = value;
         _cohesion.neighborDist = value
     });
-    this.set("cohesionMaxSpeed", function(value) {
+    this.set("cohesionMaxSpeed", function (value) {
         _config.cohesionMaxSpeed = value;
         _cohesion.maxSpeed = value
     })
@@ -30064,15 +30328,15 @@ Class(function FlockingCohesion(_neighborDist, _maxSpeed) {
     var _neighborSq = _neighborDist * _neighborDist;
     var _seek = new Vector3();
     var _steer = new Vector3();
-    this.init = function(p) {
+    this.init = function (p) {
         p.cCount = 0;
         if (!p.cSum) {
             p.cSum = new Vector3()
         }
         p.cSum.clear()
     }
-    ;
-    this.compare = function(p, f, distSq, calc) {
+        ;
+    this.compare = function (p, f, distSq, calc) {
         if (!p.neighorSq) {
             p.neighborSq = Math.pow(_neighborDist * p.cohesionOffset, 2)
         }
@@ -30081,8 +30345,8 @@ Class(function FlockingCohesion(_neighborDist, _maxSpeed) {
             p.cCount++
         }
     }
-    ;
-    this.calculate = function(p) {
+        ;
+    this.calculate = function (p) {
         if (p.cCount > 0) {
             var sum = p.cSum;
             sum.divide(p.cCount);
@@ -30092,26 +30356,26 @@ Class(function FlockingCohesion(_neighborDist, _maxSpeed) {
             p.applyForce(_steer)
         }
     }
-    ;
-    this.set("neighborDist", function(value) {
+        ;
+    this.set("neighborDist", function (value) {
         _neighborDist = value;
         _neighborSq = _neighborDist * _neighborDist
     });
-    this.set("maxSpeed", function(value) {
+    this.set("maxSpeed", function (value) {
         _maxSpeed = value
     })
 });
 Class(function FlockingRotation() {
     Inherit(this, Component);
     var _this = this;
-    var _origin = new Vector3(0,0,-1);
+    var _origin = new Vector3(0, 0, -1);
     var _u = new Vector3();
     var _c = new Vector3();
-    var _axis = new Vector3(0,0,-1);
+    var _axis = new Vector3(0, 0, -1);
     var _z = new THREE.Quaternion();
-    (function() {}
+    (function () { }
     )();
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         _u.copyFrom(p.vel);
         _u.normalize();
         _c.copyFrom(_u);
@@ -30132,15 +30396,15 @@ Class(function FlockingSeparation(_separation, _maxSpeed) {
     var _separationSq = _separation * _separation;
     var _calc = new Vector3();
     var _steer = new Vector3();
-    this.init = function(p) {
+    this.init = function (p) {
         p.sCount = 0;
         if (!p.sSum) {
             p.sSum = new Vector3()
         }
         p.sSum.clear()
     }
-    ;
-    this.compare = function(p, f, distSq, calc) {
+        ;
+    this.compare = function (p, f, distSq, calc) {
         if (!p.sepSq) {
             p.sepSq = Math.pow(_separation * p.separationOffset, 2)
         }
@@ -30150,8 +30414,8 @@ Class(function FlockingSeparation(_separation, _maxSpeed) {
             p.sCount++
         }
     }
-    ;
-    this.calculate = function(p) {
+        ;
+    this.calculate = function (p) {
         if (p.sCount > 0) {
             p.sSum.divide(p.sCount);
             p.sSum.setLength(_maxSpeed);
@@ -30159,12 +30423,12 @@ Class(function FlockingSeparation(_separation, _maxSpeed) {
             p.applyForce(_steer)
         }
     }
-    ;
-    this.set("separation", function(value) {
+        ;
+    this.set("separation", function (value) {
         _separation = value;
         _separationSq = _separation * _separation
     });
-    this.set("maxSpeed", function(value) {
+    this.set("maxSpeed", function (value) {
         _maxSpeed = value
     })
 });
@@ -30174,20 +30438,20 @@ Class(function PlaneFlockingBehaviour(_particles) {
     var _alignmentWeight = 50;
     var _cohesionWeight = 60;
     var _separationWeight = 70;
-    (function() {}
+    (function () { }
     )();
-    var computeFactors = (function() {
+    var computeFactors = (function () {
         var averageVelocity = new Vector3();
         var averagePosition = new Vector3();
         var averageDistance = new Vector3();
         var distance = new Vector3();
         var direction = new Vector3();
-        return function(p) {
+        return function (p) {
             averageVelocity.clear();
             averagePosition.clear();
             averageDistance.clear();
             var neighborCount = 0;
-            _particles.forEach(function(q) {
+            _particles.forEach(function (q) {
                 if (q != p && p.pos.distanceTo(q.pos) < 400) {
                     neighborCount++;
                     averageVelocity.add(q.vel);
@@ -30215,7 +30479,7 @@ Class(function PlaneFlockingBehaviour(_particles) {
         }
     }
     )();
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         var factors = computeFactors(p);
         var alignment = factors[0];
         var cohesion = factors[1];
@@ -30229,9 +30493,9 @@ Class(function PlaneGravityBehaviour() {
     Inherit(this, Component);
     var _this = this;
     var _pull = new Vector3();
-    (function() {}
+    (function () { }
     )();
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         _pull.copyFrom(p.pos);
         _pull.multiply(Utils.range(_pull.length(), 700, 1000, 0, -0.06, true));
         p.vel.add(_pull)
@@ -30241,9 +30505,9 @@ Class(function PlaneGroundBehaviour() {
     Inherit(this, Component);
     var _this = this;
     var _push = new Vector3();
-    (function() {}
+    (function () { }
     )();
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         _push.copyFrom(p.pos);
         var multiply = Utils.range(_push.length(), 400, 450, 1, 0, true);
         _push.normalize();
@@ -30255,9 +30519,9 @@ Class(function PlaneSpeedBehaviour() {
     Inherit(this, Component);
     var _this = this;
     var _pull = new Vector3();
-    (function() {}
+    (function () { }
     )();
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         p.vel.multiply(Utils.range(p.vel.length(), 10, 20, 1, 0.9, true))
     }
 });
@@ -30266,7 +30530,7 @@ Class(function PlaneFlockingChunk(_index, _numParticles, _geometry, _numThreads)
     var _this = this;
     var _thread, _recycle, _render;
     var OFFSET = 7;
-    (function() {
+    (function () {
         initThread();
         Render.start(loop)
     }
@@ -30295,7 +30559,7 @@ Class(function PlaneFlockingChunk(_index, _numParticles, _geometry, _numThreads)
             releasedPlanes.push(0)
         }
         for (var i = 0, j = _index * _numParticles; i < e.values.length; i += OFFSET,
-        j++) {
+            j++) {
             _geometry.attributes.offset.setXYZ(j, e.values[i + 0], e.values[i + 1], e.values[i + 2]);
             _geometry.attributes.orientation.setXYZW(j, e.values[i + 3], e.values[i + 4], e.values[i + 5], e.values[i + 6]);
             if (i === 0) {
@@ -30330,28 +30594,28 @@ Class(function PlaneFlockingChunk(_index, _numParticles, _geometry, _numThreads)
         _recycle.msg.buffers.push(buffer.buffer);
         _thread.recycleBuffer(_recycle)
     }
-    this.pause = function() {
+    this.pause = function () {
         Render.stop(loop)
     }
-    ;
-    this.resume = function() {
+        ;
+    this.resume = function () {
         Render.start(loop)
     }
-    ;
-    this.disperse = function() {
+        ;
+    this.disperse = function () {
         _this.isDispersed = true;
         _thread.disperse()
     }
-    ;
-    this.assemble = function() {
+        ;
+    this.assemble = function () {
         if (!_this.isDispersed) {
             return
         }
         _this.isDispersed = false;
         _thread.assemble()
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         Render.stop(loop)
     }
 });
@@ -30361,7 +30625,7 @@ Class(function PlaneFlockingThread() {
     var _system, _converter, _wiggle, _behavior, _attractor;
     var _particles = [];
     var _count = 0;
-    (function() {}
+    (function () { }
     )();
     function initSystem() {
         var integrator = new EulerIntegrator();
@@ -30372,7 +30636,7 @@ Class(function PlaneFlockingThread() {
     function initParticles(numParticles) {
         var max = 1000;
         for (var i = 0; i < numParticles; i++) {
-            var p = new Particle(new Vector3(Utils.doRandom(-max, max),0,0),0,0);
+            var p = new Particle(new Vector3(Utils.doRandom(-max, max), 0, 0), 0, 0);
             p.targetRotation = new THREE.Quaternion();
             p.rotation = new THREE.Quaternion();
             p.vel.set(Utils.doRandom(-100, 100) / 10, Utils.doRandom(-100, 100) / 10, Utils.doRandom(-100, 100) / 10);
@@ -30401,7 +30665,7 @@ Class(function PlaneFlockingThread() {
         _system.addBehavior(_attractor);
         _system.addBehavior(new FlockingRotation());
         _system.friction = 0.993;
-        setTimeout(function() {}, 2000)
+        setTimeout(function () { }, 2000)
     }
     function loop(time, delta, mouse) {
         _count++;
@@ -30415,25 +30679,25 @@ Class(function PlaneFlockingThread() {
         }
         emit("transfer", message, buffers)
     }
-    this.init = function(e) {
+    this.init = function (e) {
         initSystem();
         initParticles(e.total);
         initBehaviours()
     }
-    ;
-    this.disperse = function() {
-        _attractor.addPoint(new Vector3(0,0,0), 1000, 1000)
+        ;
+    this.disperse = function () {
+        _attractor.addPoint(new Vector3(0, 0, 0), 1000, 1000)
     }
-    ;
-    this.assemble = function() {
+        ;
+    this.assemble = function () {
         _attractor.removeLastPoint()
     }
-    ;
-    this.render = function(e) {
+        ;
+    this.render = function (e) {
         loop(e.time, e.delta, e.mouse)
     }
-    ;
-    this.recycleBuffer = function(e) {
+        ;
+    this.recycleBuffer = function (e) {
         _converter.recycle(e.array)
     }
 });
@@ -30443,7 +30707,7 @@ Class(function PlaneFlockingThreadConverter(_particles) {
     var OFFSET = 7;
     var _buffer = {};
     var _pool;
-    (function() {}
+    (function () { }
     )();
     function initPool() {
         _pool = new ObjectPool();
@@ -30452,7 +30716,7 @@ Class(function PlaneFlockingThreadConverter(_particles) {
             _pool.insert(array)
         }
     }
-    this.convert = function() {
+    this.convert = function () {
         if (!_pool) {
             initPool()
         }
@@ -30473,8 +30737,8 @@ Class(function PlaneFlockingThreadConverter(_particles) {
         _buffer.values = values;
         return _buffer
     }
-    ;
-    this.recycle = function(array) {
+        ;
+    this.recycle = function (array) {
         _pool.put(array)
     }
 });
@@ -30482,7 +30746,7 @@ Class(function PlaneFlockingGPGPU(_textureSize, _plane) {
     Inherit(this, Component);
     var _this = this;
     var _simulator;
-    (function() {
+    (function () {
         initSimulator()
     }
     )();
@@ -30497,7 +30761,7 @@ Class(function PlaneFlockingGPGPUShaders(_textureSize, _plane) {
     var _renderer = new THREE.WebGLRenderer();
     var _numParticles = _textureSize * _textureSize;
     var _boundary = 100;
-    (function() {
+    (function () {
         initScene();
         initShaders();
         initTextures();
@@ -30516,14 +30780,14 @@ Class(function PlaneFlockingGPGPUShaders(_textureSize, _plane) {
             },
             resolution: {
                 type: "v2",
-                value: new THREE.Vector2(_textureSize,_textureSize)
+                value: new THREE.Vector2(_textureSize, _textureSize)
             },
             texture: {
                 type: "t",
                 value: null
             }
         };
-        _quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2,2),_passThroughShader.material);
+        _quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), _passThroughShader.material);
         _quad.frustumCulled = false;
         _scene.add(_quad)
     }
@@ -30540,7 +30804,7 @@ Class(function PlaneFlockingGPGPUShaders(_textureSize, _plane) {
             },
             resolution: {
                 type: "v2",
-                value: new THREE.Vector2(_textureSize,_textureSize)
+                value: new THREE.Vector2(_textureSize, _textureSize)
             },
             texturePosition: {
                 type: "t",
@@ -30563,7 +30827,7 @@ Class(function PlaneFlockingGPGPUShaders(_textureSize, _plane) {
             },
             resolution: {
                 type: "v2",
-                value: new THREE.Vector2(_textureSize,_textureSize)
+                value: new THREE.Vector2(_textureSize, _textureSize)
             },
             texturePosition: {
                 type: "t",
@@ -30623,7 +30887,7 @@ Class(function PlaneFlockingGPGPUShaders(_textureSize, _plane) {
             a[k + 2] = z;
             a[k + 3] = 1
         }
-        var texture = new THREE.DataTexture(a,_textureSize,_textureSize,THREE.RGBAFormat,THREE.FloatType);
+        var texture = new THREE.DataTexture(a, _textureSize, _textureSize, THREE.RGBAFormat, THREE.FloatType);
         texture.needsUpdate = true;
         return texture
     }
@@ -30637,12 +30901,12 @@ Class(function PlaneFlockingGPGPUShaders(_textureSize, _plane) {
             a[k + 1] = y * 10;
             a[k + 2] = z * 10
         }
-        var texture = new THREE.DataTexture(a,_textureSize,_textureSize,THREE.RGBFormat,THREE.FloatType);
+        var texture = new THREE.DataTexture(a, _textureSize, _textureSize, THREE.RGBFormat, THREE.FloatType);
         texture.needsUpdate = true;
         return texture
     }
     function getRenderTarget(type) {
-        return new THREE.WebGLRenderTarget(_textureSize,_textureSize,{
+        return new THREE.WebGLRenderTarget(_textureSize, _textureSize, {
             wrapS: THREE.RepeatWrapping,
             wrapT: THREE.RepeatWrapping,
             minFilter: THREE.NearestFilter,
@@ -30695,7 +30959,7 @@ Class(function PlaneFoldGeometry() {
     this.flipContainer = new THREE.Group();
     this.swayContainer = new THREE.Group();
     var _frame = 91;
-    (function() {
+    (function () {
         initGeometry();
         initShader();
         initMesh();
@@ -30839,8 +31103,8 @@ Class(function PlaneFoldGeometry() {
         _backShader.material.extensions.derivatives = true
     }
     function initMesh() {
-        _frontMesh = new THREE.Mesh(_geometry,_frontShader.material);
-        _backMesh = new THREE.Mesh(_geometry,_backShader.material);
+        _frontMesh = new THREE.Mesh(_geometry, _frontShader.material);
+        _backMesh = new THREE.Mesh(_geometry, _backShader.material);
         _frontMesh.frustumCulled = false;
         _backMesh.frustumCulled = false;
         _this.mesh.add(_frontMesh);
@@ -30864,7 +31128,7 @@ Class(function PlaneFoldGeometry() {
         _this.stamp = _this.initClass(PlaneStampTexture);
         _frontShader.uniforms.tStamp.value = _this.stamp.texture;
         _backShader.uniforms.tStamp.value = _this.stamp.texture;
-        _this.stamp.onStamp = function(data) {
+        _this.stamp.onStamp = function (data) {
             _frontShader.uniforms.splatAlpha.value = 1;
             _frontShader.uniforms.splatScale.value = 0.3;
             _frontShader.uniforms.splatColor.value.set(data.color);
@@ -30873,26 +31137,26 @@ Class(function PlaneFoldGeometry() {
             _frontShader.tween("splatAlpha", 0, 300, "easeInOutCubic")
         }
     }
-    this.age = function() {
+    this.age = function () {
         _frontShader.uniforms.fAge.value = 1;
         _backShader.uniforms.fAge.value = 1
     }
-    ;
-    this.update = function(frame) {
+        ;
+    this.update = function (frame) {
         var diff = frame - _frame;
         _frontMixer.update(diff);
         _backMixer.update(diff);
         _frame = frame
     }
-    ;
-    this.get("frame", function() {
+        ;
+    this.get("frame", function () {
         return _frame
     });
-    this.set("fade", function(value) {
+    this.set("fade", function (value) {
         _frontShader.uniforms.fFade.value = value;
         _backShader.uniforms.fFade.value = value
     });
-    this.set("stripColor", function(value) {
+    this.set("stripColor", function (value) {
         if (value == null) {
             _frontShader.uniforms.stripAlpha.value = 0;
             _backShader.uniforms.stripAlpha.value = 0;
@@ -30903,19 +31167,19 @@ Class(function PlaneFoldGeometry() {
         _frontShader.uniforms.stripAlpha.value = 1;
         _backShader.uniforms.stripAlpha.value = 1
     });
-    this.set("depth", function(value) {
+    this.set("depth", function (value) {
         _frontShader.material.depthTest = value;
         _frontShader.material.depthWrite = value;
         _backShader.material.depthTest = value;
         _backShader.material.depthWrite = value
     });
-    this.destroy = function() {
+    this.destroy = function () {
         _frontShader.material.dispose();
         _backShader.material.dispose()
     }
-}, function() {
+}, function () {
     var _geometry;
-    PlaneFoldGeometry.getGeometry = function() {
+    PlaneFoldGeometry.getGeometry = function () {
         if (_geometry) {
             return _geometry
         }
@@ -30923,19 +31187,19 @@ Class(function PlaneFoldGeometry() {
         projectUVsOnAxis(_geometry);
         return _geometry
     }
-    ;
+        ;
     function projectUVsOnAxis(geometry) {
         geometry.computeBoundingBox();
         var max = geometry.boundingBox.max;
         var min = geometry.boundingBox.min;
-        var offset = new THREE.Vector2(0 - min.x,0 - min.z);
-        var range = new THREE.Vector2(max.x - min.x,max.z - min.z);
+        var offset = new THREE.Vector2(0 - min.x, 0 - min.z);
+        var range = new THREE.Vector2(max.x - min.x, max.z - min.z);
         geometry.faceVertexUvs[0] = [];
-        geometry.faces.forEach(function(face) {
+        geometry.faces.forEach(function (face) {
             var v1 = geometry.vertices[face.a];
             var v2 = geometry.vertices[face.b];
             var v3 = geometry.vertices[face.c];
-            geometry.faceVertexUvs[0].push([new THREE.Vector2((v1.x + offset.x) / range.x,(v1.z + offset.y) / range.y), new THREE.Vector2((v2.x + offset.x) / range.x,(v2.z + offset.y) / range.y), new THREE.Vector2((v3.x + offset.x) / range.x,(v3.z + offset.y) / range.y)])
+            geometry.faceVertexUvs[0].push([new THREE.Vector2((v1.x + offset.x) / range.x, (v1.z + offset.y) / range.y), new THREE.Vector2((v2.x + offset.x) / range.x, (v2.z + offset.y) / range.y), new THREE.Vector2((v3.x + offset.x) / range.x, (v3.z + offset.y) / range.y)])
         });
         geometry.uvsNeedUpdate = true
     }
@@ -30946,7 +31210,7 @@ Class(function PlaneInstance(_shaderName, _textureSize, _numInstances) {
     var _geometry, _shader, _mesh, _override;
     _numInstances = _numInstances || _textureSize * _textureSize;
     this.object3D = new THREE.Group();
-    (function() {
+    (function () {
         initGeometry();
         initInstances();
         initShader();
@@ -30957,19 +31221,19 @@ Class(function PlaneInstance(_shaderName, _textureSize, _numInstances) {
     function initGeometry() {
         _geometry = new THREE.InstancedBufferGeometry();
         var data = Hydra.JSON.plane;
-        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices),3);
-        var uvs = new THREE.BufferAttribute(new Float32Array(data.uvs),2);
-        var normals = new THREE.BufferAttribute(new Float32Array(data.normals),3);
+        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices), 3);
+        var uvs = new THREE.BufferAttribute(new Float32Array(data.uvs), 2);
+        var normals = new THREE.BufferAttribute(new Float32Array(data.normals), 3);
         _geometry.addAttribute("position", vertices);
         _geometry.addAttribute("uv", uvs);
         _geometry.addAttribute("normal", normals)
     }
     function initInstances() {
-        var offsets = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 3),3).setDynamic(true);
-        var orientations = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 4),4).setDynamic(true);
-        var random = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 3),3);
-        var released = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances),1);
-        var coords = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 2),2).setDynamic(true);
+        var offsets = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 3), 3).setDynamic(true);
+        var orientations = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 4), 4).setDynamic(true);
+        var random = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 3), 3);
+        var released = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances), 1);
+        var coords = new THREE.InstancedBufferAttribute(new Float32Array(_numInstances * 2), 2).setDynamic(true);
         for (var i = 0; i < _numInstances; i++) {
             var x = (i % _textureSize) / _textureSize;
             var y = Math.floor(i / _textureSize) / _textureSize;
@@ -31024,7 +31288,7 @@ Class(function PlaneInstance(_shaderName, _textureSize, _numInstances) {
         }
     }
     function initMesh() {
-        var mesh = new THREE.Mesh(_geometry,_shader.material);
+        var mesh = new THREE.Mesh(_geometry, _shader.material);
         mesh.frustumCulled = false;
         _this.object3D.add(mesh);
         _mesh = mesh
@@ -31043,35 +31307,35 @@ Class(function PlaneInstance(_shaderName, _textureSize, _numInstances) {
             _mesh.material = _shader.material
         }
     }
-    this.get("geometry", function() {
+    this.get("geometry", function () {
         return _geometry
     });
-    this.get("shader", function() {
+    this.get("shader", function () {
         return _shader
     });
-    this.set("texturePosition", function(value) {});
-    this.set("textureVelocity", function(value) {});
-    this.fadeIn = function(callback, delay) {
+    this.set("texturePosition", function (value) { });
+    this.set("textureVelocity", function (value) { });
+    this.fadeIn = function (callback, delay) {
         Render.start(loop);
         _shader.material.depthTest = true;
-        _shader.tween("alpha", 1, 1000, "easeOutCubic", delay || 0, function() {
+        _shader.tween("alpha", 1, 1000, "easeOutCubic", delay || 0, function () {
             if (typeof callback == "function") {
                 callback()
             }
         })
     }
-    ;
-    this.fadeOut = function(callback) {
+        ;
+    this.fadeOut = function (callback) {
         _shader.material.depthTest = false;
-        _shader.tween("alpha", 0, 1000, "easeOutCubic", function() {
+        _shader.tween("alpha", 0, 1000, "easeOutCubic", function () {
             Render.stop(loop);
             if (typeof callback == "function") {
                 callback()
             }
         })
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         Render.stop(loop)
     }
 });
@@ -31080,7 +31344,7 @@ Class(function PlaneOrbitGeometry(_earth) {
     var _this = this;
     var _geometry, _shader, _tweenScale;
     this.group = new THREE.Group();
-    (function() {
+    (function () {
         initGeometry();
         initShader();
         initMesh();
@@ -31110,7 +31374,7 @@ Class(function PlaneOrbitGeometry(_earth) {
         _shader.material.side = THREE.DoubleSide
     }
     function initMesh() {
-        var mesh = new THREE.Mesh(_geometry,_shader.material);
+        var mesh = new THREE.Mesh(_geometry, _shader.material);
         mesh.frustumCulled = false;
         mesh.rotation.x = 0.15;
         mesh.position.y = -1;
@@ -31124,7 +31388,7 @@ Class(function PlaneOrbitGeometry(_earth) {
     function loop(t, dt, delta) {
         _shader.uniforms.time.value += delta
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         Render.start(loop);
         _tweenScale = TweenManager.tween(_this.group.scale, {
             x: 1,
@@ -31132,35 +31396,35 @@ Class(function PlaneOrbitGeometry(_earth) {
             z: 1
         }, 500, "easeOutCubic", 1000)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _tweenScale = TweenManager.tween(_this.group.scale, {
             x: 0.01,
             y: 0.01,
             z: 0.01
-        }, 500, "easeInCubic", function() {
+        }, 500, "easeInCubic", function () {
             Render.stop(loop)
         })
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         _earth.object3D.remove(_this.group);
         if (_tweenScale && _tweenScale.stop) {
             _tweenScale.stop()
         }
         Render.stop(loop)
     }
-}, function() {
+}, function () {
     var _geometry;
-    PlaneOrbitGeometry.getGeometry = function() {
+    PlaneOrbitGeometry.getGeometry = function () {
         if (_geometry) {
             return _geometry
         }
         _geometry = new THREE.BufferGeometry();
         var data = Hydra.JSON.plane;
-        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices),3);
-        var uvs = new THREE.BufferAttribute(new Float32Array(data.uvs),2);
-        var normals = new THREE.BufferAttribute(new Float32Array(data.normals),3);
+        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices), 3);
+        var uvs = new THREE.BufferAttribute(new Float32Array(data.uvs), 2);
+        var normals = new THREE.BufferAttribute(new Float32Array(data.normals), 3);
         _geometry.addAttribute("position", vertices);
         _geometry.addAttribute("uv", uvs);
         _geometry.addAttribute("normal", normals);
@@ -31172,7 +31436,7 @@ Class(function ThrownPlaneGeometry() {
     var _this = this;
     var _geometry, _shader, _mesh;
     this.group = new THREE.Group();
-    (function() {
+    (function () {
         initGeometry();
         initShader();
         initMesh();
@@ -31189,7 +31453,7 @@ Class(function ThrownPlaneGeometry() {
         _shader.material.side = THREE.DoubleSide
     }
     function initMesh() {
-        var mesh = new THREE.Mesh(_geometry,_shader.material);
+        var mesh = new THREE.Mesh(_geometry, _shader.material);
         mesh.frustumCulled = false;
         mesh.rotation.x = 0.15;
         mesh.position.y = -1;
@@ -31200,53 +31464,53 @@ Class(function ThrownPlaneGeometry() {
     function loop(t, dt, delta) {
         _shader.uniforms.time.value += delta
     }
-    this.fadeIn = function(callback, delay) {
+    this.fadeIn = function (callback, delay) {
         Render.start(loop);
         _shader.material.depthTest = true;
-        _shader.tween("alpha", 1, 1000, "easeOutCubic", delay || 0, function() {
+        _shader.tween("alpha", 1, 1000, "easeOutCubic", delay || 0, function () {
             if (typeof callback == "function") {
                 callback()
             }
         })
     }
-    ;
-    this.fadeOut = function(callback) {
+        ;
+    this.fadeOut = function (callback) {
         _shader.material.depthTest = false;
-        _shader.tween("alpha", 0, 1000, "easeOutCubic", function() {
+        _shader.tween("alpha", 0, 1000, "easeOutCubic", function () {
             Render.stop(loop);
             if (typeof callback == "function") {
                 callback()
             }
         })
     }
-    ;
-    this.set("stripColor", function(value) {
+        ;
+    this.set("stripColor", function (value) {
         _shader.uniforms.stripColor.value.set(value)
     });
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         Render.stop(loop);
         FXObjects.remove(_mesh)
     }
-}, function() {
+}, function () {
     var _geometry, _shader;
-    ThrownPlaneGeometry.getGeometry = function() {
+    ThrownPlaneGeometry.getGeometry = function () {
         if (_geometry) {
             return _geometry
         }
         _geometry = new THREE.BufferGeometry();
         var data = Hydra.JSON.plane;
-        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices),3);
-        var uvs = new THREE.BufferAttribute(new Float32Array(data.uvs),2);
-        var normals = new THREE.BufferAttribute(new Float32Array(data.normals),3);
+        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices), 3);
+        var uvs = new THREE.BufferAttribute(new Float32Array(data.uvs), 2);
+        var normals = new THREE.BufferAttribute(new Float32Array(data.normals), 3);
         _geometry.addAttribute("position", vertices);
         _geometry.addAttribute("uv", uvs);
         _geometry.addAttribute("normal", normals);
         return _geometry
     }
-    ;
-    ThrownPlaneGeometry.getShader = function() {
+        ;
+    ThrownPlaneGeometry.getShader = function () {
         if (!_shader) {
-            _shader = new Shader("ThrownPlane","ThrownPlane");
+            _shader = new Shader("ThrownPlane", "ThrownPlane");
             _shader.uniforms = {
                 tMatCap: {
                     type: "t",
@@ -31273,7 +31537,7 @@ Class(function IntroDesktopView() {
     Inherit(this, View);
     var _this = this;
     var $this, $start, $qr, $connect, $url, $outerSpace;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -31322,7 +31586,7 @@ Class(function IntroDesktopView() {
             bottom: "50%",
             left: 0,
         });
-        $url.html("planes.damvan.ca").css({
+        $url.html("cmoneon.github.io/planes").css({
             top: "50%",
             right: 0,
             left: 0,
@@ -31377,20 +31641,20 @@ Class(function IntroDesktopView() {
         ThrownPlane.instance().launchPlane(data);
         Data.Planes.throwPlane(data)
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $start.tween({
             opacity: 1
-        }, 1000, "easeOutCubic", 4000, function() {
+        }, 1000, "easeOutCubic", 4000, function () {
             $start.tween({
                 opacity: 0
-            }, 1000, "easeOutCubic", 3000, function() {})
+            }, 1000, "easeOutCubic", 3000, function () { })
         });
         $connect.tween({
             opacity: 1
-        }, 1000, "easeOutCubic", 10500, function() {
+        }, 1000, "easeOutCubic", 10500, function () {
             $connect.tween({
                 opacity: 0
-            }, 1000, "easeOutCubic", 5000, function() {});
+            }, 1000, "easeOutCubic", 5000, function () { });
             $url.tween({
                 opacity: 0
             }, 1000, "easeOutCubic", 5000)
@@ -31408,7 +31672,7 @@ Class(function LoaderDesktopView() {
     var _this = this;
     var $this, $logo, $spinner;
     var _spin;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -31446,7 +31710,7 @@ Class(function LocationPingView(_coords) {
     var _this = this;
     var _shader;
     this.group = new THREE.Group();
-    (function() {
+    (function () {
         initPing()
     }
     )();
@@ -31457,7 +31721,7 @@ Class(function LocationPingView(_coords) {
         _shader.material.transparent = true;
         _shader.material.blending = THREE.AdditiveBlending;
         _shader.material.depthWrite = false;
-        var mesh = new THREE.Mesh(geometry,_shader.material);
+        var mesh = new THREE.Mesh(geometry, _shader.material);
         mesh.position.x = 162;
         _this.group.add(mesh);
         _this.group.add(mesh);
@@ -31467,32 +31731,32 @@ Class(function LocationPingView(_coords) {
     function loop(t, dt) {
         _shader.uniforms.time.value = dt
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         Render.start(loop);
         _shader.tween("alpha", 0.2, 1000, "easeInOutCubic")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _shader.tween("alpha", 0, 1000, "easeInOutCubic")
     }
-    ;
-    this.stop = function() {
+        ;
+    this.stop = function () {
         Render.stop(loop)
     }
-}, function() {
+}, function () {
     var _geometry, _shader;
-    LocationPingView.getGeometry = function() {
+    LocationPingView.getGeometry = function () {
         if (_geometry) {
             return _geometry
         }
-        _geometry = new THREE.CylinderBufferGeometry(10,1,5,20,1,true);
+        _geometry = new THREE.CylinderBufferGeometry(10, 1, 5, 20, 1, true);
         _geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI / 2));
         return _geometry
     }
-    ;
-    LocationPingView.getShader = function() {
+        ;
+    LocationPingView.getShader = function () {
         if (!_shader) {
-            _shader = new Shader("EarthLocations","EarthLocations2");
+            _shader = new Shader("EarthLocations", "EarthLocations2");
             _shader.uniforms = {
                 time: {
                     type: "f",
@@ -31512,7 +31776,7 @@ Class(function ThrownPlaneCurve() {
     var _this = this;
     var _curve;
     this.group = new THREE.Group();
-    (function() {
+    (function () {
         initCurve()
     }
     )();
@@ -31521,23 +31785,23 @@ Class(function ThrownPlaneCurve() {
         camPos.y -= 15;
         camPos.x += Utils.doRandom(-100, 100) / 10;
         var points = [];
-        var offsetZ = new THREE.Vector3(Utils.doRandom(-10, 10),Utils.doRandom(-10, 10),150);
+        var offsetZ = new THREE.Vector3(Utils.doRandom(-10, 10), Utils.doRandom(-10, 10), 150);
         points.push(camPos.clone().sub(offsetZ));
         points.push(camPos.clone().add(offsetZ));
         var angle, radius;
         if (camPos.z < -500) {
             angle = Utils.doRandom(-180, 180) / 180 * Math.PI;
             radius = Utils.doRandom(0, 120);
-            points.push(new THREE.Vector3(radius * Math.sin(angle),radius * Math.cos(angle),-300))
+            points.push(new THREE.Vector3(radius * Math.sin(angle), radius * Math.cos(angle), -300))
         }
         if (Math.abs(camPos.x) < 50) {
             angle = Utils.doRandom(-180, 180) / 180 * Math.PI;
             radius = Utils.doRandom(180, 320);
-            points.push(new THREE.Vector3(radius * Math.sin(angle),radius * Math.cos(angle),0))
+            points.push(new THREE.Vector3(radius * Math.sin(angle), radius * Math.cos(angle), 0))
         } else {
             angle = Math.atan2(camPos.x, camPos.y) + Utils.doRandom(-45, 45) / 180 * Math.PI;
             radius = Utils.doRandom(170, 300);
-            points.push(new THREE.Vector3(radius * Math.sin(angle),radius * Math.cos(angle),50))
+            points.push(new THREE.Vector3(radius * Math.sin(angle), radius * Math.cos(angle), 50))
         }
         points.push(camPos.clone().normalize().multiplyScalar(-200));
         _curve = new THREE.CatmullRomCurve3(points);
@@ -31546,14 +31810,14 @@ Class(function ThrownPlaneCurve() {
         var material = new THREE.LineBasicMaterial({
             color: 15658734
         });
-        var mesh = new THREE.Line(geometry,material);
+        var mesh = new THREE.Line(geometry, material);
         _this.group.add(mesh)
     }
-    this.getPoint = function(alpha) {
+    this.getPoint = function (alpha) {
         return _curve.getPoint(alpha)
     }
-    ;
-    this.get("curve", function() {
+        ;
+    this.get("curve", function () {
         return _curve
     })
 });
@@ -31562,7 +31826,7 @@ Class(function ThrownPlaneTrail(_curve, _data) {
     var _this = this;
     var _trail;
     this.group = new THREE.Group();
-    (function() {
+    (function () {
         initTrail();
         addHandlers()
     }
@@ -31570,7 +31834,7 @@ Class(function ThrownPlaneTrail(_curve, _data) {
     function initTrail() {
         var geometry = new THREE.Geometry();
         geometry.vertices = _curve.getPoints(100);
-        var calculateLineThickness = function(percentage, i, total) {
+        var calculateLineThickness = function (percentage, i, total) {
             return 1
         };
         var color = new THREE.Color(_data.color);
@@ -31584,13 +31848,13 @@ Class(function ThrownPlaneTrail(_curve, _data) {
             useMap: 0,
             color: color,
             lineWidth: 7,
-            resolution: new THREE.Vector2(Stage.width,Stage.height),
+            resolution: new THREE.Vector2(Stage.width, Stage.height),
             transparent: true,
             opacity: 0.5,
         });
         material.depthWrite = false;
         material.blending = THREE.AdditiveBlending;
-        _trail.mesh = new THREE.Mesh(_trail.geometry,material);
+        _trail.mesh = new THREE.Mesh(_trail.geometry, material);
         _trail.mesh.frustumCulled = false;
         _this.group.add(_trail.mesh);
         FXObjects.register(_trail.mesh)
@@ -31601,12 +31865,12 @@ Class(function ThrownPlaneTrail(_curve, _data) {
     function resize() {
         _trail.mesh.material.uniforms.resolution.value.set(Stage.width, Stage.height)
     }
-    this.set("progress", function(value) {
+    this.set("progress", function (value) {
         if (_trail.mesh.material.uniforms) {
             _trail.mesh.material.uniforms.progress.value = value
         }
     });
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         FXObjects.remove(_trail.mesh)
     }
 });
@@ -31615,7 +31879,7 @@ Class(function ThrownPlaneView(_data) {
     var _this = this;
     var _plane, _curve, _trail, _flightTween;
     this.group = new THREE.Group();
-    (function() {
+    (function () {
         initGeometry();
         initCurve();
         initTrail();
@@ -31641,7 +31905,7 @@ Class(function ThrownPlaneView(_data) {
             a: 0.12
         };
         AudioController.planeEnter(_curve.getPoint(0));
-        var onUpdate = function() {
+        var onUpdate = function () {
             _plane.group.position.copy(_curve.getPoint(temp.a));
             var lookAt = _curve.getPoint(Math.max(0, temp.a - 0.01));
             _plane.group.lookAt(lookAt);
@@ -31651,13 +31915,13 @@ Class(function ThrownPlaneView(_data) {
         };
         _flightTween = TweenManager.tween(temp, {
             a: 1
-        }, 8000, "linear", function() {
+        }, 8000, "linear", function () {
             if (typeof _this.onComplete == "function") {
                 _this.onComplete()
             }
         }, onUpdate)
     }
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         if (_flightTween && _flightTween.stop) {
             _flightTween.stop()
         }
@@ -31672,7 +31936,7 @@ Class(function StatsMeshText() {
     var _rotation = {
         strength: 1
     };
-    (function() {
+    (function () {
         initShaders();
         loadFont();
         World.instance().scene.add(_this.group);
@@ -31682,7 +31946,7 @@ Class(function StatsMeshText() {
     function initShaders() {
         var captionFontTexture = Utils3D.getTexture("assets/fonts/din.png");
         var titleFontTexture = Utils3D.getTexture("assets/fonts/din.png");
-        [captionFontTexture, titleFontTexture].forEach(function(texture) {
+        [captionFontTexture, titleFontTexture].forEach(function (texture) {
             texture.minFilter = THREE.LinearMipMapLinearFilter;
             texture.magFilter = THREE.LinearFilter;
             texture.generateMipmaps = true;
@@ -31743,7 +32007,7 @@ Class(function StatsMeshText() {
     }
     function initMesh(type) {
         if (type == "title") {
-            _titleMesh = new THREE.Mesh(_titleGeometry,_titleShader.material);
+            _titleMesh = new THREE.Mesh(_titleGeometry, _titleShader.material);
             _titleMesh.frustumCulled = false;
             _titleMesh.position.x = -2000;
             var textAnchor = new THREE.Group();
@@ -31756,7 +32020,7 @@ Class(function StatsMeshText() {
             _this.group.add(textAnchor);
             FXObjects.register(_titleMesh)
         } else {
-            _captionMesh = new THREE.Mesh(_captionGeometry,_captionShader.material);
+            _captionMesh = new THREE.Mesh(_captionGeometry, _captionShader.material);
             _captionMesh.frustumCulled = false;
             _captionMesh.position.x = -2000;
             var textAnchor = new THREE.Group();
@@ -31779,7 +32043,7 @@ Class(function StatsMeshText() {
         _this.group.rotation.y = _rotation.position.offset.y * 0.8 * _rotation.strength;
         _this.group.rotation.x = (_rotation.position.y * 0.002 + 0.2) * _rotation.strength
     }
-    this.animateIn = function(stat, position) {
+    this.animateIn = function (stat, position) {
         _rotation.position = position;
         _this.group.scale.set(1, 1, 1);
         var text = new BMFontText({
@@ -31813,8 +32077,8 @@ Class(function StatsMeshText() {
             strength: 0.1
         }, 6000, "easeOutCubic", 4000, null, updateRotation)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _titleShader.uniforms.yOffset.value = -20;
         _captionShader.uniforms.yOffset.value = 50;
         _titleShader.tween("opacity", 0, 1400, "easeInCubic");
@@ -31834,15 +32098,15 @@ Class(function StatsPing() {
     var _this = this;
     var _shader;
     _this.group = new THREE.Group();
-    (function() {
+    (function () {
         initGeometry();
         Render.start(loop)
     }
     )();
     function initGeometry() {
-        var geometry = new THREE.CylinderBufferGeometry(20,1,20,20,1,true);
+        var geometry = new THREE.CylinderBufferGeometry(20, 1, 20, 20, 1, true);
         geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI / 2));
-        _shader = new Shader("EarthLocations","EarthLocations");
+        _shader = new Shader("EarthLocations", "EarthLocations");
         _shader.uniforms = {
             time: {
                 type: "f",
@@ -31857,7 +32121,7 @@ Class(function StatsPing() {
         _shader.material.transparent = true;
         _shader.material.blending = THREE.AdditiveBlending;
         _shader.material.depthWrite = false;
-        var mesh = new THREE.Mesh(geometry,_shader.material);
+        var mesh = new THREE.Mesh(geometry, _shader.material);
         mesh.position.x = 166;
         _this.group.add(mesh);
         FXObjects.register(mesh);
@@ -31867,19 +32131,19 @@ Class(function StatsPing() {
     function loop(t, dt) {
         _shader.uniforms.time.value = dt
     }
-    this.highlightLocation = function(stat) {
+    this.highlightLocation = function (stat) {
         _this.group.rotation.y = stat.coords.lng * Math.PI / 180 - 1.6;
         _this.group.rotation.z = stat.coords.lat * Math.PI / 180;
         _this.delayedCall(_this.animateIn, 5000);
         _this.delayedCall(_this.animateOut, 14500)
     }
-    ;
-    this.animateIn = function() {
+        ;
+    this.animateIn = function () {
         AudioController.trigger("stats_in");
         _shader.tween("alpha", 0.2, 1000, "easeInOutSine")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         AudioController.trigger("stats_out");
         _shader.tween("alpha", 0, 1000, "easeInOutSine")
     }
@@ -31888,7 +32152,7 @@ Class(function StatsText() {
     Inherit(this, View);
     var _this = this;
     var $this, $text1, $text2;
-    (function() {
+    (function () {
         initHTML()
     }
     )();
@@ -31915,10 +32179,10 @@ Class(function StatsText() {
             marginTop: -20
         })
     }
-    this.animateIn = function(stat) {
-        var locationText = formatLocationText(stat.city || stat.address || "Planet Earth", stat.region || stat.address, stat.country_name || stat.country);
-        if (!locationText) {
-            locationText = stat.location || stat.address || stat.city || "Planet Earth"
+    this.animateIn = function (stat) {
+        var locationText = formatLiveLocationText(stat.city || stat.location || stat.address, stat.region, stat.country_name || stat.country);
+        if (!locationText || locationText === "Planet Earth") {
+            locationText = formatLocationText(stat.location || stat.address || "Planet Earth")
         }
         $text1.html(Copy.THROWN_TEXT[Utils.doRandom(0, Copy.THROWN_TEXT.length - 1)]).clearTransform().clearAlpha();
         $text2.html(locationText).clearTransform().clearAlpha();
@@ -31927,7 +32191,7 @@ Class(function StatsText() {
             fontSize: $text2.fontSize
         });
         $this.invisible().clearTransform().clearAlpha();
-        defer(function() {
+        defer(function () {
             $text1.words = SplitTextfield.split($text1, "word");
             $text2.words = SplitTextfield.split($text2);
             $this.visible();
@@ -31965,8 +32229,8 @@ Class(function StatsText() {
             _this.delayedCall(_this.animateOut, 10000)
         })
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         AudioController.trigger("stats_text_out");
         var delay = 0;
         for (var i = 0; i < $text1.words.length; i++) {
@@ -31990,7 +32254,7 @@ Class(function DOFPass(_nuke, _scene, _camera, _renderer) {
     Inherit(this, Component);
     var _this = this;
     var _rt, _depthShader, _shader;
-    (function() {
+    (function () {
         initDepthShader();
         initPass();
         initRT();
@@ -32020,7 +32284,7 @@ Class(function DOFPass(_nuke, _scene, _camera, _renderer) {
             format: THREE.RGBAFormat,
             stencilBuffer: false
         };
-        _rt = new THREE.WebGLRenderTarget(Stage.width,Stage.height,params);
+        _rt = new THREE.WebGLRenderTarget(Stage.width, Stage.height, params);
         _shader.depth = _rt
     }
     function initDepthShader() {
@@ -32042,7 +32306,7 @@ Class(function DOFPass(_nuke, _scene, _camera, _renderer) {
     function addListeners() {
         _this.events.subscribe(HydraEvents.RESIZE, initRT)
     }
-    this.render = function() {
+    this.render = function () {
         _shader.far = World.instance().camera.far;
         _shader.earth = Earth.instance().object3D.position;
         FXObjects.override(_depthShader.material);
@@ -32056,15 +32320,15 @@ Class(function FXObjects() {
     this.objects = [];
     this.OVERRIDE = "override";
     HydraEvents.createLocalEmitter(_this);
-    this.register = function(obj) {
+    this.register = function (obj) {
         _this.objects.push(obj)
     }
-    ;
-    this.remove = function(obj) {
+        ;
+    this.remove = function (obj) {
         _this.objects.findAndRemove(obj)
     }
-    ;
-    this.override = function(mat) {
+        ;
+    this.override = function (mat) {
         _this.fire("override", "override");
         for (var i = _this.objects.length - 1; i > -1; i--) {
             var obj = _this.objects[i];
@@ -32077,8 +32341,8 @@ Class(function FXObjects() {
             obj.material = obj.overrideMat
         }
     }
-    ;
-    this.reset = function() {
+        ;
+    this.reset = function () {
         _this.fire("override", "reset");
         for (var i = _this.objects.length - 1; i > -1; i--) {
             var obj = _this.objects[i];
@@ -32090,7 +32354,7 @@ Class(function AboutPrompt() {
     Inherit(this, View);
     var _this = this;
     var $this;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -32120,13 +32384,13 @@ Class(function AboutPrompt() {
         _this.events.subscribe(PlanesEvents.CONFIRMATION_HIDDEN, show);
         _this.events.subscribe(PlanesEvents.CANCEL, show)
     }
-    function hover() {}
+    function hover() { }
     function click() {
         if (_this.isTimeout) {
             return
         }
         _this.isTimeout = true;
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _this.isTimeout = false
         }, 1000);
         OverlayMobile.instance().animateIn();
@@ -32137,7 +32401,7 @@ Class(function AboutPrompt() {
     function hide() {
         $this.tween({
             opacity: 0
-        }, 500, "easeOutCubic", function() {
+        }, 500, "easeOutCubic", function () {
             $this.hide()
         })
     }
@@ -32154,7 +32418,7 @@ Class(function ConfirmationView(isNew) {
     var _this = this;
     var $this, $title, $text, $touchPrompt;
     var _earth, _flocking, _title;
-    (function() {
+    (function () {
         initHTML();
         style();
         initEarth();
@@ -32214,7 +32478,7 @@ Class(function ConfirmationView(isNew) {
     function addHandlers() {
         Stage.bind("touchstart", _this.animateOut)
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.css({
             opacity: 1
         });
@@ -32235,8 +32499,8 @@ Class(function ConfirmationView(isNew) {
         AudioController.trigger("lift_off");
         GATracker.trackEvent("confirmation", "click", "animate in", 1)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         GATracker.trackEvent("confirmation", "click", "animate out", 1);
         Stage.unbind("touchstart", _this.animateOut);
         $this.tween({
@@ -32244,7 +32508,7 @@ Class(function ConfirmationView(isNew) {
         }, 700, "easeInOutCubic");
         TweenManager.tween(_earth.object3D.position, {
             y: -50
-        }, 1000, "easeInCubic", function() {
+        }, 1000, "easeInCubic", function () {
             World.instance().scene.remove(_earth.object3D);
             World.instance().scene.remove(_flocking.object3D);
             _this.events.fire(PlanesEvents.PAUSE_FLOCKING);
@@ -32255,8 +32519,8 @@ Class(function ConfirmationView(isNew) {
         _flocking.animateOut();
         AudioController.trigger("tap")
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         Render.stop(loop);
         Stage.unbind("touchstart", _this.animateOut);
         World.instance().scene.remove(_earth.object3D);
@@ -32269,7 +32533,7 @@ Class(function IntroMobileView() {
     var _this = this;
     var $this, $message, $touchPrompt;
     var _logo, _title;
-    (function() {
+    (function () {
         initHTML();
         style();
         initViews()
@@ -32306,7 +32570,7 @@ Class(function IntroMobileView() {
     function initViews() {
         _logo = _this.initClass(IntroLogo)
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         _this.delayedCall(_logo.animateIn, 1000);
         _this.delayedCall(_logo.animateOut, 3300);
         _this.delayedCall(_title.animateIn, 4800);
@@ -32316,7 +32580,7 @@ Class(function IntroMobileView() {
             }).css({
                 opacity: 0
             });
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 $touchPrompt.tween({
                     opacity: 0.8,
                     y: 0
@@ -32324,8 +32588,8 @@ Class(function IntroMobileView() {
             }, 6500)
         }
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _title.animateOut();
         $touchPrompt.tween({
             opacity: 0
@@ -32337,7 +32601,7 @@ Class(function IntroLogo() {
     var _this = this;
     var $this, $plane, $logo, $nonIO;
     var _data, _svg;
-    (function() {
+    (function () {
         initHTML()
     }
     )();
@@ -32368,7 +32632,7 @@ Class(function IntroLogo() {
         $logo.size(320 * s, 65 * s).bg("assets/images/common/logo.png").center();
         $logo.invisible()
     }
-    this.animateIn = function(delay) {
+    this.animateIn = function (delay) {
         $this.visible().tween({
             opacity: 0.9
         }, 700, "easeOutSine");
@@ -32382,7 +32646,7 @@ Class(function IntroLogo() {
             rotation: 0,
             opacity: 1,
             scale: 1
-        }, 1700, "easeOutQuart", function() {
+        }, 1700, "easeOutQuart", function () {
             $plane.tween({
                 x: 100,
                 y: -200,
@@ -32391,8 +32655,8 @@ Class(function IntroLogo() {
             }, 1500, "easeInCubic", 200)
         })
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
         }, 1500, "easeOutSine")
@@ -32401,7 +32665,7 @@ Class(function IntroLogo() {
 Class(function IntroLogoSVG() {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     this.paperPlanes = "M295.421,31.078c-6.515,11.188-24.075,44.422-34.131,50.889c-1.841,1.181-3.445-2.077,0.378-9.488l2.738-7.034c0.755-1.935,0.991-3.21,0.991-4.201c0-5.995-9.017-10.338-12.463-13.359l2.833-6.939l-5.099-3.115c-3.446,1.085-7.694,5.334-7.694,9.535c0,2.03,1.085,3.588,2.596,5.193c-2.407,5.334-4.909,10.385-6.845,13.879c0.006,0.017,0.019,0.033,0.025,0.05c-0.008,0-0.018-0.003-0.025-0.003c-6.043,10.527-15.059,16.711-23.415,16.711c-10.621,0-7.458-9.96-7.458-9.96c13.879,1.651,20.818-2.267,24.5-10.386c5.287-11.377-1.511-17.892-10.527-17.892c-12.673,0-20.836,11.668-24,22.297c-5.61,9.345-11.465,14.603-18.391,17.263c3.398-3.399,11.849-17.467,11.849-28.324c0-6.09-2.69-11.188-8.969-11.188c-5.901,0-10.008,4.485-10.103,4.674l1.416-3.588H161.92l-8.644,21.357c-5.669,9.551-11.397,15.747-14.959,15.747c-1.699,0-3.021-1.511,0.661-10.621l10.621-26.483h-11.802l-2.36,5.665c0,0-1.558-6.751-9.347-6.751c-10.356,0-17.073,11.841-20.362,22.321c-5.596,9.3-11.44,14.538-18.348,17.191c3.399-3.399,11.849-17.467,11.849-28.324c0-6.09-2.69-11.188-8.969-11.188c-5.901,0-10.008,4.485-10.103,4.674l1.416-3.588H69.866l-24.265,59.953h11.802L75.39,61.479c2.737-3.918,6.42-7.034,9.441-7.034c1.746,0,2.596,1.133,2.596,3.493c0,7.789-8.639,25.587-13.643,25.587c-1.416,0-2.69-1.747-2.69-1.747l-3.918,3.588c0,0,2.879,5.192,12.981,5.192c9.494,0,17.22-4.596,23.194-11.08c-0.008,0.222-0.016,0.443-0.016,0.647c0,5.76,3.068,10.433,9.017,10.433c7.176,0,12.698-6.845,12.698-6.845s0.661,6.845,9.017,6.845c4.319,0,8.28-1.94,11.915-5.089l-8.327,20.573h11.802l17.986-44.563c2.737-3.918,6.42-7.034,9.441-7.034c1.746,0,2.596,1.133,2.596,3.493c0,7.789-8.639,25.587-13.643,25.587c-1.416,0-2.69-1.747-2.69-1.747l-3.919,3.588c0,0,2.88,5.192,12.982,5.192c10.043,0,18.108-5.143,24.214-12.225c0.709,7.669,5.957,12.225,15.724,12.225c15.153,0,25.113-10.952,30.873-21.007c2.407-4.343,4.674-8.78,6.845-13.784c2.455,2.077,4.201,3.54,4.201,5.192c0,0.425-0.094,1.274-0.755,2.927l-2.832,7.034c-5.948,14.634,0.094,18.458,6.515,19.638c17.277,3.258,38.143-48.34,43.524-57.356C300,31.786,297.027,31.173,295.421,31.078z M221.165,54.398c2.927,0,2.69,2.313,1.085,5.759c-1.746,4.296-4.579,7.979-12.368,6.704C209.882,66.861,214.651,54.398,221.165,54.398zM126.279,74.461c0,0-4.06,6.515-8.827,6.515c-1.7,0-2.691-0.896-2.691-3.163c0-5.759,6.515-23.084,13.643-23.084c3.824,0,3.824,5.099,3.824,5.099L126.279,74.461z M535.327,46.043l-10.056-2.927c-3.162,7.033-8.592,17.372-12.037,23.32c0.005,0.017,0.017,0.033,0.022,0.05c-0.007,0-0.015-0.003-0.022-0.003c-6.043,10.527-15.06,16.711-23.415,16.711c-10.621,0-7.459-9.96-7.459-9.96c13.879,1.651,20.818-2.267,24.501-10.386c5.287-11.377-1.511-17.892-10.527-17.892c-12.717,0-20.893,11.748-24.033,22.404c-5.728,9.6-11.435,15.833-15.007,15.833c-1.416,0-3.258-0.991,0.661-10.621l4.343-10.857c1.746-4.344,2.597-7.317,2.597-9.678c0-4.438-2.738-7.034-7.507-7.034c-5.806,0-11.329,3.918-12.981,5.523l1.747-4.438h-11.802l-8.75,21.615c-5.619,9.405-11.276,15.489-14.807,15.489c-1.699,0-3.021-1.511,0.661-10.621l10.621-26.483h-11.802l-2.36,5.665c0,0-1.558-6.751-9.347-6.751c-10.375,0-17.098,11.885-20.38,22.379c-5.696,9.614-11.543,15.859-15.12,15.859c-1.604,0-3.115-1.275,0.661-10.622l17.372-43.053H369.3l-15.352,37.826c-5.584,9.258-11.416,14.476-18.307,17.123c3.398-3.399,11.849-17.467,11.849-28.324c0-6.09-2.69-11.188-8.97-11.188c-5.9,0-10.008,4.485-10.102,4.674l1.416-3.588h-11.707l-24.265,59.953h11.802l17.985-44.563c2.738-3.918,6.421-7.034,9.441-7.034c1.747,0,2.597,1.133,2.597,3.493c0,7.789-8.639,25.587-13.643,25.587c-1.416,0-2.691-1.747-2.691-1.747l-3.918,3.588c0,0,2.88,5.192,12.982,5.192c8.787,0,16.058-3.938,21.829-9.666c-0.192,6.879,3.768,9.666,8.949,9.666c6.035,0,11.632-4.238,16.618-10.397c0.013,5.743,3.079,10.397,9.016,10.397c7.176,0,12.698-6.845,12.698-6.845s0.661,6.845,9.017,6.845c4.289,0,8.225-1.912,11.837-5.021l-1.593,3.936h11.802l11.707-28.938c3.588-4.107,7.459-5.948,9.631-5.948c1.274,0,2.171,0.661,2.171,1.747c0,1.274-1.274,4.438-2.927,8.45l-1.936,4.862c-5.947,14.822-2.266,20.912,5.854,20.912c6.788,0,12.663-4.771,17.905-11.702c0.897,7.35,6.119,11.702,15.659,11.702c15.153,0,25.114-10.952,30.874-21.007c-0.005-0.016-0.017-0.032-0.021-0.048c1.744-3.205,4.092-7.525,6.252-11.754c-0.142,4.957,0.189,10.574,0.189,14.398c0,8.025-1.699,10.196-4.532,10.196c-1.369,0-2.36-0.425-3.352-1.511l-6.42,4.013c0.188,0.473,3.823,5.429,13.312,5.665c10.716,0,11.235-9.017,11.235-9.017c0.377-1.464,0.566-2.927,0.566-5.287C534.666,71.109,532.919,57.75,535.327,46.043zM495.72,54.398c2.928,0,2.691,2.313,1.086,5.759c-1.746,4.296-4.579,7.979-12.368,6.704C484.438,66.861,489.206,54.398,495.72,54.398z M398.757,74.461c0,0-4.106,6.515-8.827,6.515c-1.7,0-2.691-0.896-2.691-3.163c0-5.759,6.515-23.084,13.644-23.084c3.823,0,3.823,5.099,3.823,5.099L398.757,74.461z";
     this.linePaper = "M77.64,31.653l-26.25,76.542c0,0,26.432-77.84,42.5-55.25c6.675,9.385-11,39.75-24.417,30.317c40.667,22.78,42.5-39.484,64.417-30.067c-24.917-9.583-38.943,57.868-8.75,27.25c11.501-11.663,19.833-38.333,19.833-38.333s-29.833,64.458,0.917,39.833c20.856-16.702,19.648-34.42,21.75-37.5c-6.102,10.934-19.901,55.436-24.833,65c13.25-42.098,42.01-76.545,43.833-54c1.212,14.984-11.949,35.282-25.256,27.948c24.193,15.166,31.273-14.455,47.256-12.448c21.229,2.666,32.654-27.882,9-21.75c-20.25,5.25-23.314,41.358-0.096,36.612c32.346-6.612,28.346-37.112,31.596-43.862c4.961,3.083,13.5,19.5,6,34s7.321,18.729,24-8.14c8.196-13.203,19.261-36.152,19.261-36.152";
@@ -32412,7 +32676,7 @@ Class(function _IntroLogo() {
     var _this = this;
     var $this, $plane, $linePlanes, $linePaper;
     var _data, _svg;
-    (function() {
+    (function () {
         initHTML();
         initData();
         initSVG();
@@ -32492,7 +32756,7 @@ Class(function _IntroLogo() {
             strokeDashoffset: length,
         })
     }
-    this.animateIn = function(delay) {
+    this.animateIn = function (delay) {
         $this.visible().css({
             opacity: 0
         }).tween({
@@ -32509,7 +32773,7 @@ Class(function _IntroLogo() {
             y: -20,
             rotation: -10,
             opacity: 1
-        }, 2300, "easeOutQuart", function() {
+        }, 2300, "easeOutQuart", function () {
             $plane.tween({
                 x: 100,
                 y: -200,
@@ -32519,19 +32783,19 @@ Class(function _IntroLogo() {
         });
         $linePaper.div.style[Device.styles.vendorTransition] = "stroke-dashoffset 800ms " + TweenManager.getEase("easeOutQuad");
         $linePlanes.div.style[Device.styles.vendorTransition] = "stroke-dashoffset 1200ms " + TweenManager.getEase("easeOutQuad");
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             $linePaper.css({
                 strokeDashoffset: 0
             })
         }, (delay || 0) + 500);
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             $linePlanes.css({
                 strokeDashoffset: 0
             })
         }, (delay || 0) + 1100)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
         }, 1000, "easeOutSine")
@@ -32542,7 +32806,7 @@ Class(function LoaderMobileView() {
     var _this = this;
     var $this, $logo, $spinner;
     var _spin;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -32582,7 +32846,7 @@ Class(function MyPlanesSwipePrompt() {
     var _swipe, _tweenIn;
     var _threshold = -120;
     var _velocity = 0;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -32671,12 +32935,12 @@ Class(function MyPlanesSwipePrompt() {
             }).tween({
                 opacity: 0.1
             }, 300, "easeOutSine");
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 complete(1)
             }, 100)
         }
     }
-    this.animateIn = function(callback) {
+    this.animateIn = function (callback) {
         $text.transform({
             y: 7
         });
@@ -32691,7 +32955,7 @@ Class(function MyPlanesSwipePrompt() {
             scaleX: 1,
             scaleY: 1,
             opacity: 0.85
-        }, (typeof callback == "function") ? 100 : 1200, "easeOutQuart", 800, function() {
+        }, (typeof callback == "function") ? 100 : 1200, "easeOutQuart", 800, function () {
             initInteraction();
             if (typeof callback == "function") {
                 callback()
@@ -32704,8 +32968,8 @@ Class(function MyPlanesSwipePrompt() {
             opacity: 1
         }, 1000, "easeOutQuart", 1000)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         if (_tweenIn && _tweenIn.stop) {
             _tweenIn.stop()
         }
@@ -32725,7 +32989,8 @@ Class(function MyPlanesDetailView(_data) {
     if (Hydra.HASH && Hydra.HASH.indexOf("force") !== -1) {
         _data.data.stamps = [{
             date: "05-18-2016",
-            address: "Melbourne, VIC",
+            address: "VIC",
+            region: "VIC",
             country: "Australia",
             coords: [-36.95, 146.07],
         }, {
@@ -32735,12 +33000,14 @@ Class(function MyPlanesDetailView(_data) {
             coords: [-29.62, 21.97],
         }, {
             date: "05-18-2016",
-            address: "Los Angeles, CA",
+            address: "CA",
+            region: "CA",
             country: "USA",
             coords: [35.38, -117.94],
         }, {
             date: "05-18-2016",
-            address: "Melbourne, VIC",
+            address: "VIC",
+            region: "VIC",
             country: "Australia",
             coords: [-36.95, 146.07],
         }, {
@@ -32750,12 +33017,14 @@ Class(function MyPlanesDetailView(_data) {
             coords: [-29.62, 21.97],
         }, {
             date: "05-18-2016",
-            address: "Los Angeles, CA",
+            address: "CA",
+            region: "CA",
             country: "USA",
             coords: [35.38, -117.94],
         }, {
             date: "05-18-2016",
-            address: "Melbourne, VIC",
+            address: "VIC",
+            region: "VIC",
             country: "Australia",
             coords: [-36.95, 146.07],
         }, {
@@ -32765,15 +33034,17 @@ Class(function MyPlanesDetailView(_data) {
             coords: [-29.62, 21.97],
         }, {
             date: "05-18-2016",
-            address: "Los Angeles, CA",
+            address: "CA",
+            region: "CA",
             country: "USA",
             coords: [35.38, -117.94],
-        }, ]
+        },]
     }
     if (Hydra.HASH && Hydra.HASH.indexOf("forceSame") !== -1) {
         _data.data.stamps = [{
             date: "05-18-2016",
-            address: "Los Angeles, CA",
+            address: "CA",
+            region: "CA",
             country: "USA",
             coords: [35.38, -117.94],
         }, {
@@ -32789,7 +33060,7 @@ Class(function MyPlanesDetailView(_data) {
         }]
     }
     var _beenThrown = _data.data.stamps.length > 1;
-    (function() {
+    (function () {
         initData();
         initHTML();
         style();
@@ -32797,7 +33068,7 @@ Class(function MyPlanesDetailView(_data) {
         addHandlers()
     }
     )();
-    function initData() {}
+    function initData() { }
     function initHTML() {
         $this = _this.element;
         $container = $this.create("Container");
@@ -32896,12 +33167,12 @@ Class(function MyPlanesDetailView(_data) {
     }
     function onClose() {
         if (_closePrompt) {
-            _closePrompt.animateOut(function() {
+            _closePrompt.animateOut(function () {
                 _closePrompt = _closePrompt.destroy()
             })
         }
         if (_sharePrompt) {
-            _sharePrompt.animateOut(function() {
+            _sharePrompt.animateOut(function () {
                 _sharePrompt = _sharePrompt.destroy()
             })
         }
@@ -32918,7 +33189,7 @@ Class(function MyPlanesDetailView(_data) {
         _plane.close()
     }
     function sharePlane() {
-        World.instance().getSnapshot(function(imageData) {
+        World.instance().getSnapshot(function (imageData) {
             if (imageData) {
                 var snapshot = World.instance().renderer.domElement.toDataURL("image/png");
                 var image = new Image();
@@ -32935,11 +33206,11 @@ Class(function MyPlanesDetailView(_data) {
                 logo.style.height = "auto";
                 document.body.appendChild(image);
                 document.body.appendChild(logo);
-                setTimeout(function() {
+                setTimeout(function () {
                     Mobile.Social.shareImage({
                         image: snapshot
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         document.body.removeChild(image);
                         document.body.removeChild(logo)
                     }, 250)
@@ -32947,7 +33218,7 @@ Class(function MyPlanesDetailView(_data) {
             }
         })
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.tween({
             x: 0
         }, 700, "slideInOut");
@@ -32959,8 +33230,8 @@ Class(function MyPlanesDetailView(_data) {
             _earth.animateIn(300)
         }
     }
-    ;
-    this.animateOut = function(callback) {
+        ;
+    this.animateOut = function (callback) {
         _plane.animateOut();
         if (_earth) {
             _earth.animateOut()
@@ -32969,15 +33240,15 @@ Class(function MyPlanesDetailView(_data) {
             x: Stage.width
         }, 700, "slideInOut", callback)
     }
-    ;
-    this.fadeOut = function(callback) {
+        ;
+    this.fadeOut = function (callback) {
         _plane.animateOut();
         if (_earth) {
             _earth.animateOut()
         }
         $this.tween({
             opacity: 0
-        }, 500, "easeInOutCubic", function() {
+        }, 500, "easeInOutCubic", function () {
             $this.transform({
                 x: Stage.width
             }).css({
@@ -32986,8 +33257,8 @@ Class(function MyPlanesDetailView(_data) {
             callback()
         })
     }
-    ;
-    this.onDestroy = function() {}
+        ;
+    this.onDestroy = function () { }
 });
 Class(function EarthDetail(_data) {
     Inherit(this, View);
@@ -32996,7 +33267,7 @@ Class(function EarthDetail(_data) {
     var _earth, _rotation, _curve, _timeline, _plane, _timerAutoplay;
     var _locations = [];
     var _locationMeshes = [];
-    (function() {
+    (function () {
         initHTML();
         style();
         initGeometry();
@@ -33029,7 +33300,7 @@ Class(function EarthDetail(_data) {
     }
     function initLocations() {
         var points = [];
-        _data.data.stamps.forEach(function(d) {
+        _data.data.stamps.forEach(function (d) {
             var location = _this.initClass(EarthDetailLocation, d, _earth);
             _locations.push(location);
             _locationMeshes.push(location.object3D.children[1]);
@@ -33051,24 +33322,24 @@ Class(function EarthDetail(_data) {
         _timeline = _this.initClass(EarthDetailTimeline, _locations, _rotation, _plane, _curve);
         _timeline.element.hide()
     }
-    this.animateIn = function(delay) {
+    this.animateIn = function (delay) {
         World.instance().scene.add(_earth.object3D);
         _earth.object3D.position.x = -40;
         TweenManager.tween(_earth.object3D.position, {
             x: 0
         }, 700, "slideInOut", delay || 0)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _locations.forEach(hideLocation);
         TweenManager.tween(_earth.object3D.position, {
             x: -40
-        }, 700, "slideInOut", function() {
+        }, 700, "slideInOut", function () {
             World.instance().scene.remove(_earth.object3D)
         })
     }
-    ;
-    this.shiftIn = function() {
+        ;
+    this.shiftIn = function () {
         if (!_this.isShiftedOut) {
             return
         }
@@ -33079,17 +33350,17 @@ Class(function EarthDetail(_data) {
             y: -25
         }, 700, "slideInOut", 100)
     }
-    ;
-    this.shiftOut = function() {
+        ;
+    this.shiftOut = function () {
         _this.isShiftedOut = true;
         TweenManager.tween(_earth.object3D.position, {
             y: -40
-        }, 700, "slideInOut", function() {
+        }, 700, "slideInOut", function () {
             World.instance().scene.remove(_earth.object3D)
         })
     }
-    ;
-    this.deactivate = function() {
+        ;
+    this.deactivate = function () {
         $rotateCatcher.hide();
         if (_timeline) {
             _timeline.element.hide()
@@ -33112,8 +33383,8 @@ Class(function EarthDetail(_data) {
             y: -25
         }, 600, "slideInOut")
     }
-    ;
-    this.activate = function() {
+        ;
+    this.activate = function () {
         $rotateCatcher.show();
         if (_timeline) {
             _timeline.element.show()
@@ -33127,7 +33398,7 @@ Class(function EarthDetail(_data) {
             _plane.animateIn()
         }
         if (_timeline) {
-            _timerAutoplay = _this.delayedCall(function() {
+            _timerAutoplay = _this.delayedCall(function () {
                 _timeline.autoPlay()
             }, 800)
         }
@@ -33135,8 +33406,8 @@ Class(function EarthDetail(_data) {
             y: -2
         }, 800, "slideInOut")
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         World.instance().scene.remove(_earth.object3D)
     }
 });
@@ -33144,46 +33415,46 @@ Class(function EarthDetailCurve(_initialPoints, _earth) {
     Inherit(this, Component);
     var _this = this;
     var _mesh, _curve, _material, _timer;
-    (function() {
+    (function () {
         initCurve()
     }
     )();
     function initCurve() {
         var initialCurve = new THREE.CatmullRomCurve3(_initialPoints);
         var points = initialCurve.getPoints(_initialPoints.length * 30);
-        points.forEach(function(p) {
+        points.forEach(function (p) {
             p.multiplyScalar(160 / p.length())
         });
         _curve = new THREE.CatmullRomCurve3(points);
         var geometry = new THREE.Geometry();
         geometry.vertices = _curve.getPoints(points.length);
         _material = EarthDetailCurve.getMaterial();
-        _mesh = new THREE.Line(geometry,_material);
+        _mesh = new THREE.Line(geometry, _material);
         _mesh.frustumCulled = false;
         _earth.object3D.add(_mesh);
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _mesh.visible = false
         }, 100)
     }
-    this.get("mesh", function() {
+    this.get("mesh", function () {
         return _mesh
     });
-    this.get("curve", function() {
+    this.get("curve", function () {
         return _curve
     });
-    this.animateIn = function() {
+    this.animateIn = function () {
         _mesh.visible = true;
         EarthDetailCurve.animateInLine()
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         EarthDetailCurve.animateOutLine();
-        _timer = _this.delayedCall(function() {
+        _timer = _this.delayedCall(function () {
             _mesh.visible = false
         }, 500)
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         if (_timer) {
             clearTimeout(_timer)
         }
@@ -33191,9 +33462,9 @@ Class(function EarthDetailCurve(_initialPoints, _earth) {
         _earth.object3D.remove(_mesh);
         _mesh.geometry.dispose()
     }
-}, function() {
+}, function () {
     var _material;
-    EarthDetailCurve.getMaterial = function() {
+    EarthDetailCurve.getMaterial = function () {
         if (_material) {
             return _material
         }
@@ -33204,14 +33475,14 @@ Class(function EarthDetailCurve(_initialPoints, _earth) {
         });
         return _material
     }
-    ;
-    EarthDetailCurve.animateInLine = function() {
+        ;
+    EarthDetailCurve.animateInLine = function () {
         TweenManager.tween(_material, {
             opacity: 1
         }, 500, "easeInOutCubic", 500)
     }
-    ;
-    EarthDetailCurve.animateOutLine = function() {
+        ;
+    EarthDetailCurve.animateOutLine = function () {
         TweenManager.tween(_material, {
             opacity: 0
         }, 500, "easeInOutCubic")
@@ -33222,7 +33493,7 @@ Class(function EarthDetailLocation(_data, _earth) {
     var _this = this;
     var _shader, _popup, _timeoutPopup;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initGeometry();
         initPopup()
     }
@@ -33232,22 +33503,22 @@ Class(function EarthDetailLocation(_data, _earth) {
         if (EarthDetailLocation.CYLINDER_GEOMETRY) {
             geometry = EarthDetailLocation.CYLINDER_GEOMETRY
         } else {
-            geometry = new THREE.CylinderBufferGeometry(10,1,30,16,1,true);
+            geometry = new THREE.CylinderBufferGeometry(10, 1, 30, 16, 1, true);
             geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI / 2));
             EarthDetailLocation.CYLINDER_GEOMETRY = geometry
         }
         _shader = EarthDetailLocation.getShader();
-        var mesh = new THREE.Mesh(geometry,_shader.material);
+        var mesh = new THREE.Mesh(geometry, _shader.material);
         mesh.position.x = 160;
         _this.object3D.add(mesh);
         if (EarthDetailLocation.CLICK_GEOMETRY) {
             geometry = EarthDetailLocation.CLICK_GEOMETRY
         } else {
-            geometry = new THREE.IcosahedronGeometry(30,1);
+            geometry = new THREE.IcosahedronGeometry(30, 1);
             EarthDetailLocation.CLICK_GEOMETRY = geometry
         }
         var material = EarthDetailLocation.getClickMaterial();
-        var clickMesh = new THREE.Mesh(geometry,material);
+        var clickMesh = new THREE.Mesh(geometry, material);
         clickMesh.position.x = 160;
         _this.object3D.add(clickMesh);
         _this.object3D.rotation.reorder("YXZ");
@@ -33261,37 +33532,37 @@ Class(function EarthDetailLocation(_data, _earth) {
     function initPopup() {
         _popup = _this.initClass(EarthDetailLocationPopup, _data, [Stage])
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         EarthDetailLocation.animateIn()
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         EarthDetailLocation.animateOut();
         _popup.animateOut(true)
     }
-    ;
-    this.showPopup = function() {
+        ;
+    this.showPopup = function () {
         _popup.animateIn();
         _timeoutPopup = _this.delayedCall(_this.hidePopup, 1500)
     }
-    ;
-    this.hidePopup = function() {
+        ;
+    this.hidePopup = function () {
         if (_timeoutPopup) {
             clearTimeout(_timeoutPopup)
         }
         _popup.animateOut()
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         _earth.object3D.remove(_this.object3D)
     }
-}, function() {
+}, function () {
     var _shader, _material;
-    EarthDetailLocation.getShader = function() {
+    EarthDetailLocation.getShader = function () {
         if (_shader) {
             return _shader
         }
-        _shader = new Shader("EarthLocations","EarthLocations");
+        _shader = new Shader("EarthLocations", "EarthLocations");
         _shader.uniforms = {
             time: {
                 type: "f",
@@ -33307,22 +33578,22 @@ Class(function EarthDetailLocation(_data, _earth) {
         _shader.material.depthWrite = false;
         return _shader
     }
-    ;
-    EarthDetailLocation.animateIn = function() {
+        ;
+    EarthDetailLocation.animateIn = function () {
         _shader.tween("alpha", 1, 500, "easeInOutCubic", 500);
         Render.start(loop)
     }
-    ;
-    EarthDetailLocation.animateOut = function() {
-        _shader.tween("alpha", 0, 500, "easeInOutCubic", function() {
+        ;
+    EarthDetailLocation.animateOut = function () {
+        _shader.tween("alpha", 0, 500, "easeInOutCubic", function () {
             Render.stop(loop)
         })
     }
-    ;
+        ;
     function loop(t, dt) {
         _shader.uniforms.time.value = dt
     }
-    EarthDetailLocation.getClickMaterial = function() {
+    EarthDetailLocation.getClickMaterial = function () {
         if (_material) {
             return _material
         }
@@ -33340,7 +33611,7 @@ Class(function EarthDetailLocationPopup(_data) {
     Inherit(this, View);
     var _this = this;
     var $this, $text1, $text2;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -33374,7 +33645,7 @@ Class(function EarthDetailLocationPopup(_data) {
             opacity: 0
         }).hide()
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.transform({
             x: -3,
             y: -6
@@ -33385,18 +33656,18 @@ Class(function EarthDetailLocationPopup(_data) {
             y: 0
         }, 500, "easeOutCubic", 300)
     }
-    ;
-    this.animateOut = function(isHaste) {
+        ;
+    this.animateOut = function (isHaste) {
         $this.tween({
             opacity: 0,
             x: 3,
             y: 6
-        }, isHaste ? 200 : 500, "easeInOutCubic", function() {
+        }, isHaste ? 200 : 500, "easeInOutCubic", function () {
             $this.hide()
         })
     }
-    ;
-    this.onDestroy = function() {}
+        ;
+    this.onDestroy = function () { }
 });
 Class(function EarthDetailRotation(_catcher, _earth, _data, _locationMeshes, _locations) {
     Inherit(this, Component);
@@ -33410,7 +33681,7 @@ Class(function EarthDetailRotation(_catcher, _earth, _data, _locationMeshes, _lo
     };
     var _animRotation = new THREE.Vector3();
     this.progress = 0;
-    (function() {
+    (function () {
         initInteraction();
         Render.start(loop)
     }
@@ -33470,11 +33741,11 @@ Class(function EarthDetailRotation(_catcher, _earth, _data, _locationMeshes, _lo
             _this.rotateTo(index, 700, "easeOutCubic")
         }
     }
-    this.resetAnim = function() {
+    this.resetAnim = function () {
         _animRotation.set(_earth.object3D.rotation.x, _earth.object3D.rotation.y, 0)
     }
-    ;
-    this.rotateTo = function(index, duration, ease, callback) {
+        ;
+    this.rotateTo = function (index, duration, ease, callback) {
         if (_currentLocation) {
             _currentLocation.hidePopup()
         }
@@ -33507,8 +33778,8 @@ Class(function EarthDetailRotation(_catcher, _earth, _data, _locationMeshes, _lo
         _animTween = TweenManager.tween(_animRotation, {
             x: x,
             y: y
-        }, duration || 1000, ease || "easeInOutCubic", function() {
-            _timerInertia = _this.delayedCall(function() {
+        }, duration || 1000, ease || "easeInOutCubic", function () {
+            _timerInertia = _this.delayedCall(function () {
                 _this.isAnimating = false;
                 TweenManager.tween(_autoPlayStrength, {
                     value: 1
@@ -33519,16 +33790,16 @@ Class(function EarthDetailRotation(_catcher, _earth, _data, _locationMeshes, _lo
             }
         })
     }
-    ;
-    this.activate = function() {
+        ;
+    this.activate = function () {
         _this.isActive = true
     }
-    ;
-    this.deactivate = function() {
+        ;
+    this.deactivate = function () {
         _this.isActive = false
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         if (_animTween && _animTween.stop) {
             _animTween.stop()
         }
@@ -33546,7 +33817,7 @@ Class(function EarthDetailTimeline(_locations, _rotation, _plane, _curve) {
     var _points = [];
     var _current = 0;
     var _gutter = 80;
-    (function() {
+    (function () {
         initHTML();
         style();
         initInteraction()
@@ -33558,7 +33829,7 @@ Class(function EarthDetailTimeline(_locations, _rotation, _plane, _curve) {
         $touchCatcher = $this.create("TouchCatcher");
         $lineMask = $container.create("LineMask");
         $line = $lineMask.create("Line");
-        _locations.forEach(function() {
+        _locations.forEach(function () {
             var $point = $container.create("Point");
             _points.push($point)
         });
@@ -33585,7 +33856,7 @@ Class(function EarthDetailTimeline(_locations, _rotation, _plane, _curve) {
             background: "#fff",
             marginRight: 6,
         });
-        _points.forEach(function($point, i) {
+        _points.forEach(function ($point, i) {
             $point.size(5, 5).center().css({
                 left: i * (100 / (_points.length - 1)) + "%",
                 background: "#fff",
@@ -33678,7 +33949,7 @@ Class(function EarthDetailTimeline(_locations, _rotation, _plane, _curve) {
         _plane.animateOut()
     }
     this.stopAutoPlay = stopAutoPlay;
-    this.autoPlay = function() {
+    this.autoPlay = function () {
         _plane.animateIn();
         _current = 0;
         _rotation.resetAnim();
@@ -33687,7 +33958,7 @@ Class(function EarthDetailTimeline(_locations, _rotation, _plane, _curve) {
         var temp = {
             a: 0
         };
-        var onUpdate = function(e) {
+        var onUpdate = function (e) {
             var index = Math.round(temp.a + 0.3);
             if (index !== _current) {
                 _current = index;
@@ -33704,15 +33975,15 @@ Class(function EarthDetailTimeline(_locations, _rotation, _plane, _curve) {
             _plane.group.lookAt(_curve.curve.getPoint(Math.max(0, e - 0.01)));
             _plane.group.rotation.z += _plane.group.position.y * -0.007 + Math.PI / 2
         };
-        var onComplete = function() {
+        var onComplete = function () {
             _plane.animateOut()
         };
         _tweenAuto = TweenManager.tween(temp, {
             a: _locations.length - 1
         }, _locations.length * 1500, "linear", 1000, onComplete, onUpdate)
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         if (_tweenAuto && _tweenAuto.stop) {
             _tweenAuto.stop()
         }
@@ -33722,7 +33993,7 @@ Class(function DetailBackPrompt() {
     Inherit(this, View);
     var _this = this;
     var $this, $overlay;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -33750,7 +34021,7 @@ Class(function DetailBackPrompt() {
     function addHandlers() {
         $this.touchClick(hover, click)
     }
-    function hover() {}
+    function hover() { }
     function click() {
         $overlay.css({
             opacity: 0.2
@@ -33764,7 +34035,7 @@ Class(function DetailBackPrompt() {
         }, 600, "easeOutCubic");
         _this.events.fire(PlanesEvents.PLANE_DETAIL_CLOSE)
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.show().css({
             opacity: 0
         }).transform({
@@ -33774,12 +34045,12 @@ Class(function DetailBackPrompt() {
             x: 0
         }, 1000, "easeOutCubic")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0,
             x: -5
-        }, 800, "easeInCubic", function() {
+        }, 800, "easeInCubic", function () {
             $this.hide()
         })
     }
@@ -33788,7 +34059,7 @@ Class(function DetailInfoView(_data) {
     Inherit(this, View);
     var _this = this;
     var $this, $title, $text, $number, $icon, $arrows, $up, $down;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -33811,7 +34082,7 @@ Class(function DetailInfoView(_data) {
             fontSize: 32,
             fontWeight: "bold",
         });
-        var locationText = _data.data.location || _data.data.address || formatLocationText(_data.data.city, _data.data.region, _data.data.country_name || _data.data.country);
+        var locationText = formatLiveLocationText(_data.data.city || _data.data.location || _data.data.address, _data.data.region, _data.data.country_name || _data.data.country);
         $text.html("Created " + _data.data.date + "<br />in " + locationText).css({
             left: 0,
             right: 0,
@@ -33859,7 +34130,7 @@ Class(function DetailInfoView(_data) {
             })
         }
     }
-    this.up = function() {
+    this.up = function () {
         $title.tween({
             y: -50
         }, 500, "easeOutCubic");
@@ -33883,8 +34154,8 @@ Class(function DetailInfoView(_data) {
             }, 300, "easeOutSine")
         }
     }
-    ;
-    this.down = function() {
+        ;
+    this.down = function () {
         $title.tween({
             y: 0
         }, 900, "easeInOutCubic");
@@ -33908,8 +34179,8 @@ Class(function DetailInfoView(_data) {
             }, 300, "easeOutSine", 300)
         }
     }
-    ;
-    this.fadeOut = function() {
+        ;
+    this.fadeOut = function () {
         if ($arrows) {
             $arrows.tween({
                 opacity: 0,
@@ -33917,8 +34188,8 @@ Class(function DetailInfoView(_data) {
             }, 700, "easeInCubic")
         }
     }
-    ;
-    this.fadeIn = function() {
+        ;
+    this.fadeIn = function () {
         if ($arrows) {
             $arrows.tween({
                 opacity: 1,
@@ -33926,8 +34197,8 @@ Class(function DetailInfoView(_data) {
             }, 700, "easeOutCubic")
         }
     }
-    ;
-    this.animateIn = function() {
+        ;
+    this.animateIn = function () {
         if ($arrows) {
             $arrows.tween({
                 opacity: 1,
@@ -33940,7 +34211,7 @@ Class(function DetailPinchInstructions(_data) {
     Inherit(this, View);
     var _this = this;
     var $this;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -33961,34 +34232,34 @@ Class(function DetailPinchInstructions(_data) {
             letterSpacing: 0.5
         })
     }
-    this.animateIn = function(delay) {
+    this.animateIn = function (delay) {
         $this.tween({
             opacity: 0.5
         }, 500, "easeOutSine", delay || 0)
     }
-    ;
-    this.fadeOut = function() {
+        ;
+    this.fadeOut = function () {
         $this.tween({
             opacity: 0,
             y: -10
         }, 300, "easeInCubic")
     }
-    ;
-    this.fadeIn = function() {
+        ;
+    this.fadeIn = function () {
         $this.tween({
             opacity: 0.5,
             y: 0
         }, 700, "easeOutCubic")
     }
-    ;
-    this.activate = function() {
+        ;
+    this.activate = function () {
         $this.tween({
             opacity: 0.5,
             y: 0
         }, 800, "slideInOut")
     }
-    ;
-    this.deactivate = function() {
+        ;
+    this.deactivate = function () {
         $this.tween({
             opacity: 0,
             y: -40
@@ -33999,7 +34270,7 @@ Class(function DetailStatsView(_data) {
     Inherit(this, View);
     var _this = this;
     var $this, $label, $stat;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -34070,20 +34341,20 @@ Class(function DetailStatsView(_data) {
     function toMiles(value) {
         return value * 0.621371
     }
-    this.animateIn = function(delay) {
+    this.animateIn = function (delay) {
         $this.tween({
             x: 0
         }, 700, "slideInOut", delay || 0)
     }
-    ;
-    this.fadeOut = function() {
+        ;
+    this.fadeOut = function () {
         $this.tween({
             opacity: 0,
             y: 10
         }, 300, "easeInCubic")
     }
-    ;
-    this.fadeIn = function() {
+        ;
+    this.fadeIn = function () {
         $this.tween({
             opacity: 1,
             y: 0
@@ -34096,7 +34367,7 @@ Class(function MyPlanesList() {
     var $this, $title, $container;
     var _data, _count, _dw;
     var _items = [];
-    (function() {
+    (function () {
         initData();
         initHTML();
         style();
@@ -34107,7 +34378,7 @@ Class(function MyPlanesList() {
     function initData() {
         _data = Data.Planes.getCreatedPlanes();
         _count = _data.length;
-        _data.sort(function(a, b) {
+        _data.sort(function (a, b) {
             return b.number - a.number
         })
     }
@@ -34165,7 +34436,7 @@ Class(function MyPlanesList() {
             return
         }
         _dw = new DistributedWorker(2);
-        _dw.start(function() {
+        _dw.start(function () {
             _items.push(_this.initClass(MyPlanesListItem, _data[index], index, [$container]));
             if (index++ >= _data.length - 1) {
                 _dw.stop()
@@ -34187,11 +34458,11 @@ Class(function MyPlanesList() {
         $this.show()
     }
     function updateList() {
-        Data.Planes.refreshPlanes(function() {
+        Data.Planes.refreshPlanes(function () {
             if (_dw) {
                 _dw.stop()
             }
-            _items.forEach(function(item) {
+            _items.forEach(function (item) {
                 item.destroy()
             });
             _items = [];
@@ -34204,14 +34475,14 @@ Class(function MyPlanesList() {
             $title.html(text)
         })
     }
-    this.animateOut = function(callback) {
+    this.animateOut = function (callback) {
         $title.tween({
             opacity: 0
         }, 300, "easeOutCubic");
         $this.tween({
             opacity: 0,
             y: 100
-        }, 300, "easeOutCubic", function() {
+        }, 300, "easeOutCubic", function () {
             $this.transform({
                 y: Stage.height,
                 x: 0
@@ -34224,16 +34495,16 @@ Class(function MyPlanesList() {
             }
         })
     }
-    ;
-    this.animateShiftOut = function() {
+        ;
+    this.animateShiftOut = function () {
         $this.tween({
             x: -Stage.width
         }, 600, "slideInOut", 50);
         AudioController.trigger("plane_stats_in");
         AudioController.trigger("tap")
     }
-    ;
-    this.animateShiftIn = function() {
+        ;
+    this.animateShiftIn = function () {
         $this.tween({
             x: 0
         }, 700, "slideInOut", 50);
@@ -34245,7 +34516,7 @@ Class(function MyPlanesListItem(_data, _index) {
     Inherit(this, View);
     var _this = this;
     var $this, $overlay, $text, $created, $number, $icon, $plane;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -34324,7 +34595,7 @@ Class(function MyPlanesListItem(_data, _index) {
         $this.touchClick(hover, click)
     }
     function hover(e) {
-        if (e.action == "over") {} else {}
+        if (e.action == "over") { } else { }
     }
     function click(e) {
         var top = _index * 83 - $this.div.parentNode.scrollTop;
@@ -34344,7 +34615,7 @@ Class(function MyPlanesListItem(_data, _index) {
             scaleY: 1.8,
             opacity: 0
         }, 1000, "easeOutCubic");
-        defer(function() {
+        defer(function () {
             _this.events.fire(PlanesEvents.PLANE_LIST_SELECT, {
                 data: _data
             })
@@ -34356,7 +34627,7 @@ Class(function NetView() {
     var _this = this;
     var _net, _netBase, _animation;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initGeometries()
     }
     )();
@@ -34378,7 +34649,7 @@ Class(function NetView() {
         _this.animateOut = _animation.animateOut
     }
     function addHandlers() {
-        __window.bind("keydown", function(e) {
+        __window.bind("keydown", function (e) {
             if (_animation.stopCatching) {
                 return
             }
@@ -34407,7 +34678,7 @@ Class(function NetView() {
             _this.events.fire(PlanesEvents.CATCH_PLANE)
         }
     }
-    this.init = function() {
+    this.init = function () {
         initAnimation();
         addHandlers()
     }
@@ -34421,7 +34692,7 @@ Class(function NetAnimation(_net, _netBase, _container) {
     var _shaleVel = 0;
     var _time = 0;
     var _shake = 1;
-    (function() {
+    (function () {
         initAccel();
         Render.start(loop);
         animateInStart()
@@ -34480,21 +34751,21 @@ Class(function NetAnimation(_net, _netBase, _container) {
         _net.shader.tween("alpha", 1, 3000, "easeOutSine", delay + 500);
         _netBase.shader.tween("alpha", 1, 2000, "easeOutSine", delay + 500)
     }
-    this.get("shake", function() {
+    this.get("shake", function () {
         return _shake
     });
-    this.set("shake", function(value) {
+    this.set("shake", function (value) {
         _shake = value
     });
-    this.catchPlane = function() {
+    this.catchPlane = function () {
         _this.stopCatching = true;
         var temp = {
             a: _shake
         };
-        var onUpdate = function() {
+        var onUpdate = function () {
             _shake = temp.a
         };
-        var onComplete = function() {
+        var onComplete = function () {
             TweenManager.tween(temp, {
                 a: 0.5
             }, 800, "easeInOutCubic", 0, null, onUpdate)
@@ -34504,18 +34775,18 @@ Class(function NetAnimation(_net, _netBase, _container) {
         }, 100, "easeOutCubic", 0, onComplete, onUpdate);
         _fadeTwn = _this.delayedCall(_this.animateOut, 1500)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _this.stopCatching = true;
         _net.shader.tween("alpha", 0, 500, "easeOutCubic");
-        _netBase.shader.tween("alpha", 0, 500, "easeOutCubic", function() {
+        _netBase.shader.tween("alpha", 0, 500, "easeOutCubic", function () {
             Render.stop(loop);
             _container.remove(_netBase.object3D);
             _container.remove(_net.object3D)
         })
     }
-    ;
-    this.renewNet = function() {
+        ;
+    this.renewNet = function () {
         if (_fadeTwn) {
             clearTimeout(_fadeTwn)
         }
@@ -34524,12 +34795,12 @@ Class(function NetAnimation(_net, _netBase, _container) {
         _shake = 1;
         Render.start(loop);
         _net.shader.tween("alpha", 1, 1200, "easeOutCubic");
-        _netBase.shader.tween("alpha", 1, 1200, "easeOutCubic", function() {
+        _netBase.shader.tween("alpha", 1, 1200, "easeOutCubic", function () {
             _this.stopCatching = false
         })
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         Render.stop(loop)
     }
 });
@@ -34538,7 +34809,7 @@ Class(function NetBaseGeometry() {
     var _this = this;
     var _geometry, _shader;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initGeometry();
         initShader();
         initMesh()
@@ -34547,15 +34818,15 @@ Class(function NetBaseGeometry() {
     function initGeometry() {
         _geometry = new THREE.BufferGeometry();
         var data = Hydra.JSON.netBase;
-        var position = new THREE.BufferAttribute(new Float32Array(data.position),3);
-        var normal = new THREE.BufferAttribute(new Float32Array(data.normal),3);
-        var uv = new THREE.BufferAttribute(new Float32Array(data.uv),2);
+        var position = new THREE.BufferAttribute(new Float32Array(data.position), 3);
+        var normal = new THREE.BufferAttribute(new Float32Array(data.normal), 3);
+        var uv = new THREE.BufferAttribute(new Float32Array(data.uv), 2);
         _geometry.addAttribute("position", position);
         _geometry.addAttribute("normal", normal);
         _geometry.addAttribute("uv", uv)
     }
     function initShader() {
-        _shader = new Shader("NetBase","NetBase");
+        _shader = new Shader("NetBase", "NetBase");
         _shader.uniforms = {
             alpha: {
                 type: "f",
@@ -34569,13 +34840,13 @@ Class(function NetBaseGeometry() {
         _shader.material.transparent = true
     }
     function initMesh() {
-        var mesh = new THREE.Mesh(_geometry,_shader.material);
+        var mesh = new THREE.Mesh(_geometry, _shader.material);
         mesh.frustumCulled = false;
         _this.object3D.add(mesh);
         _this.object3D.position.set(2, 15, 0);
         _this.object3D.rotation.z = 0.4
     }
-    this.get("shader", function() {
+    this.get("shader", function () {
         return _shader
     })
 });
@@ -34584,7 +34855,7 @@ Class(function NetGeometry() {
     var _this = this;
     var _geometry, _shader, _accel;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initGeometry();
         initShader();
         initMesh()
@@ -34593,15 +34864,15 @@ Class(function NetGeometry() {
     function initGeometry() {
         _geometry = new THREE.BufferGeometry();
         var data = Hydra.JSON.net;
-        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices),3);
+        var vertices = new THREE.BufferAttribute(new Float32Array(data.vertices), 3);
         _geometry.addAttribute("position", vertices)
     }
     function initShader() {
-        _shader = new Shader("Net","Net");
+        _shader = new Shader("Net", "Net");
         _shader.uniforms = {
             control: {
                 type: "v3",
-                value: new THREE.Vector3(-15,0,0)
+                value: new THREE.Vector3(-15, 0, 0)
             },
             flaccid: {
                 type: "f",
@@ -34634,7 +34905,7 @@ Class(function NetGeometry() {
         _this.object3D.position.set(2, 15, 0);
         _this.object3D.rotation.z = 0.4
     }
-    this.get("shader", function() {
+    this.get("shader", function () {
         return _shader
     })
 });
@@ -34643,7 +34914,7 @@ Class(function OverlayMobileView(_text) {
     var _this = this;
     var $this, $wrapper, $logo, $text1, $text2, $text3, $text4, $gps, $close;
     var _fallback = Tests.NO_CSS_BLEND();
-    (function() {
+    (function () {
         initHTML();
         initLogo();
         initText();
@@ -34695,7 +34966,7 @@ Class(function OverlayMobileView(_text) {
             $text2.css({
                 color: "#9da4e1"
             });
-            defer(function() {
+            defer(function () {
                 var list = $text2.div.getElementsByTagName("a");
                 console.log(list);
                 for (var i = 0; i < list.length; i++) {
@@ -34753,14 +35024,14 @@ Class(function OverlayMobileView(_text) {
             })
         }
         $gps.html(Copy.INFO_GPS_2);
-        $gps.interact(null, function() {
+        $gps.interact(null, function () {
             Data.User.getAccurateGeo();
             $text4.tween({
                 opacity: 0
             }, 300, "easeOutSine");
             $gps.tween({
                 opacity: 0
-            }, 300, "easeOutSine", function() {
+            }, 300, "easeOutSine", function () {
                 $gps.hide();
                 $text4.hide()
             })
@@ -34792,7 +35063,7 @@ Class(function OverlayMobileView(_text) {
         });
         OverlayMobile.instance().animateOut()
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $wrapper.size(220, Data.User.usingAccurateGeo() ? 340 : 400).center();
         _this.isVisible = true;
         $this.visible();
@@ -34868,7 +35139,7 @@ Class(function PlaneButterflies() {
     var _numParticles = Math.round((Device.mobile ? 10 : Config.BUTTERFLY_COUNT) * Tests.getPlaneReduce());
     var _numThreads = Config.BUTTERFLY_THREAD_COUNT;
     var _chunks = [];
-    (function() {
+    (function () {
         initPlanes()
     }
     )();
@@ -34886,7 +35157,7 @@ Class(function PlaneButterflies() {
         }
     }
     function callChunks(func, args) {
-        _chunks.forEach(function(chunk) {
+        _chunks.forEach(function (chunk) {
             if (typeof chunk[func] == "function") {
                 chunk[func](args)
             }
@@ -34908,19 +35179,19 @@ Class(function PlaneButterflies() {
     function hidePlanes() {
         _planes.shader.uniforms.alpha.value = 0
     }
-    this.init = function() {
+    this.init = function () {
         initChunks();
         addHandlers();
         animateInStart()
     }
-    ;
-    this.pause = function() {
-        _planes.fadeOut(function() {
+        ;
+    this.pause = function () {
+        _planes.fadeOut(function () {
             callChunks("pause")
         })
     }
-    ;
-    this.resume = function() {
+        ;
+    this.resume = function () {
         _planes.fadeIn();
         callChunks("resume")
     }
@@ -34930,26 +35201,26 @@ Class(function ButterfliesBehavior(_boundary) {
     var _this = this;
     var _delta = new Vector3();
     var _points = [];
-    this.addPoint = function(pos, radius, strength) {
+    this.addPoint = function (pos, radius, strength) {
         pos.radius = radius;
         pos.strength = strength;
         pos.radiusSq = pos.radius * pos.radius;
         _points.push(pos)
     }
-    ;
+        ;
     function contain(p) {
         if (p.pos.x < -_boundary * 2) {
             p.pos.set(p.pos.x + _boundary * 4, Utils.doRandom(-_boundary, _boundary) - 50, Utils.doRandom(-_boundary, _boundary));
             p.vel.set(Utils.doRandom(-10, -100), Utils.doRandom(-20, 20), Utils.doRandom(-100, 100))
         }
     }
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         contain(p);
         p.acc.x -= 100 * p.speed;
         p.acc.y += 40 * p.speed;
         _delta.copyFrom(p.pos);
         var distSq = _delta.lengthSq();
-        _points.forEach(function(point, i) {
+        _points.forEach(function (point, i) {
             if (distSq < point.radiusSq && distSq > 0.000001) {
                 _delta.normalize().multiply(1 - distSq / point.radiusSq);
                 p.acc.add(_delta.multiply(point.strength))
@@ -34960,14 +35231,14 @@ Class(function ButterfliesBehavior(_boundary) {
 Class(function ButterfliesRotation() {
     Inherit(this, Component);
     var _this = this;
-    var _origin = new Vector3(0,0,-1);
+    var _origin = new Vector3(0, 0, -1);
     var _u = new Vector3();
     var _c = new Vector3();
-    var _axis = new Vector3(0,0,-1);
+    var _axis = new Vector3(0, 0, -1);
     var _z = new THREE.Quaternion();
-    (function() {}
+    (function () { }
     )();
-    this.applyBehavior = function(p) {
+    this.applyBehavior = function (p) {
         _u.copyFrom(p.vel);
         _u.normalize();
         _c.copyFrom(_u);
@@ -34985,7 +35256,7 @@ Class(function PlaneButterfliesChunk(_index, _numParticles, _geometry) {
     var _this = this;
     var _thread, _recycle, _render;
     var OFFSET = 7;
-    (function() {
+    (function () {
         initThread();
         Render.start(loop)
     }
@@ -35009,7 +35280,7 @@ Class(function PlaneButterfliesChunk(_index, _numParticles, _geometry) {
     }
     function updateGeometry(e) {
         for (var i = 0, j = _index * _numParticles; i < e.values.length; i += OFFSET,
-        j++) {
+            j++) {
             _geometry.attributes.offset.setXYZ(j, e.values[i + 0], e.values[i + 1], e.values[i + 2]);
             _geometry.attributes.orientation.setXYZW(j, e.values[i + 3], e.values[i + 4], e.values[i + 5], e.values[i + 6])
         }
@@ -35031,11 +35302,11 @@ Class(function PlaneButterfliesChunk(_index, _numParticles, _geometry) {
         _recycle.msg.buffers.push(buffer.buffer);
         _thread.recycleBuffer(_recycle)
     }
-    this.pause = function() {
+    this.pause = function () {
         Render.stop(loop)
     }
-    ;
-    this.resume = function() {
+        ;
+    this.resume = function () {
         Render.start(loop)
     }
 });
@@ -35044,7 +35315,7 @@ Class(function PlaneButterfliesThread() {
     var _this = this;
     var _system, _converter;
     var _boundary = 100;
-    (function() {}
+    (function () { }
     )();
     function initSystem() {
         var integrator = new EulerIntegrator();
@@ -35054,7 +35325,7 @@ Class(function PlaneButterfliesThread() {
     }
     function initParticles(numParticles) {
         for (var i = 0; i < numParticles; i++) {
-            var p = new Particle(new Vector3(Utils.doRandom(-_boundary * 2, _boundary * 2),Utils.doRandom(-_boundary, _boundary),Utils.doRandom(-_boundary, _boundary)),0,0);
+            var p = new Particle(new Vector3(Utils.doRandom(-_boundary * 2, _boundary * 2), Utils.doRandom(-_boundary, _boundary), Utils.doRandom(-_boundary, _boundary)), 0, 0);
             p.rotation = new THREE.Quaternion();
             p.speed = Utils.doRandom(80, 200) / 100;
             p.vel.set(Utils.doRandom(-10, -100), Utils.doRandom(-20, 20), Utils.doRandom(-20, 20));
@@ -35064,10 +35335,10 @@ Class(function PlaneButterfliesThread() {
     }
     function initBehaviours() {
         var attractor = new ButterfliesBehavior(_boundary);
-        attractor.addPoint(new Vector3(300,0,0), 200, 100);
-        attractor.addPoint(new Vector3(250,50,200), 100, 200);
-        attractor.addPoint(new Vector3(150,-50,-200), 100, 200);
-        attractor.addPoint(new Vector3(0,0,0), 150, -80);
+        attractor.addPoint(new Vector3(300, 0, 0), 200, 100);
+        attractor.addPoint(new Vector3(250, 50, 200), 100, 200);
+        attractor.addPoint(new Vector3(150, -50, -200), 100, 200);
+        attractor.addPoint(new Vector3(0, 0, 0), 150, -80);
         _system.addBehavior(attractor);
         _system.addBehavior(new ButterfliesRotation());
         _system.friction = 0.99
@@ -35083,17 +35354,17 @@ Class(function PlaneButterfliesThread() {
         }
         emit("transfer", message, buffers)
     }
-    this.init = function(e) {
+    this.init = function (e) {
         initSystem();
         initParticles(e.total);
         initBehaviours()
     }
-    ;
-    this.render = function(e) {
+        ;
+    this.render = function (e) {
         loop(e.time, e.delta)
     }
-    ;
-    this.recycleBuffer = function(e) {
+        ;
+    this.recycleBuffer = function (e) {
         _converter.recycle(e.array)
     }
 });
@@ -35103,7 +35374,7 @@ Class(function PlaneButterfliesThreadConverter(_particles) {
     var OFFSET = 7;
     var _buffer = {};
     var _pool;
-    (function() {}
+    (function () { }
     )();
     function initPool() {
         _pool = new ObjectPool();
@@ -35112,7 +35383,7 @@ Class(function PlaneButterfliesThreadConverter(_particles) {
             _pool.insert(array)
         }
     }
-    this.convert = function() {
+    this.convert = function () {
         if (!_pool) {
             initPool()
         }
@@ -35133,8 +35404,8 @@ Class(function PlaneButterfliesThreadConverter(_particles) {
         _buffer.values = values;
         return _buffer
     }
-    ;
-    this.recycle = function(array) {
+        ;
+    this.recycle = function (array) {
         _pool.put(array)
     }
 });
@@ -35142,7 +35413,7 @@ Class(function PlaneCaught() {
     Inherit(this, Component);
     var _this = this;
     var _plane, _animation, _pinch, _stamp, _fold, _throw, _shadow;
-    (function() {
+    (function () {
         initGeometry();
         initData();
         initAnimation()
@@ -35164,7 +35435,7 @@ Class(function PlaneCaught() {
         World.instance().scene.add(_plane.swayContainer)
     }
     function initData() {
-        Data.Planes.catchPlane(function(data) {
+        Data.Planes.catchPlane(function (data) {
             _plane.stamp.addStamps(data.stamps)
         })
     }
@@ -35180,10 +35451,10 @@ Class(function PlaneCaught() {
         _plane.stamp.render();
         Mobile.vibrate(100);
         _animation.flyIntoNet();
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _animation.toCenter(initPinching)
         }, 1000);
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             UIMobile.instance().closePrompt.animateIn();
             UIMobile.instance().instructions.update("PINCH", 160);
             UIMobile.instance().instructions.heading("CATCH", 115)
@@ -35193,13 +35464,13 @@ Class(function PlaneCaught() {
         var tl = _animation.createPinchingTimeline();
         UIMobile.instance().createPinchPrompt();
         _pinch = _this.initClass(PlanePinch, tl);
-        _pinch.onStart = function() {
+        _pinch.onStart = function () {
             UIMobile.instance().removePinchPrompt();
             UIMobile.instance().instructions.animateOut();
             UIMobile.instance().newPrompt.animateOut()
         }
-        ;
-        _pinch.onComplete = function() {
+            ;
+        _pinch.onComplete = function () {
             GATracker.trackEvent("plane caught", "pinch", "pinched plane", 1);
             _pinch = _pinch.destroy();
             tl = tl.destroy();
@@ -35209,19 +35480,19 @@ Class(function PlaneCaught() {
     function initStamping() {
         _plane.depth = true;
         _stamp = _this.initClass(PlaneStamp, _plane);
-        _stamp.onComplete = function() {
+        _stamp.onComplete = function () {
             UIMobile.instance().closePrompt.animateOut();
             initFolding()
         }
     }
     function initFolding() {
         _fold = _this.initClass(PlaneFold, _plane, _animation, _stamp, true);
-        _fold.onStart = function() {
+        _fold.onStart = function () {
             _stamp = _stamp.destroy();
             _plane.stripColor = PlaneStampTexture.DATA.color
         }
-        ;
-        _fold.onComplete = function() {
+            ;
+        _fold.onComplete = function () {
             GATracker.trackEvent("plane caught", "fold", "folded plane", 1);
             _fold = _fold.destroy();
             promptToRotate()
@@ -35239,7 +35510,7 @@ Class(function PlaneCaught() {
         UIMobile.instance().instructions.update("ROTATE");
         UIMobile.instance().createRotatePrompt();
         _animation.toThrowPosition();
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             UIMobile.instance().removeRotatePrompt();
             initThrowing()
         }, 1500);
@@ -35249,17 +35520,17 @@ Class(function PlaneCaught() {
         _shadow = _this.initClass(PlaneShadow);
         _shadow.animateIn();
         _throw = _this.initClass(PlaneThrow, _plane, _animation, _shadow, true);
-        _throw.onComplete = function() {
+        _throw.onComplete = function () {
             GATracker.trackEvent("plane caught", "throw", "throw plane", 1);
             _throw = _throw.destroy();
             _this.events.fire(PlanesEvents.RE_THROW_CAUGHT_PLANE)
         }
     }
-    this.init = function() {
+    this.init = function () {
         addHandlers()
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         if (_throw) {
             _throw = _throw.destroy()
         }
@@ -35288,7 +35559,7 @@ Class(function PlaneDetail(_data) {
     Inherit(this, Component);
     var _this = this;
     var _plane, _animation, _pinch, _tl, _pinchPrompt, _tweenAnimIn;
-    (function() {
+    (function () {
         initGeometry();
         initAnimation()
     }
@@ -35303,7 +35574,7 @@ Class(function PlaneDetail(_data) {
             _plane.age()
         }
         _plane.fade = 0;
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _plane.stamp.addStamps(_data.data.stamps)
         }, 500);
         World.instance().scene.add(_plane.swayContainer)
@@ -35317,7 +35588,7 @@ Class(function PlaneDetail(_data) {
     function initPinching() {
         _tl = _animation.createPinchingTimeline(true);
         _pinch = _this.initClass(PlanePinch, _tl, true);
-        _pinch.onStart = function() {
+        _pinch.onStart = function () {
             GATracker.trackEvent("plane detail", "pinch", "pinch open", 1);
             if (typeof _this.onStartOpen == "function") {
                 _this.onStartOpen()
@@ -35325,8 +35596,8 @@ Class(function PlaneDetail(_data) {
             _pinchPrompt = UIMobile.instance().removePinchPrompt();
             _animation.toDetailOpenPosition()
         }
-        ;
-        _pinch.onClose = function() {
+            ;
+        _pinch.onClose = function () {
             GATracker.trackEvent("plane detail", "pinch", "pinch close", 1);
             if (typeof _this.onClose == "function") {
                 _this.onClose()
@@ -35339,21 +35610,21 @@ Class(function PlaneDetail(_data) {
             _pinchPrompt = UIMobile.instance().createPinchPrompt(-50)
         }
     }
-    this.animateIn = function(delay) {
+    this.animateIn = function (delay) {
         GATracker.trackEvent("plane detail", "click", "animate out", 1);
         World.instance().scene.add(_plane.swayContainer);
         _plane.object3D.position.x = -40;
         _tweenAnimIn = TweenManager.tween(_plane.object3D.position, {
             x: 0
-        }, 700, "slideInOut", delay || 0, function() {
-            _this.delayedCall(function() {
+        }, 700, "slideInOut", delay || 0, function () {
+            _this.delayedCall(function () {
                 initPinching();
                 initPinchPrompt()
             }, 200)
         })
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         GATracker.trackEvent("plane detail", "click", "animate out", 1);
         if (_pinch) {
             _pinch = _pinch.destroy()
@@ -35364,7 +35635,7 @@ Class(function PlaneDetail(_data) {
         if (_pinchPrompt) {
             _pinchPrompt.element.tween({
                 opacity: 0
-            }, 200, "easeOutCubic", function() {
+            }, 200, "easeOutCubic", function () {
                 if (_pinchPrompt) {
                     _pinchPrompt = UIMobile.instance().removePinchPrompt()
                 }
@@ -35375,17 +35646,17 @@ Class(function PlaneDetail(_data) {
         }
         TweenManager.tween(_plane.object3D.position, {
             x: -40
-        }, 700, "slideInOut", function() {
+        }, 700, "slideInOut", function () {
             World.instance().scene.remove(_plane.swayContainer)
         })
     }
-    ;
-    this.close = function() {
+        ;
+    this.close = function () {
         GATracker.trackEvent("plane detail", "click", "close detial", 1);
         _pinch.snap(0)
     }
-    ;
-    this.deactivate = function() {
+        ;
+    this.deactivate = function () {
         GATracker.trackEvent("plane detail", "click", "deactivate", 1);
         if (_pinch) {
             _pinch = _pinch.destroy()
@@ -35398,13 +35669,13 @@ Class(function PlaneDetail(_data) {
             _pinchPrompt.element.tween({
                 opacity: 0,
                 y: -100
-            }, 300, "easeInOutCubic", function() {
+            }, 300, "easeInOutCubic", function () {
                 _pinchPrompt.element.hide()
             })
         }
     }
-    ;
-    this.activate = function() {
+        ;
+    this.activate = function () {
         GATracker.trackEvent("plane detail", "click", "activate", 1);
         _animation.toDetailActive(initPinching);
         _pinchPrompt.element.show();
@@ -35414,8 +35685,8 @@ Class(function PlaneDetail(_data) {
             opacity: 1
         }, 500, "easeInOutCubic", 500)
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         if (_pinch) {
             _pinch = _pinch.destroy()
         }
@@ -35432,7 +35703,7 @@ Class(function PlaneNew(_isFirstPlane) {
     Inherit(this, Component);
     var _this = this;
     var _plane, _animation, _stamp, _fold, _scale, _throw, _shadow;
-    (function() {
+    (function () {
         initGeometry();
         initAnimation()
     }
@@ -35465,19 +35736,19 @@ Class(function PlaneNew(_isFirstPlane) {
             UIMobile.instance().closePrompt.animateIn()
         }
         _stamp = _this.initClass(PlaneStamp, _plane);
-        _stamp.onComplete = function() {
+        _stamp.onComplete = function () {
             GATracker.trackEvent("plane", "stamped", "stamped plane", 1);
             initFolding()
         }
     }
     function initFolding() {
         _fold = _this.initClass(PlaneFold, _plane, _animation, _stamp);
-        _fold.onStart = function() {
+        _fold.onStart = function () {
             _stamp = _stamp.destroy();
             _plane.stripColor = PlaneStampTexture.DATA.color
         }
-        ;
-        _fold.onComplete = function() {
+            ;
+        _fold.onComplete = function () {
             GATracker.trackEvent("plane", "fold", "fold plane", 1);
             _fold = _fold.destroy();
             promptToRotate()
@@ -35495,7 +35766,7 @@ Class(function PlaneNew(_isFirstPlane) {
         UIMobile.instance().instructions.update("ROTATE");
         UIMobile.instance().createRotatePrompt();
         _animation.toThrowPosition();
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             UIMobile.instance().removeRotatePrompt();
             initThrowing()
         }, 2000);
@@ -35505,7 +35776,7 @@ Class(function PlaneNew(_isFirstPlane) {
         _shadow = _this.initClass(PlaneShadow);
         _shadow.animateIn();
         _scale = _this.initClass(PlaneScaling, _plane, _shadow);
-        _scale.onComplete = function() {
+        _scale.onComplete = function () {
             GATracker.trackEvent("plane", "scale", "scale plane", 1);
             _scale = _scale.destroy();
             initThrowing()
@@ -35517,13 +35788,13 @@ Class(function PlaneNew(_isFirstPlane) {
             _shadow.animateIn()
         }
         _throw = _this.initClass(PlaneThrow, _plane, _animation, _shadow);
-        _throw.onComplete = function() {
+        _throw.onComplete = function () {
             GATracker.trackEvent("plane", "throw", "throw plane", 1);
             _throw = _throw.destroy();
             _this.events.fire(PlanesEvents.THROW_NEW_PLANE)
         }
     }
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         UIMobile.instance().removeRotatePrompt();
         if (_throw) {
             _throw = _throw.destroy()
@@ -35554,7 +35825,7 @@ Class(function PlaneFoldAnimation(_plane) {
     var _time = 0;
     var _swayStrength = 1;
     var _lastTime = 0;
-    (function() {
+    (function () {
         Render.start(loop)
     }
     )();
@@ -35563,25 +35834,25 @@ Class(function PlaneFoldAnimation(_plane) {
         _plane.swayContainer.rotation.x = _swayStrength * Utils.range(Math.sin(_time * 0.001 + 1.2), -1, 1, -0.02, 0.02);
         _plane.swayContainer.rotation.z = _swayStrength * Utils.range(Math.sin(_time * 0.002 + 1.2), -1, 1, -0.05, 0.05)
     }
-    this.set("swayStrength", function(value) {
+    this.set("swayStrength", function (value) {
         _swayStrength = value
     });
-    this.preCatchPosition = function() {
+    this.preCatchPosition = function () {
         var s = 0.3;
         _plane.object3D.scale.set(s, s, s);
         _plane.object3D.position.set(28, 0, -12);
         _plane.object3D.rotation.set(0.4, 2.2, -0.5)
     }
-    ;
-    this.flyIntoNet = function() {
+        ;
+    this.flyIntoNet = function () {
         _catchTweens[0] = TweenManager.tween(_plane.object3D.position, {
             x: -4,
             y: 7,
             z: -4
         }, 2000, "easeOutExpo")
     }
-    ;
-    this.toCenter = function(callback) {
+        ;
+    this.toCenter = function (callback) {
         var s = 1;
         _catchTweens[1] = TweenManager.tween(_plane.object3D.scale, {
             x: s,
@@ -35599,19 +35870,19 @@ Class(function PlaneFoldAnimation(_plane) {
             z: 0.4
         }, 1500, "easeInOutQuad")
     }
-    ;
-    this.createPinchingTimeline = function(isDetail) {
+        ;
+    this.createPinchingTimeline = function (isDetail) {
         var tl = _this.initClass(TweenTimeline);
         var temp = {
             a: _plane.frame
         };
         var s = 1.3;
-        tl.onUpdate = function(alpha) {
+        tl.onUpdate = function (alpha) {
             _swayStrength = 1 - alpha;
             _plane.update(temp.a);
             _plane.fade = alpha
         }
-        ;
+            ;
         tl.add(temp, {
             a: 96
         }, 650, "easeInOutCubic");
@@ -35632,38 +35903,38 @@ Class(function PlaneFoldAnimation(_plane) {
         }, 700, "easeInOutQuad");
         return tl
     }
-    ;
-    this.initFolding = function() {
+        ;
+    this.initFolding = function () {
         _plane.update(0);
         AudioController.trigger("paper_loop_start")
     }
-    ;
-    this.teaseFold = function(t) {
+        ;
+    this.teaseFold = function (t) {
         var temp = {
             a: _plane.frame
         };
-        var onUpdate = function() {
+        var onUpdate = function () {
             _plane.update(temp.a)
         };
         AudioController.trigger("hint");
         _teaseTwn = TweenManager.tween(temp, {
             a: t + 2
-        }, 200, "easeOutCubic", function() {
+        }, 200, "easeOutCubic", function () {
             _teaseTwn = TweenManager.tween(temp, {
                 a: t + 1
-            }, 100, "easeInOutCubic", function() {
+            }, 100, "easeInOutCubic", function () {
                 _teaseTwn = TweenManager.tween(temp, {
                     a: t + 2
-                }, 100, "easeInOutCubic", function() {
+                }, 100, "easeInOutCubic", function () {
                     _teaseTwn = TweenManager.tween(temp, {
                         a: t
-                    }, 200, "easeInOutCubic", function() {}, onUpdate)
+                    }, 200, "easeInOutCubic", function () { }, onUpdate)
                 }, onUpdate)
             }, onUpdate)
         }, onUpdate)
     }
-    ;
-    this.updateFold = function(t) {
+        ;
+    this.updateFold = function (t) {
         if (_teaseTwn && _teaseTwn.stop) {
             _teaseTwn.stop()
         }
@@ -35671,18 +35942,18 @@ Class(function PlaneFoldAnimation(_plane) {
         AudioController.trigger("paper_mod", t - _lastTime);
         _lastTime = t
     }
-    ;
-    this.completeFold = function(callback, duration, ease) {
+        ;
+    this.completeFold = function (callback, duration, ease) {
         var temp = {
             a: _plane.frame
         };
-        var onUpdate = function(alpha) {
+        var onUpdate = function (alpha) {
             _plane.update(temp.a);
             _plane.fade = 1 - alpha
         };
         _foldTwn = TweenManager.tween(temp, {
             a: 91
-        }, duration || 2000, ease || "easeOutCubic", function() {
+        }, duration || 2000, ease || "easeOutCubic", function () {
             if (typeof callback == "function") {
                 callback()
             }
@@ -35690,12 +35961,12 @@ Class(function PlaneFoldAnimation(_plane) {
         AudioController.trigger("fold_last");
         AudioController.trigger("paper_loop_stop")
     }
-    ;
-    this.toThrowPosition = function() {
+        ;
+    this.toThrowPosition = function () {
         var temp = {
             a: 0
         };
-        var onUpdate = function(e) {
+        var onUpdate = function (e) {
             _swayStrength = e
         };
         TweenManager.tween(temp, {
@@ -35707,14 +35978,14 @@ Class(function PlaneFoldAnimation(_plane) {
             z: 2
         }, 1000, "easeInOutQuad")
     }
-    ;
-    this.throwPlane = function(callback) {
+        ;
+    this.throwPlane = function (callback) {
         TweenManager.tween(_plane.object3D.position, {
             y: 100
         }, 1000, "easeOutCubic", callback)
     }
-    ;
-    this.animateInNewPlane = function(callback) {
+        ;
+    this.animateInNewPlane = function (callback) {
         _plane.update(0);
         _swayStrength = 0;
         var s = 1.4;
@@ -35728,38 +35999,38 @@ Class(function PlaneFoldAnimation(_plane) {
             z: s
         }, 1500, "easeOutExpo", 100)
     }
-    ;
-    this.toInitialDetailPosition = function() {
+        ;
+    this.toInitialDetailPosition = function () {
         var s = 0.9;
         _plane.object3D.scale.set(s, s, s);
         _plane.object3D.rotation.set(0.15, 5.3, 0.4);
         _plane.object3D.position.set(0, 6, 0)
     }
-    ;
-    this.toDetailInactive = function() {
+        ;
+    this.toDetailInactive = function () {
         TweenManager.tween(_plane.object3D.position, {
             y: 31
         }, 650, "slideInOut")
     }
-    ;
-    this.toDetailActive = function(callback) {
+        ;
+    this.toDetailActive = function (callback) {
         TweenManager.tween(_plane.object3D.position, {
             y: 6
         }, 800, "slideInOut", callback)
     }
-    ;
-    this.toDetailOpenPosition = function() {
+        ;
+    this.toDetailOpenPosition = function () {
         TweenManager.tween(_plane.object3D.position, {
             y: 1
         }, 500, "easeInOutCubic")
     }
-    ;
-    this.closeDetail = function(callback) {
+        ;
+    this.closeDetail = function (callback) {
         _plane.update(96);
         var temp = {
             a: _plane.frame
         };
-        var onUpdate = function(e) {
+        var onUpdate = function (e) {
             _swayStrength = e;
             _plane.update(temp.a)
         };
@@ -35782,8 +36053,8 @@ Class(function PlaneFoldAnimation(_plane) {
         }, 1000, "easeInOutCubic");
         AudioController.trigger("fold_last")
     }
-    ;
-    this.flip = function(isFlipped) {
+        ;
+    this.flip = function (isFlipped) {
         TweenManager.tween(_plane.flipContainer.rotation, {
             x: isFlipped ? Math.PI : 0
         }, 700, "easeInOutCubic");
@@ -35791,9 +36062,9 @@ Class(function PlaneFoldAnimation(_plane) {
             z: isFlipped ? 1.1 : 2
         }, 700, "easeInOutCubic")
     }
-    ;
-    this.onDestroy = function() {
-        _catchTweens.forEach(function(tween) {
+        ;
+    this.onDestroy = function () {
+        _catchTweens.forEach(function (tween) {
             if (tween && tween.stop) {
                 tween.stop()
             }
@@ -35818,7 +36089,7 @@ Class(function PlaneFold(_plane, _animation, _stamp, _isShort) {
     if (_isShort) {
         _keys = _keys.slice(0, -3)
     }
-    (function() {
+    (function () {
         initFold();
         initPrompt();
         initUI();
@@ -35832,14 +36103,14 @@ Class(function PlaneFold(_plane, _animation, _stamp, _isShort) {
         _this.delayedCall(startTeasing, 500, _current)
     }
     function initPrompt() {
-        var geometry = new THREE.PlaneBufferGeometry(2.5,2.5);
+        var geometry = new THREE.PlaneBufferGeometry(2.5, 2.5);
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
         var material = new THREE.MeshBasicMaterial({
             map: Utils3D.getTexture("assets/images/icons/circle.png"),
             transparent: true,
             opacity: 0
         });
-        _prompt = new THREE.Mesh(geometry,material);
+        _prompt = new THREE.Mesh(geometry, material);
         _prompt.position.set(9.5, 5, -13.7);
         _plane.mesh.add(_prompt);
         _promptTween = TweenManager.tween(_prompt.material, {
@@ -35881,10 +36152,10 @@ Class(function PlaneFold(_plane, _animation, _stamp, _isShort) {
             _teaseTimeout = _this.delayedCall(startTeasing, 2000, _current);
             return
         }
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             if (_current + 1 == _keys.length - 1) {
                 _folding = _folding.destroy();
-                _animation.completeFold(function() {
+                _animation.completeFold(function () {
                     if (typeof _this.onComplete == "function") {
                         _this.onComplete()
                     }
@@ -35917,7 +36188,7 @@ Class(function PlaneFold(_plane, _animation, _stamp, _isShort) {
         _animation.teaseFold(_keys[current]);
         _teaseTimeout = _this.delayedCall(startTeasing, 2000, current)
     }
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         if (_promptTween && _promptTween.stop) {
             _promptTween.stop()
         }
@@ -35937,7 +36208,7 @@ Class(function PlanePinch(_tl, _isDetail) {
     var _debug;
     var _lastPercent = 0;
     var _threshold = 0.3;
-    (function() {
+    (function () {
         initPinch();
         addHandlers();
         Render.start(loop)
@@ -35979,14 +36250,14 @@ Class(function PlanePinch(_tl, _isDetail) {
     }
     function addHandlers() {
         _pinch.events.add(HydraEvents.COMPLETE, pinchSnap);
-        _debug = function(e) {
+        _debug = function (e) {
             if (e.keyCode == 32) {
                 __window.unbind("keydown", _debug);
                 _pinch.stop();
                 _pinch.snapTo(1, 1000)
             }
         }
-        ;
+            ;
         __window.bind("keydown", _debug)
     }
     function pinchSnap(force) {
@@ -36000,7 +36271,7 @@ Class(function PlanePinch(_tl, _isDetail) {
         AudioController.trigger("paper_loop_stop")
     }
     this.snap = pinchSnap;
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         __window.unbind("keydown", _debug);
         Render.stop(loop)
     }
@@ -36014,7 +36285,7 @@ Class(function PlaneScaling(_plane, _shadow) {
     var _deviceRotation = new Vector3();
     var _planeRotation = new Vector3();
     var _lastScale = new Vector3();
-    (function() {
+    (function () {
         initScaling();
         initPrompts();
         initUI();
@@ -36026,14 +36297,14 @@ Class(function PlaneScaling(_plane, _shadow) {
         AudioController.trigger("paper_loop_start")
     }
     function initPrompts() {
-        var geometry = new THREE.PlaneBufferGeometry(2.3,2.3);
+        var geometry = new THREE.PlaneBufferGeometry(2.3, 2.3);
         geometry.applyMatrix(new THREE.Matrix4().makeRotationY(-Math.PI / 2));
         var material = new THREE.MeshBasicMaterial({
             map: Utils3D.getTexture("assets/images/icons/circle.png"),
             transparent: true
         });
-        [[0, 0, -14.8], [-5.5, 5.3, 15.5]].forEach(function(p) {
-            var prompt = new THREE.Mesh(geometry,material);
+        [[0, 0, -14.8], [-5.5, 5.3, 15.5]].forEach(function (p) {
+            var prompt = new THREE.Mesh(geometry, material);
             prompt.position.set(p[0], p[1], p[2]);
             _plane.mesh.add(prompt);
             _prompts.push(prompt)
@@ -36043,7 +36314,7 @@ Class(function PlaneScaling(_plane, _shadow) {
         _scalePrompt = UIMobile.instance().createScalePrompt();
         UIMobile.instance().instructions.update("SCALE", 30, true)
     }
-    function loop() {}
+    function loop() { }
     function addHandlers() {
         _scalePrompt.events.subscribe(HydraEvents.COMPLETE, complete);
         _scale.onUpdate = onUpdate
@@ -36054,7 +36325,7 @@ Class(function PlaneScaling(_plane, _shadow) {
         vol = Math.min(1, vol * 10);
         AudioController.trigger("paper_mod", vol);
         _lastScale = _plane.mesh.scale.clone();
-        _prompts.forEach(function(prompt) {
+        _prompts.forEach(function (prompt) {
             prompt.scale[axis] = 1 / value
         });
         _shadow.object3D.scale[axis == "z" ? "y" : "x"] = value
@@ -36062,7 +36333,7 @@ Class(function PlaneScaling(_plane, _shadow) {
     function complete() {
         _prompts[0].geometry.dispose();
         _prompts[0].material.dispose();
-        _prompts.forEach(function(prompt) {
+        _prompts.forEach(function (prompt) {
             _plane.mesh.remove(prompt)
         });
         AudioController.trigger("paper_loop_stop");
@@ -36070,12 +36341,12 @@ Class(function PlaneScaling(_plane, _shadow) {
             _this.onComplete()
         }
     }
-    this.onDestroy = function() {}
+    this.onDestroy = function () { }
 });
 Class(function PlaneStamp(_plane) {
     Inherit(this, Component);
     var _this = this;
-    (function() {
+    (function () {
         initUI();
         addHandlers()
     }
@@ -36108,7 +36379,7 @@ Class(function PlaneStamp(_plane) {
         if (e.type == "touchstart") {
             Stage.bind("touchend", onStampUp)
         } else {
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 AudioController.trigger("stamp_up")
             }, Utils.doRandom(60, 300))
         }
@@ -36122,7 +36393,7 @@ Class(function PlaneStamp(_plane) {
         Stage.unbind("touchend", onStampUp)
     }
     this.addStamp = addStamp;
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         Stage.unbind("touchstart", addStamp);
         Stage.unbind("touchend", onStampUp)
     }
@@ -36138,7 +36409,7 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
     };
     var _hold = 0;
     var _debug;
-    (function() {
+    (function () {
         initUI();
         initAccel();
         addHandlers();
@@ -36158,7 +36429,7 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
         _accel.capture()
     }
     function loop() {
-        ["x", "y", "z"].forEach(function(axis) {
+        ["x", "y", "z"].forEach(function (axis) {
             var amount = Utils.range(_accel[axis], -18, 18, -50, 50);
             _shake[axis] += (amount - _shake[axis]) * 0.04
         });
@@ -36176,13 +36447,13 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
         Stage.bind("touchcancel", onUp);
         _flipPrompt.events.add(HydraEvents.COMPLETE, flip);
         _this.events.subscribe(ThrowMechanic.THROW, throwPlane);
-        _debug = function(e) {
+        _debug = function (e) {
             if (e.keyCode == 32) {
                 __window.unbind("keydown", _debug);
                 throwPlane()
             }
         }
-        ;
+            ;
         __window.bind("keydown", _debug)
     }
     function onDown(e) {
@@ -36210,7 +36481,7 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
         Render.stop(loop);
         _this.events.unsubscribe(ThrowMechanic.THROW, throwPlane);
         _shadow.throwShadow(_flipToggle);
-        _animation.throwPlane(function() {
+        _animation.throwPlane(function () {
             if (typeof _this.onComplete == "function") {
                 _this.onComplete()
             }
@@ -36223,11 +36494,10 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
             x: _plane.mesh.scale.x,
             z: _plane.mesh.scale.z
         };
-        var city = stampLocation.city || PlaneStampTexture.DATA.city || "";
-        var address = formatLocationText(city, region, stampLocation.country_name || PlaneStampTexture.DATA.country_name || stampLocation.country || PlaneStampTexture.DATA.country);
         var country = stampLocation.country || PlaneStampTexture.DATA.country || "";
         var countryName = stampLocation.country_name || PlaneStampTexture.DATA.country_name || country;
-        var location = formatLocationText(city, region, countryName);
+        var address = region || countryName || "Planet Earth";
+        var location = formatLiveLocationText("", region, countryName);
         Data.Planes.throwPlane({
             id: Utils.timestamp(),
             coords: coords,
@@ -36235,7 +36505,7 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
             scale: scale,
             location: location,
             address: address,
-            city: city,
+            city: "",
             region: region,
             country: country,
             country_name: countryName
@@ -36249,7 +36519,7 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
         _flipPrompt.flip(_flipToggle);
         _shadow.flip()
     }
-    this.onDestroy = function() {
+    this.onDestroy = function () {
         Stage.unbind("touchstart", onDown);
         Stage.unbind("touchend", onUp);
         Stage.unbind("touchcancel", onUp);
@@ -36263,7 +36533,7 @@ Class(function PlaneShadow() {
     Inherit(this, Component);
     var _this = this;
     var _mesh, _tween;
-    (function() {
+    (function () {
         if (PlaneShadow.OBJECT3D) {
             _this.object3D = PlaneShadow.OBJECT3D
         } else {
@@ -36277,30 +36547,30 @@ Class(function PlaneShadow() {
     }
     )();
     function initMesh() {
-        var geometry = new THREE.PlaneBufferGeometry(5,60);
+        var geometry = new THREE.PlaneBufferGeometry(5, 60);
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI));
         var material = new THREE.MeshBasicMaterial({
             map: Utils3D.getTexture("assets/images/plane/shadow.png"),
             transparent: true,
             opacity: 0
         });
-        _mesh = new THREE.Mesh(geometry,material);
+        _mesh = new THREE.Mesh(geometry, material);
         _this.object3D.add(_mesh)
     }
-    this.get("mesh", function() {
+    this.get("mesh", function () {
         return _mesh
     });
-    this.animateIn = function() {
+    this.animateIn = function () {
         _this.isAnimating = true;
         World.instance().scene.add(_this.object3D);
         _tween = TweenManager.tween(_mesh.material, {
             opacity: 0.15
-        }, 500, "easeOutCubic", 500, function() {
+        }, 500, "easeOutCubic", 500, function () {
             _this.isAnimating = false
         })
     }
-    ;
-    this.updateFade = function(value) {
+        ;
+    this.updateFade = function (value) {
         if (_this.isAnimating) {
             return
         }
@@ -36309,31 +36579,31 @@ Class(function PlaneShadow() {
         _mesh.scale.y = 1 - value * 0.2;
         _mesh.scale.x = 1 - value * 0.2
     }
-    ;
-    this.throwShadow = function(isFlipped) {
+        ;
+    this.throwShadow = function (isFlipped) {
         _this.isAnimating = true;
         _tween = TweenManager.tween(_this.object3D.position, {
             y: isFlipped ? -80 : 80
-        }, 1000, "easeOutCubic", function() {
+        }, 1000, "easeOutCubic", function () {
             World.instance().scene.remove(_this.object3D)
         })
     }
-    ;
-    this.flip = function() {
+        ;
+    this.flip = function () {
         var initialX = _this.object3D.scale.x;
         var initialY = _this.object3D.scale.y;
         _tween = TweenManager.tween(_this.object3D.scale, {
             x: 3,
             y: 0.2
-        }, 350, "easeInCubic", function() {
+        }, 350, "easeInCubic", function () {
             _tween = TweenManager.tween(_this.object3D.scale, {
                 x: initialX,
                 y: initialY
             }, 350, "easeOutCubic")
         })
     }
-    ;
-    this.onDestroy = function() {
+        ;
+    this.onDestroy = function () {
         if (_tween && _tween.stop) {
             _tween.stop()
         }
@@ -36350,25 +36620,25 @@ Class(function PlaneStampTexture() {
     var _styleCount = 0;
     var _lastStyleIndex = -1;
     var _canvases = [];
-    (function() {
+    (function () {
         initTexture();
         initStyles()
     }
     )();
     function initTexture() {
         _s = 4;
-        _canvas = new Canvas(210 * _s,297 * _s);
+        _canvas = new Canvas(210 * _s, 297 * _s);
         _finalSize = 1024;
-        _finalCanvas = new Canvas(_finalSize,_finalSize);
+        _finalCanvas = new Canvas(_finalSize, _finalSize);
         _context = _finalCanvas.context;
         _stampTexture = new THREE.Texture(_finalCanvas.div);
         _stampTexture.needsUpdate = true;
         _this.canStamp = true
     }
     function initStyles() {
-        _stylesList = [_this.initClass(PeaceDayStamp, _s), _this.initClass(PeaceDayStamp, _s), _this.initClass(StampStyle1, _s), _this.initClass(StampStyle3, _s), _this.initClass(StampStyle4, _s), _this.initClass(StampStyle5, _s), _this.initClass(StampStyle6, _s), _this.initClass(SpecialStamp, _s), _this.initClass(SpecialStamp, _s), ];
+        _stylesList = [_this.initClass(PeaceDayStamp, _s), _this.initClass(PeaceDayStamp, _s), _this.initClass(StampStyle1, _s), _this.initClass(StampStyle3, _s), _this.initClass(StampStyle4, _s), _this.initClass(StampStyle5, _s), _this.initClass(StampStyle6, _s), _this.initClass(SpecialStamp, _s), _this.initClass(SpecialStamp, _s),];
         var stylesPool = [];
-        var populatePool = function(e, i) {
+        var populatePool = function (e, i) {
             if (Tests.PEACE_DAY()) {
                 if (i < 2) {
                     stylesPool.push(i)
@@ -36382,7 +36652,7 @@ Class(function PlaneStampTexture() {
         _stylesList.forEach(populatePool);
         _stylesSelection = [];
         var isSpecial = false;
-        _colors.forEach(function() {
+        _colors.forEach(function () {
             var random = Utils.doRandom(0, stylesPool.length - (isSpecial ? 2 : 1));
             isSpecial = stylesPool[random] > 8;
             var styleIndex = stylesPool.splice(random, 1)[0];
@@ -36396,14 +36666,14 @@ Class(function PlaneStampTexture() {
             }
         })
     }
-    this.get("texture", function() {
+    this.get("texture", function () {
         return _stampTexture
     });
-    this.render = function() {
+    this.render = function () {
         _context.clearRect(0, 0, _finalSize, _finalSize);
         _context.save();
         _context.scale(1, -1);
-        _canvases.forEach(function(canvas) {
+        _canvases.forEach(function (canvas) {
             if (!canvas.alreadyRendered) {
                 canvas.render()
             }
@@ -36413,8 +36683,8 @@ Class(function PlaneStampTexture() {
         _stampTexture.needsUpdate = true;
         _this.canStamp = true
     }
-    ;
-    this.addStamp = function(x, y, isReplace) {
+        ;
+    this.addStamp = function (x, y, isReplace) {
         if (!_this.canStamp) {
             return
         }
@@ -36440,8 +36710,7 @@ Class(function PlaneStampTexture() {
         var color = _colors[colorIndex];
         var rotation = Utils.doRandom(-30, 30);
         var location = Data.User.getLocation();
-        var city = location.city || location.address || "Planet Earth";
-        var address = formatLocationText(city, location.region);
+        var region = location.region || "";
         var date = DateUtil.getDate();
         GATracker.trackEvent("plane", "stamp", "plane stamp", 1);
         var country = (location.country || "").toUpperCase();
@@ -36454,8 +36723,12 @@ Class(function PlaneStampTexture() {
         if (country == "AU") {
             country = "AUS"
         }
+        if (country == "RU") {
+            country = "RUS"
+        }
         var countryName = location.country_name || country;
-        var fullLocation = formatLocationText(city, location.region, countryName);
+        var address = region || countryName || "Planet Earth";
+        var fullLocation = formatLiveLocationText("", region, countryName);
         PlaneStampTexture.DATA = {
             position: {
                 x: x,
@@ -36468,13 +36741,13 @@ Class(function PlaneStampTexture() {
             date: date.numeric,
             address: address,
             location: fullLocation,
-            city: city,
-            region: location.region || "",
+            city: "",
+            region: region,
             country: country,
             country_name: countryName,
             coords: Data.User.getCoords(),
         };
-        style.addStamp(_canvas, PlaneStampTexture.DATA, function(graphics) {
+        style.addStamp(_canvas, PlaneStampTexture.DATA, function (graphics) {
             _canvases.push(_canvas);
             _canvas.add(graphics);
             _this.render();
@@ -36485,36 +36758,36 @@ Class(function PlaneStampTexture() {
         _colorCount++;
         _styleCount++
     }
-    ;
-    this.addStamps = function(data) {
+        ;
+    this.addStamps = function (data) {
         if (!data) {
             return
         }
-        _canvas.children.forEach(function(child) {
+        _canvas.children.forEach(function (child) {
             if (child.destroy) {
                 child.destroy()
             }
         });
         _canvas.children = [];
         _canvases = [];
-        _this.delayedCall(function() {
-            data.forEach(function(d, i) {
+        _this.delayedCall(function () {
+            data.forEach(function (d, i) {
                 if (i > data.length - 20) {
                     _this.addOldStamp(d)
                 }
             })
         }, 500)
     }
-    ;
-    this.addOldStamp = function(data) {
+        ;
+    this.addOldStamp = function (data) {
         if (data.style == undefined || data.style >= _stylesList.length) {
             return
         }
         var style = _stylesList[data.style];
         var canvas = _this.initClass(Canvas, 210 * _s, 297 * _s);
         _canvases.push(canvas);
-        style.addStamp(canvas, data, function(graphics) {
-            _this.delayedCall(function() {
+        style.addStamp(canvas, data, function (graphics) {
+            _this.delayedCall(function () {
                 canvas.add(graphics);
                 canvas.render();
                 canvas.alreadyRendered = true;
@@ -36522,10 +36795,10 @@ Class(function PlaneStampTexture() {
             }, Utils.doRandom(0, 250))
         })
     }
-    ;
-    this.clearStamps = function() {
+        ;
+    this.clearStamps = function () {
         _canvases = [];
-        _canvas.children.forEach(function(child) {
+        _canvas.children.forEach(function (child) {
             if (child.destroy) {
                 child.destroy()
             }
@@ -36537,13 +36810,13 @@ Class(function PlaneStampTexture() {
 Class(function IOStamp1(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function drawArcText(str, size, bottom, offset) {
         str = str.toUpperCase();
         var gap = Math.PI * 1;
         var angle = bottom ? -gap : gap;
-        var canvas = new Canvas(size * 2,size * 2);
+        var canvas = new Canvas(size * 2, size * 2);
         var textSize = bottom ? 4.2 : 5;
         textSize *= 1.6;
         var context = canvas.context;
@@ -36580,23 +36853,24 @@ Class(function IOStamp1(_s) {
         context.restore();
         return canvas.div
     }
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var mask = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/io/0.png");
-        img.onload = function() {
-            var image = new CanvasTexture(img,360,360);
+        img.onload = function () {
+            var image = new CanvasTexture(img, 360, 360);
             image.x = -180;
             image.y = -180;
             mask.add(image);
-            var date = new CanvasTexture(drawArcText(data.date, 200, false),240,240);
+            var date = new CanvasTexture(drawArcText(data.date, 200, false), 240, 240);
             date.x = -120;
             date.y = -120;
             mask.add(date);
-            var location = new CanvasTexture(drawArcText(data.address, 200, true),280,280);
+            var locationText = formatLiveLocationText(data.city || data.location || data.address, data.region, data.country_name || data.country);
+            var location = new CanvasTexture(drawArcText(locationText, 200, true), 280, 280);
             location.x = -140;
             location.y = -140;
             mask.add(location);
@@ -36616,15 +36890,15 @@ Class(function IOStamp1(_s) {
 Class(function IOStamp2(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/io/1.png");
-        img.onload = function() {
+        img.onload = function () {
             var date = new CanvasGraphics();
             date.font = "bold " + 7 * _s + "pt roboto";
             date.textAlign = "center";
@@ -36633,7 +36907,7 @@ Class(function IOStamp2(_s) {
             date.fillText(data.date.toUpperCase(), 0, -80);
             graphics.add(date);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = formatLiveLocationText(data.city || data.location || data.address, data.region, data.country_name || data.country);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 6, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -36642,7 +36916,7 @@ Class(function IOStamp2(_s) {
             address.textBaseline = "middle";
             address.fillText(text.toUpperCase(), 0, 85);
             graphics.add(address);
-            var image = new CanvasTexture(img,380,380);
+            var image = new CanvasTexture(img, 380, 380);
             image.x = -190;
             image.y = -190;
             image.roataion = data.rotation;
@@ -36662,15 +36936,15 @@ Class(function IOStamp2(_s) {
 Class(function IOStamp3(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/io/2.png");
-        img.onload = function() {
+        img.onload = function () {
             var date2 = new CanvasGraphics();
             date2.font = "bold " + 4 * _s + "pt roboto";
             date2.textAlign = "center";
@@ -36680,7 +36954,7 @@ Class(function IOStamp3(_s) {
             date2.fillText(data.date.toUpperCase(), 0, -125);
             graphics.add(date2);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = formatLiveLocationText(data.city || data.location || data.address, data.region, data.country_name || data.country);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 6, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -36689,7 +36963,7 @@ Class(function IOStamp3(_s) {
             address.textBaseline = "middle";
             address.fillText(text.toUpperCase(), 0, 60);
             graphics.add(address);
-            var image = new CanvasTexture(img,360,360);
+            var image = new CanvasTexture(img, 360, 360);
             image.x = -180;
             image.y = -180;
             image.roataion = data.rotation;
@@ -36709,15 +36983,15 @@ Class(function IOStamp3(_s) {
 Class(function IOStamp4(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/io/3.png");
-        img.onload = function() {
+        img.onload = function () {
             var date = new CanvasGraphics();
             date.font = "bold " + 5 * _s + "pt roboto";
             date.textAlign = "center";
@@ -36726,7 +37000,7 @@ Class(function IOStamp4(_s) {
             date.fillText(data.date.toUpperCase(), 0, -35);
             graphics.add(date);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = formatLiveLocationText(data.city || data.location || data.address, data.region, data.country_name || data.country);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 6, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -36735,7 +37009,7 @@ Class(function IOStamp4(_s) {
             address.textBaseline = "middle";
             address.fillText(text.toUpperCase(), 0, -70);
             graphics.add(address);
-            var image = new CanvasTexture(img,380,380);
+            var image = new CanvasTexture(img, 380, 380);
             image.x = -190;
             image.y = -190;
             image.roataion = data.rotation;
@@ -36755,13 +37029,13 @@ Class(function IOStamp4(_s) {
 Class(function PeaceDayStamp(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function drawArcText(str, size, bottom, offset) {
         str = str.toUpperCase();
         var gap = Math.PI * 0.6;
         var angle = bottom ? -gap : gap;
-        var canvas = new Canvas(size * 2,size * 2);
+        var canvas = new Canvas(size * 2, size * 2);
         var textSize = bottom ? 4.4 : 5.2;
         var context = canvas.context;
         context.font = "bold " + textSize * _s + "pt roboto";
@@ -36799,7 +37073,7 @@ Class(function PeaceDayStamp(_s) {
         context.restore();
         return canvas.div
     }
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var mask = new CanvasGraphics();
         var img = new Image();
@@ -36812,17 +37086,19 @@ Class(function PeaceDayStamp(_s) {
         if (PlaneStampTexture.DATA && typeof PlaneStampTexture.DATA.image !== "number") {
             PlaneStampTexture.DATA.image = Global.PEACE_STAMP_COUNT
         }
-        img.onload = function() {
-            var image = new CanvasTexture(img,350,350);
+        img.onload = function () {
+            var image = new CanvasTexture(img, 350, 350);
             image.x = -175;
             image.y = -179;
             mask.add(image);
-            var date = new CanvasTexture(drawArcText(data.date + " " + data.country, 200, false, false),400,400);
+            var date = new CanvasTexture(drawArcText(data.date + " " + data.country, 200, false, false), 400, 400);
             date.x = -200;
             date.y = -200;
             mask.add(date);
-            var locationText = formatLocationText(data.city || "", data.region || "", data.country_name || data.country) || data.location || data.address || "Planet Earth";
-            var location = new CanvasTexture(drawArcText(locationText, 200, true),440,440);
+            var province = getStampProvinceText(data);
+            var countryStr = data.country_name || data.country || "";
+            var locationText = (province && countryStr) ? (province + ", " + countryStr) : (province || countryStr || "Planet Earth");
+            var location = new CanvasTexture(drawArcText(locationText, 200, true), 440, 440);
             location.x = -220;
             location.y = -220;
             mask.add(location);
@@ -36842,13 +37118,13 @@ Class(function PeaceDayStamp(_s) {
 Class(function SpecialStamp(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function drawArcText(str, size, bottom, offset) {
         str = str.toUpperCase();
         var gap = Math.PI * 0.6;
         var angle = bottom ? -gap : gap;
-        var canvas = new Canvas(size * 2,size * 2);
+        var canvas = new Canvas(size * 2, size * 2);
         var textSize = bottom ? 4.4 : 5.2;
         var context = canvas.context;
         context.font = "bold " + textSize * _s + "pt roboto";
@@ -36886,7 +37162,7 @@ Class(function SpecialStamp(_s) {
         context.restore();
         return canvas.div
     }
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var mask = new CanvasGraphics();
         var img = new Image();
@@ -36899,16 +37175,19 @@ Class(function SpecialStamp(_s) {
         if (PlaneStampTexture.DATA && typeof PlaneStampTexture.DATA.image !== "number") {
             PlaneStampTexture.DATA.image = Global.SPECIAL_STAMP_COUNT
         }
-        img.onload = function() {
-            var image = new CanvasTexture(img,350,350);
+        img.onload = function () {
+            var image = new CanvasTexture(img, 350, 350);
             image.x = -175;
             image.y = -179;
             mask.add(image);
-            var date = new CanvasTexture(drawArcText(data.date, 200, false, Global.SPECIAL_STAMP_COUNT == 7),400,400);
+            var date = new CanvasTexture(drawArcText(data.date, 200, false, Global.SPECIAL_STAMP_COUNT == 7), 400, 400);
             date.x = -200;
             date.y = -200;
             mask.add(date);
-            var location = new CanvasTexture(drawArcText(data.address + ", " + data.country, 200, true),440,440);
+            var province = getStampProvinceText(data);
+            var countryStr = data.country_name || data.country || "";
+            var locationText = (province && countryStr) ? (province + ", " + countryStr) : (province || countryStr || "Planet Earth");
+            var location = new CanvasTexture(drawArcText(locationText, 200, true), 440, 440);
             location.x = -220;
             location.y = -220;
             mask.add(location);
@@ -36928,15 +37207,15 @@ Class(function SpecialStamp(_s) {
 Class(function StampStyle1(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/outlines/0.png");
-        img.onload = function() {
+        img.onload = function () {
             var date = new CanvasGraphics();
             date.font = "bold " + 6 * _s + "pt roboto";
             date.textAlign = "center";
@@ -36945,7 +37224,7 @@ Class(function StampStyle1(_s) {
             date.fillText(data.date.toUpperCase(), 0, 22);
             graphics.add(date);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = getStampProvinceText(data);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 6, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -36964,7 +37243,7 @@ Class(function StampStyle1(_s) {
             country.textBaseline = "bottom";
             country.fillText(countryName.toUpperCase(), 0, -22 + size);
             graphics.add(country);
-            var image = new CanvasTexture(img,340,340);
+            var image = new CanvasTexture(img, 340, 340);
             image.x = -170;
             image.y = -170;
             image.roataion = data.rotation;
@@ -36984,10 +37263,10 @@ Class(function StampStyle1(_s) {
 Class(function StampStyle2(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function wrapText(text, x, y, maxWidth, lineHeight) {
-        var canvas = new Canvas(200,200);
+        var canvas = new Canvas(200, 200);
         var context = canvas.context;
         context.font = "bold " + 7 * _s + "pt roboto";
         context.fillStyle = "#000";
@@ -36997,13 +37276,13 @@ Class(function StampStyle2(_s) {
         context.restore();
         return canvas.div
     }
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/outlines/1.png");
-        img.onload = function() {
+        img.onload = function () {
             var max = 15;
             var countryName = data.country_name && data.country_name.length < max ? data.country_name : data.country;
             var split = countryName.split(" ");
@@ -37029,7 +37308,7 @@ Class(function StampStyle2(_s) {
             }
             graphics.add(country);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = getStampProvinceText(data);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 4.8, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -37038,7 +37317,7 @@ Class(function StampStyle2(_s) {
             address.textBaseline = "bottom";
             address.fillText(text.toUpperCase(), -100, split.length > 1 ? 60 : 40);
             graphics.add(address);
-            var image = new CanvasTexture(img,340,340);
+            var image = new CanvasTexture(img, 340, 340);
             image.x = -170;
             image.y = -170;
             image.roataion = data.rotation;
@@ -37066,15 +37345,15 @@ Class(function StampStyle2(_s) {
 Class(function StampStyle3(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/outlines/2.png");
-        img.onload = function() {
+        img.onload = function () {
             var date1 = new CanvasGraphics();
             date1.font = "bold " + 3.5 * _s + "pt roboto";
             date1.textAlign = "center";
@@ -37092,7 +37371,7 @@ Class(function StampStyle3(_s) {
             date2.fillText(data.date.toUpperCase(), 0, -145);
             graphics.add(date2);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = getStampProvinceText(data);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 6, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -37111,7 +37390,7 @@ Class(function StampStyle3(_s) {
             country.textBaseline = "top";
             country.fillText(countryName.toUpperCase(), 0, 0 - size * 1.7);
             graphics.add(country);
-            var image = new CanvasTexture(img,380,340);
+            var image = new CanvasTexture(img, 380, 340);
             image.x = -190;
             image.y = -170;
             image.roataion = data.rotation;
@@ -37131,15 +37410,15 @@ Class(function StampStyle3(_s) {
 Class(function StampStyle4(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/outlines/4.png");
-        img.onload = function() {
+        img.onload = function () {
             var date1 = new CanvasGraphics();
             date1.font = "bold " + 4 * _s + "pt roboto";
             date1.textAlign = "center";
@@ -37157,7 +37436,7 @@ Class(function StampStyle4(_s) {
             date2.fillText(data.date.toUpperCase(), 0, -145);
             graphics.add(date2);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = getStampProvinceText(data);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 6, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -37176,7 +37455,7 @@ Class(function StampStyle4(_s) {
             country.textBaseline = "top";
             country.fillText(countryName.toUpperCase(), 0, 3 - size * 1.5);
             graphics.add(country);
-            var image = new CanvasTexture(img,380,320);
+            var image = new CanvasTexture(img, 380, 320);
             image.x = -190;
             image.y = -160;
             image.roataion = data.rotation;
@@ -37196,15 +37475,15 @@ Class(function StampStyle4(_s) {
 Class(function StampStyle5(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/outlines/5.png");
-        img.onload = function() {
+        img.onload = function () {
             var date1 = new CanvasGraphics();
             date1.font = "bold " + 4 * _s + "pt roboto";
             date1.textAlign = "center";
@@ -37213,7 +37492,7 @@ Class(function StampStyle5(_s) {
             date1.fillText(data.date.toUpperCase(), 0, -20);
             graphics.add(date1);
             var locations = ["Los Angeles, CA", "Mountain View, CA", "Some long ass name awd awdawda awd", "short"];
-            var text = data.address;
+            var text = getStampProvinceText(data);
             var address = new CanvasGraphics();
             var size = Utils.convertRange(text.length, 5, 40, 6, 1);
             address.font = "bold " + size * _s + "pt roboto";
@@ -37229,7 +37508,7 @@ Class(function StampStyle5(_s) {
             country.textBaseline = "middle";
             country.fillText(data.country.toUpperCase(), 0, 20);
             graphics.add(country);
-            var image = new CanvasTexture(img,400,400);
+            var image = new CanvasTexture(img, 400, 400);
             image.x = -200;
             image.y = -200;
             image.roataion = data.rotation;
@@ -37249,7 +37528,7 @@ Class(function StampStyle5(_s) {
 Class(function StampStyle6(_s) {
     Inherit(this, Component);
     var _this = this;
-    (function() {}
+    (function () { }
     )();
     function drawArcText(str, size, bottom, offset) {
         str = str.toUpperCase();
@@ -37258,7 +37537,7 @@ Class(function StampStyle6(_s) {
         }
         var gap = Math.PI * 0.9;
         var angle = bottom ? -gap : gap;
-        var canvas = new Canvas(size * 2,size * 2);
+        var canvas = new Canvas(size * 2, size * 2);
         var textSize = bottom ? 4 : 4.6;
         textSize *= 1.6;
         var context = canvas.context;
@@ -37295,23 +37574,24 @@ Class(function StampStyle6(_s) {
         context.restore();
         return canvas.div
     }
-    this.addStamp = function(_canvas, data, callback) {
+    this.addStamp = function (_canvas, data, callback) {
         var graphics = new CanvasGraphics();
         var mask = new CanvasGraphics();
         var num = Utils.doRandom(0, 9);
         var img = new Image();
         img.crossOrigin = "anonymous";
         img.src = Images.getProxyPath("assets/images/stamps/outlines/6.png");
-        img.onload = function() {
-            var image = new CanvasTexture(img,360,360);
+        img.onload = function () {
+            var image = new CanvasTexture(img, 360, 360);
             image.x = -180;
             image.y = -180;
             mask.add(image);
-            var date = new CanvasTexture(drawArcText(data.date, 200, false),260,260);
+            var date = new CanvasTexture(drawArcText(data.date, 200, false), 260, 260);
             date.x = -130;
             date.y = -130;
             mask.add(date);
-            var location = new CanvasTexture(drawArcText(data.address, 200, true),300,300);
+            var text = getStampProvinceText(data);
+            var location = new CanvasTexture(drawArcText(text, 200, true), 300, 300);
             location.x = -150;
             location.y = -150;
             mask.add(location);
@@ -37339,7 +37619,7 @@ Class(function PrivacyPrompt() {
     Inherit(this, View);
     var _this = this;
     var $this, $privacy;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -37385,7 +37665,7 @@ Class(function UICatchPrompt() {
     var _this = this;
     var $this, $wrapper, $icon;
     var _timeout;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -37420,7 +37700,7 @@ Class(function UICatchPrompt() {
             opacity: 0
         }).tween({
             opacity: 1
-        }, 1200, "easeInOutSine", function() {
+        }, 1200, "easeInOutSine", function () {
             $wrapper.stopTween().css({
                 opacity: 1
             }).tween({
@@ -37435,11 +37715,11 @@ Class(function UICatchPrompt() {
             rotation: 0,
             y: 30,
             x: -30
-        }, 1800, "easeInOutQuart", function() {
+        }, 1800, "easeInOutQuart", function () {
             _timeout = _this.delayedCall(animateIcon, 100)
         })
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         if (!$wrapper) {
             return
         }
@@ -37452,8 +37732,8 @@ Class(function UICatchPrompt() {
             opacity: 1
         }, 500, "easeOutSine", 400)
     }
-    ;
-    this.animateOut = function(callback) {
+        ;
+    this.animateOut = function (callback) {
         if ($this.stopTween) {
             $this.stopTween()
         }
@@ -37463,7 +37743,7 @@ Class(function UICatchPrompt() {
         _this.visible = false;
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $wrapper.stopTween();
             $icon.stopTween();
             $this.hide();
@@ -37477,7 +37757,7 @@ Class(function UIClosePrompt(_isLocal) {
     Inherit(this, View);
     var _this = this;
     var $this, $overlay;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -37509,13 +37789,13 @@ Class(function UIClosePrompt(_isLocal) {
     function addHandlers() {
         $this.touchClick(hover, click)
     }
-    function hover() {}
+    function hover() { }
     function click() {
         if (_this.isTimeout) {
             return
         }
         _this.isTimeout = true;
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _this.isTimeout = false
         }, 1000);
         $overlay.css({
@@ -37527,7 +37807,7 @@ Class(function UIClosePrompt(_isLocal) {
             scaleX: 1.4,
             scaleY: 1.4,
             opacity: 0
-        }, 600, "easeOutCubic", function() {
+        }, 600, "easeOutCubic", function () {
             $overlay.transform({
                 scaleX: 0.25,
                 scaleY: 0.25
@@ -37540,18 +37820,18 @@ Class(function UIClosePrompt(_isLocal) {
         }
         AudioController.trigger("tap")
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.show().css({
             opacity: 0
         }).tween({
             opacity: 1
         }, 500, "easeOutSine")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $this.hide()
         })
     }
@@ -37560,7 +37840,7 @@ Class(function UIFlipPrompt() {
     Inherit(this, View);
     var _this = this;
     var $this, $icon;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -37586,23 +37866,23 @@ Class(function UIFlipPrompt() {
     }
     function hover(e) {
         switch (e.action) {
-        case "over":
-            $this.tween({
-                scale: 0.95
-            }, 50, "easeOutSine");
-            break;
-        case "out":
-            $icon.tween({
-                scale: 1
-            }, 300, "easeOutSine");
-            break
+            case "over":
+                $this.tween({
+                    scale: 0.95
+                }, 50, "easeOutSine");
+                break;
+            case "out":
+                $icon.tween({
+                    scale: 1
+                }, 300, "easeOutSine");
+                break
         }
     }
     function click() {
         _this.events.fire(HydraEvents.COMPLETE);
         AudioController.trigger("tap")
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.show().css({
             opacity: 0
         }).transform({
@@ -37612,20 +37892,20 @@ Class(function UIFlipPrompt() {
             scale: 1
         }, 500, "easeOutCubic")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $this.hide()
         })
     }
-    ;
-    this.flip = function(isFlipped) {
+        ;
+    this.flip = function (isFlipped) {
         $this.tween({
             opacity: 0,
             scale: 0.9
-        }, 200, "easeOutCubic", function() {
+        }, 200, "easeOutCubic", function () {
             if (isFlipped) {
                 $this.css({
                     top: "auto",
@@ -37648,7 +37928,7 @@ Class(function UIInstructions() {
     Inherit(this, View);
     var _this = this;
     var $this, $text, $heading, $subText;
-    (function() {
+    (function () {
         initHTML();
         style();
         addListeners()
@@ -37701,7 +37981,7 @@ Class(function UIInstructions() {
             $text.text($text.textSet)
         }
     }
-    this.update = function(copy, top, rotate) {
+    this.update = function (copy, top, rotate) {
         $text.textSet = Copy[copy];
         if ($text.textSet.strpos("Wave your phone")) {
             if (!ThrowMechanic.HAS_MOTION) {
@@ -37718,7 +37998,7 @@ Class(function UIInstructions() {
         $heading.textSet = "";
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             top = top || ($text.textSet.strpos("<br") ? 30 : 50);
             $text.css({
                 top: top,
@@ -37741,8 +38021,8 @@ Class(function UIInstructions() {
             _this.animateIn()
         })
     }
-    ;
-    this.heading = function(copy, top, rotate) {
+        ;
+    this.heading = function (copy, top, rotate) {
         top = top || 40;
         $heading.textSet = Copy[copy];
         $heading.css({
@@ -37765,8 +38045,8 @@ Class(function UIInstructions() {
         }
         $heading.show()
     }
-    ;
-    this.subText = function(copy, top, rotate) {
+        ;
+    this.subText = function (copy, top, rotate) {
         top = top || 50;
         $subText.textSet = Copy[copy];
         $subText.css({
@@ -37789,8 +38069,8 @@ Class(function UIInstructions() {
         }
         $subText.show()
     }
-    ;
-    this.animateIn = function() {
+        ;
+    this.animateIn = function () {
         var text = $text.textSet;
         if (Mobile.isNative() && !Mobile.System.CONNECTIVITY && text.strpos("catch a plane")) {
             text = ""
@@ -37840,12 +38120,12 @@ Class(function UIInstructions() {
             opacity: 1
         }, 300, "easeOutSine")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _this.visible = false;
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $this.hide()
         })
     }
@@ -37854,7 +38134,7 @@ Class(function UINewPrompt() {
     Inherit(this, View);
     var _this = this;
     var $this, $icon, $plus, $circle, $ring;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -37907,16 +38187,16 @@ Class(function UINewPrompt() {
     }
     function hover(e) {
         switch (e.action) {
-        case "over":
-            $icon.tween({
-                scale: 0.95
-            }, 50, "easeOutSine");
-            break;
-        case "out":
-            $icon.tween({
-                scale: 1
-            }, 300, "easeOutSine");
-            break
+            case "over":
+                $icon.tween({
+                    scale: 0.95
+                }, 50, "easeOutSine");
+                break;
+            case "out":
+                $icon.tween({
+                    scale: 1
+                }, 300, "easeOutSine");
+                break
         }
     }
     function click() {
@@ -37924,7 +38204,7 @@ Class(function UINewPrompt() {
             return
         }
         _this.isTimeout = true;
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _this.isTimeout = false
         }, 1000);
         $icon.tween({
@@ -37945,7 +38225,7 @@ Class(function UINewPrompt() {
             scale: 1,
             y: 0,
             opacity: 1
-        }, 600, "easeOutQuart", function() {
+        }, 600, "easeOutQuart", function () {
             _this.events.fire(PlanesEvents.NEW_PLANE)
         });
         AudioController.trigger("tap");
@@ -37991,7 +38271,7 @@ Class(function UINewPrompt() {
             y: 0,
             rotation: 0,
             opacity: 1
-        }, 800, "easeOutQuart", function() {
+        }, 800, "easeOutQuart", function () {
             if (!_this.isIdle) {
                 return
             }
@@ -38001,7 +38281,7 @@ Class(function UINewPrompt() {
             $icon.cover.tween({
                 opacity: 0
             }, 300, "easeOutSine");
-            _this.delayedCall(function() {
+            _this.delayedCall(function () {
                 if (!_this.isIdle) {
                     return
                 }
@@ -38010,11 +38290,11 @@ Class(function UINewPrompt() {
                 }, 300, "easeOutSine", 1200);
                 $icon.inner.tween({
                     opacity: 1
-                }, 1500, "easeInOutSine", function() {
+                }, 1500, "easeInOutSine", function () {
                     $plus.tween({
                         opacity: 1,
                         scale: 1
-                    }, 500, "easeOutCubic", 600, function() {
+                    }, 500, "easeOutCubic", 600, function () {
                         if (!_this.isIdle) {
                             return
                         }
@@ -38030,7 +38310,7 @@ Class(function UINewPrompt() {
             }, 1500)
         })
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         if (_this.isAnimatedIn) {
             return
         }
@@ -38063,17 +38343,17 @@ Class(function UINewPrompt() {
         _this.isIdle = true;
         _this.delayedCall(pulseRing, 800)
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _this.isAnimatedIn = false;
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $this.hide()
         });
         $circle.tween({
             opacity: 0
-        }, 200, "easeOutSine", 100, function() {
+        }, 200, "easeOutSine", 100, function () {
             $circle.hide()
         });
         _this.isIdle = false
@@ -38083,7 +38363,7 @@ Class(function UIPinchPrompt(_y) {
     Inherit(this, View);
     var _this = this;
     var $this;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -38102,16 +38382,16 @@ Class(function UIPinchPrompt(_y) {
             opacity: 0
         })
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.show().tween({
             opacity: 0.8
         }, 1000, "easeOutSine")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
-        }, 500, "easeOutSine", function() {
+        }, 500, "easeOutSine", function () {
             $this.hide()
         })
     }
@@ -38121,7 +38401,7 @@ Class(function UIRotatePrompt() {
     var _this = this;
     var $this, $spin;
     var _anim;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -38145,7 +38425,7 @@ Class(function UIRotatePrompt() {
         _anim.applyTo($spin);
         $this.hide()
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.show().css({
             opacity: 0
         }).tween({
@@ -38153,11 +38433,11 @@ Class(function UIRotatePrompt() {
         }, 800, "easeOutSine");
         _anim.play()
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
-        }, 200, "easeOutSine", function() {
+        }, 200, "easeOutSine", function () {
             _anim.stop();
             $this.hide()
         })
@@ -38167,7 +38447,7 @@ Class(function UIScaleCompletePrompt() {
     Inherit(this, View);
     var _this = this;
     var $this, $icon;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -38193,23 +38473,23 @@ Class(function UIScaleCompletePrompt() {
     }
     function hover(e) {
         switch (e.action) {
-        case "over":
-            $this.tween({
-                scale: 0.95
-            }, 50, "easeOutSine");
-            break;
-        case "out":
-            $icon.tween({
-                scale: 1
-            }, 300, "easeOutSine");
-            break
+            case "over":
+                $this.tween({
+                    scale: 0.95
+                }, 50, "easeOutSine");
+                break;
+            case "out":
+                $icon.tween({
+                    scale: 1
+                }, 300, "easeOutSine");
+                break
         }
     }
     function click() {
         _this.events.fire(HydraEvents.COMPLETE);
         AudioController.trigger("tap")
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.show().css({
             opacity: 0
         }).transform({
@@ -38219,11 +38499,11 @@ Class(function UIScaleCompletePrompt() {
             scale: 1
         }, 500, "easeOutCubic")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $this.hide()
         })
     }
@@ -38232,7 +38512,7 @@ Class(function UISharePrompt(_isLocal) {
     Inherit(this, View);
     var _this = this;
     var $this, $overlay;
-    (function() {
+    (function () {
         initHTML();
         style();
         addHandlers()
@@ -38263,13 +38543,13 @@ Class(function UISharePrompt(_isLocal) {
     function addHandlers() {
         $this.touchClick(hover, click)
     }
-    function hover() {}
+    function hover() { }
     function click() {
         if (_this.isTimeout) {
             return
         }
         _this.isTimeout = true;
-        _this.delayedCall(function() {
+        _this.delayedCall(function () {
             _this.isTimeout = false
         }, 1000);
         $overlay.css({
@@ -38281,7 +38561,7 @@ Class(function UISharePrompt(_isLocal) {
             scaleX: 1.4,
             scaleY: 1.4,
             opacity: 0
-        }, 600, "easeOutCubic", function() {
+        }, 600, "easeOutCubic", function () {
             $overlay.transform({
                 scaleX: 0.25,
                 scaleY: 0.25
@@ -38294,18 +38574,18 @@ Class(function UISharePrompt(_isLocal) {
         }
         AudioController.trigger("tap")
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.show().css({
             opacity: 0
         }).tween({
             opacity: 1
         }, 500, "easeOutSine")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $this.hide()
         })
     }
@@ -38314,7 +38594,7 @@ Class(function UIThrowPrompt() {
     Inherit(this, View);
     var _this = this;
     var $this, $wrapper, $icon;
-    (function() {
+    (function () {
         initHTML();
         style()
     }
@@ -38342,7 +38622,7 @@ Class(function UIThrowPrompt() {
             opacity: 0
         }).tween({
             opacity: 1
-        }, 1000, "easeOutSine", function() {
+        }, 1000, "easeOutSine", function () {
             $wrapper.stopTween().css({
                 opacity: 1
             }).tween({
@@ -38357,11 +38637,11 @@ Class(function UIThrowPrompt() {
             rotation: 70,
             y: -40,
             x: -20
-        }, 2000, "easeInOutQuart", function() {
+        }, 2000, "easeInOutQuart", function () {
             _this.delayedCall(animateIcon, 500)
         })
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         _this.visible = true;
         animateIcon();
         $this.show().css({
@@ -38370,20 +38650,20 @@ Class(function UIThrowPrompt() {
             opacity: 1
         }, 500, "easeOutSine")
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         _this.visible = false;
         $this.tween({
             opacity: 0
-        }, 300, "easeOutSine", function() {
+        }, 300, "easeOutSine", function () {
             $this.hide()
         })
     }
-    ;
-    this.flip = function(isFlipped) {
+        ;
+    this.flip = function (isFlipped) {
         $this.tween({
             opacity: 0
-        }, 200, "easeOutSine", function() {
+        }, 200, "easeOutSine", function () {
             if (isFlipped) {
                 $this.transform({
                     scaleY: -1
@@ -38406,7 +38686,7 @@ Class(function UITitle(_text) {
     var $this;
     var _lines;
     var _size = Mobile.phone ? 26 : 32;
-    (function() {
+    (function () {
         initHTML()
     }
     )();
@@ -38432,7 +38712,7 @@ Class(function UITitle(_text) {
             bottom: "50%",
             marginBottom: _size
         });
-        defer(function() {
+        defer(function () {
             for (var i = 0; i < _lines.length; i++) {
                 _lines[i].words = SplitTextfield.split(_lines[i], "word");
                 for (var j = 0; j < _lines[i].words.length; j++) {
@@ -38451,7 +38731,7 @@ Class(function UITitle(_text) {
             }
         })
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.visible();
         var delay = 0;
         for (var i = 0; i < _lines.length; i++) {
@@ -38465,8 +38745,8 @@ Class(function UITitle(_text) {
             }
         }
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
         }, 500, "easeOutCubic")
@@ -38477,7 +38757,7 @@ Class(function PlaygroundAntimatter() {
     var _this = this;
     var _antimatter;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initAntimatter()
     }
     )();
@@ -38506,7 +38786,7 @@ Class(function PlaygroundAntimatter() {
             array[i * 3 + 1] = color.g;
             array[i * 3 + 2] = color.b
         }
-        return new THREE.BufferAttribute(array,3)
+        return new THREE.BufferAttribute(array, 3)
     }
     function particleReady() {
         var vertices = _antimatter.vertices;
@@ -38537,7 +38817,7 @@ Class(function PlaygroundFlock() {
     var _this = this;
     var _meshes;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initMeshes()
     }
     )();
@@ -38553,7 +38833,7 @@ Class(function PlaygroundFlocking() {
     var _this = this;
     var _antimatter;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initAntimatter()
     }
     )();
@@ -38615,7 +38895,7 @@ Class(function PlaygroundFlocking() {
         };
         var pass = _this.initClass(AntimatterPass, "Flocking", uniforms);
         _antimatter.addPass(pass);
-        Render.start(function() {
+        Render.start(function () {
             _antimatter.update();
             pass.shader.uniforms.dT.value = Render.DELTA
         })
@@ -38625,7 +38905,7 @@ Class(function PlaygroundList() {
     Inherit(this, View);
     var _this = this;
     var $this;
-    (function() {
+    (function () {
         initHTML()
     }
     )();
@@ -38638,7 +38918,7 @@ Class(function PlaygroundPlane() {
     var _this = this;
     var _plane;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initGeom()
     }
     )();
@@ -38654,7 +38934,7 @@ Class(function PlaygroundShadow() {
     Inherit(this, Component);
     var _this = this;
     this.object3D = new THREE.Object3D();
-    (function() {
+    (function () {
         initSphere();
         initMesh();
         initPlane()
@@ -38663,11 +38943,11 @@ Class(function PlaygroundShadow() {
     function initMesh() {
         var _geometry = new THREE.BufferGeometry();
         _geometry = new THREE.SphereGeometry(4);
-        var shader = new Shader("ShadowTest","ShadowTest");
+        var shader = new Shader("ShadowTest", "ShadowTest");
         shader.uniforms = THREE.UniformsUtils.merge([THREE.UniformsLib.lights, {
             lightPosition: {
                 type: "v3",
-                value: new THREE.Vector3(700,700,700)
+                value: new THREE.Vector3(700, 700, 700)
             },
             time: {
                 type: "f",
@@ -38675,19 +38955,19 @@ Class(function PlaygroundShadow() {
             }
         }]);
         shader.material.lights = true;
-        var mesh = new THREE.Mesh(_geometry,new THREE.MeshPhongMaterial());
+        var mesh = new THREE.Mesh(_geometry, new THREE.MeshPhongMaterial());
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.scale.set(50, 50, 50);
-        Render.start(function() {
+        Render.start(function () {
             shader.uniforms.time.value = Render.TSL * 0.0025
         });
         Global.PLAYGROUND_SCENE.add(mesh)
     }
     function initSphere() {
-        var geom = new THREE.PlaneGeometry(100,100);
+        var geom = new THREE.PlaneGeometry(100, 100);
         var mat = new THREE.MeshPhongMaterial();
-        var mesh = new THREE.Mesh(geom,mat);
+        var mesh = new THREE.Mesh(geom, mat);
         mesh.scale.set(10, 10, 10);
         mesh.rotation.x = Utils.toRadians(90);
         mat.side = THREE.DoubleSide;
@@ -38695,15 +38975,15 @@ Class(function PlaygroundShadow() {
         mesh.receiveShadow = true
     }
     function initPlane() {
-        var geometry = new THREE.PlaneBufferGeometry(100,100);
+        var geometry = new THREE.PlaneBufferGeometry(100, 100);
         var planeMaterial = new THREE.MeshPhongMaterial({
             color: 16777215
         });
-        var shader = new Shader("ShadowTest","ShadowTest");
+        var shader = new Shader("ShadowTest", "ShadowTest");
         shader.uniforms = THREE.UniformsUtils.merge([THREE.UniformsLib.lights, {
             lightPosition: {
                 type: "v3",
-                value: new THREE.Vector3(700,700,700)
+                value: new THREE.Vector3(700, 700, 700)
             },
             time: {
                 type: "f",
@@ -38711,14 +38991,14 @@ Class(function PlaygroundShadow() {
             }
         }]);
         shader.material.lights = true;
-        var ground = new THREE.Mesh(geometry,planeMaterial);
+        var ground = new THREE.Mesh(geometry, planeMaterial);
         ground.position.set(1000, -1000, 0);
         ground.rotation.x = -Math.PI / 2;
         ground.scale.set(100, 100, 100);
         ground.castShadow = false;
         ground.receiveShadow = true;
         Global.PLAYGROUND_SCENE.add(ground);
-        var light = new THREE.DirectionalLight(16777215,1);
+        var light = new THREE.DirectionalLight(16777215, 1);
         light.position.set(0, 1000, 0);
         light.shadow.camera.near = 1;
         light.shadow.camera.far = 10000;
@@ -38728,7 +39008,7 @@ Class(function PlaygroundShadow() {
         light.shadow.camera.bottom = -750;
         light.shadow.camera.updateProjectionMatrix();
         console.log(light.shadow.camera);
-        Render.start(function(t) {});
+        Render.start(function (t) { });
         light.shadow.mapSize.width = 2048;
         light.shadow.mapSize.height = 2048;
         light.castShadow = true;
@@ -38741,7 +39021,7 @@ Class(function SidescreenView() {
     var _this = this;
     var $this, $logo, $ioLogo;
     var _text;
-    (function() {
+    (function () {
         initHTML();
         initLogo();
         initText();
@@ -38789,7 +39069,7 @@ Class(function SidescreenView() {
         _text.element.invisible();
         _text.animateIn(1500)
     }
-    this.animateIn = function() {
+    this.animateIn = function () {
         $this.visible();
         animateText();
         $ioLogo.css({
@@ -38805,7 +39085,7 @@ Class(function SidescreenText(_text) {
     var $this;
     var _lines;
     var _size = 50;
-    (function() {
+    (function () {
         initHTML()
     }
     )();
@@ -38837,7 +39117,7 @@ Class(function SidescreenText(_text) {
             bottom: "50%",
             marginBottom: 0
         });
-        defer(function() {
+        defer(function () {
             for (var i = 0; i < _lines.length; i++) {
                 _lines[i].words = SplitTextfield.split(_lines[i], "word");
                 for (var j = 0; j < _lines[i].words.length; j++) {
@@ -38850,7 +39130,7 @@ Class(function SidescreenText(_text) {
             }
         })
     }
-    this.animateIn = function(d) {
+    this.animateIn = function (d) {
         $this.visible();
         var delay = d || 0;
         for (var i = 0; i < _lines.length; i++) {
@@ -38867,8 +39147,8 @@ Class(function SidescreenText(_text) {
             }
         }
     }
-    ;
-    this.animateOut = function() {
+        ;
+    this.animateOut = function () {
         $this.tween({
             opacity: 0
         }, 500, "easeOutCubic")
@@ -38879,7 +39159,7 @@ Class(function Main() {
     var _this = this;
     Global.SPECIAL_STAMP_COUNT = Utils.doRandom(0, 9);
     Global.PEACE_STAMP_COUNT = Utils.doRandom(0, 4);
-    (function() {
+    (function () {
         Utils3D.disableWarnings();
         if (!Storage.get(Config.LOCALSTORAGE_KEY)) {
             Storage.set("created_planes", null);
@@ -38892,7 +39172,7 @@ Class(function Main() {
         }
         GATracker.trackPage(Mobile.isNative() ? "native" : "web");
         if (!Device.graphics.webgl) {
-            return window.location = "http://planes.damvan.ca/fallback"
+            return window.location = "https://cmoneon.github.io/planes/fallback"
         }
         Hydra.CDN = Config.CDN;
         Utils3D.PATH = Config.CDN;
@@ -38907,10 +39187,10 @@ Class(function Main() {
             localStorage.clear();
             Storage.set("clear_tue", 1)
         }
-        Images.getProxyPath = function(path) {
+        Images.getProxyPath = function (path) {
             return Config.PROXY + path
         }
-        ;
+            ;
         setupSocket();
         setupNotifications();
         if (window.LOCATION_DENIED) {
@@ -38918,8 +39198,8 @@ Class(function Main() {
             return
         }
         if (Hydra.HASH.strpos("playground")) {
-            AssetLoader.loadAllAssets(function() {
-                setTimeout(function() {
+            AssetLoader.loadAllAssets(function () {
+                setTimeout(function () {
                     Playground.instance()
                 }, 500)
             });
