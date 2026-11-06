@@ -10391,7 +10391,7 @@ Class(function Config() {
         },
         priority: 6,
         realtime: true,
-        region: "NS",
+        region: "Nova Scotia",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10402,7 +10402,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "NS",
+        region: "Nova Scotia",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10413,7 +10413,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "NS",
+        region: "Nova Scotia",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10424,7 +10424,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "NS",
+        region: "Nova Scotia",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10435,7 +10435,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: false,
-        region: "ON",
+        region: "Ontario",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10446,7 +10446,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "NL",
+        region: "Newfoundland and Labrador",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10457,7 +10457,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "BC",
+        region: "British Columbia",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10468,7 +10468,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "IA",
+        region: "Iowa",
         country: "US",
         country_name: "USA"
     }, {
@@ -10479,7 +10479,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "CO",
+        region: "Colorado",
         country: "US",
         country_name: "USA"
     }, {
@@ -10490,7 +10490,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "QC",
+        region: "Quebec",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10501,7 +10501,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "WA",
+        region: "Washington",
         country: "US",
         country_name: "USA"
     }, {
@@ -10523,7 +10523,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "TX",
+        region: "Texas",
         country: "US",
         country_name: "USA"
     }, {
@@ -10556,7 +10556,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: true,
-        region: "NS",
+        region: "Nova Scotia",
         country: "CA",
         country_name: "Canada"
     }, {
@@ -10567,7 +10567,7 @@ Class(function Config() {
         },
         priority: 4,
         realtime: false,
-        region: "AB",
+        region: "Alberta",
         country: "CA",
         country_name: "Canada"
     }]
@@ -25056,6 +25056,129 @@ Class(function PinchMechanism() {
         removeListeners()
     }
 });
+var COUNTRY_MAP = {
+    ca: "Canada", can: "Canada", canada: "Canada",
+    us: "USA", usa: "USA", "united states": "USA",
+    gb: "UK", gbr: "UK", uk: "UK", "united kingdom": "UK", "great britain": "UK",
+    au: "Australia", aus: "Australia", australia: "Australia",
+    ru: "Russia", rus: "Russia", russia: "Russia", "russian federation": "Russia",
+    it: "Italy", ita: "Italy", italy: "Italy",
+    fr: "France", fra: "France", france: "France",
+    de: "Germany", deu: "Germany", germany: "Germany", deutschland: "Germany",
+    jp: "Japan", jpn: "Japan", japan: "Japan",
+    cn: "China", chn: "China", china: "China",
+    in: "India", ind: "India", india: "India",
+    br: "Brazil", bra: "Brazil", brazil: "Brazil", brasil: "Brazil",
+    mx: "Mexico", mex: "Mexico", mexico: "Mexico",
+    nl: "Netherlands", nld: "Netherlands", netherlands: "Netherlands",
+    ch: "Switzerland", che: "Switzerland", switzerland: "Switzerland",
+    se: "Sweden", swe: "Sweden", sweden: "Sweden",
+    no: "Norway", nor: "Norway", norway: "Norway",
+    fi: "Finland", fin: "Finland", finland: "Finland",
+    dk: "Denmark", dnk: "Denmark", denmark: "Denmark",
+    pl: "Poland", pol: "Poland", poland: "Poland",
+    ua: "Ukraine", ukr: "Ukraine", ukraine: "Ukraine",
+    be: "Belgium", bel: "Belgium", belgium: "Belgium",
+    at: "Austria", aut: "Austria", austria: "Austria",
+    ie: "Ireland", irl: "Ireland", ireland: "Ireland",
+    pt: "Portugal", prt: "Portugal", portugal: "Portugal",
+    gr: "Greece", grc: "Greece", greece: "Greece",
+    cz: "Czech Republic", cze: "Czech Republic", "czech republic": "Czech Republic", czechia: "Czech Republic",
+    hu: "Hungary", hun: "Hungary", hungary: "Hungary",
+    ro: "Romania", rou: "Romania", romania: "Romania",
+    nz: "New Zealand", nzl: "New Zealand", "new zealand": "New Zealand",
+    kr: "South Korea", kor: "South Korea", "south korea": "South Korea", korea: "South Korea",
+    ar: "Argentina", arg: "Argentina", argentina: "Argentina",
+    cl: "Chile", chl: "Chile", chile: "Chile",
+    co: "Colombia", col: "Colombia", colombia: "Colombia",
+    za: "South Africa", zaf: "South Africa", "south africa": "South Africa",
+    eg: "Egypt", egy: "Egypt", egypt: "Egypt",
+    tr: "Turkey", tur: "Turkey", turkey: "Turkey",
+    sa: "Saudi Arabia", sau: "Saudi Arabia", "saudi arabia": "Saudi Arabia",
+    sg: "Singapore", sgp: "Singapore", singapore: "Singapore",
+    my: "Malaysia", mys: "Malaysia", malaysia: "Malaysia",
+    id: "Indonesia", idn: "Indonesia", indonesia: "Indonesia",
+    th: "Thailand", tha: "Thailand", thailand: "Thailand",
+    vn: "Vietnam", vnm: "Vietnam", vietnam: "Vietnam",
+    ph: "Philippines", phl: "Philippines", philippines: "Philippines",
+    pk: "Pakistan", pak: "Pakistan", pakistan: "Pakistan",
+    ng: "Nigeria", nga: "Nigeria", nigeria: "Nigeria",
+    ke: "Kenya", ken: "Kenya", kenya: "Kenya",
+    il: "Israel", isr: "Israel", israel: "Israel",
+    ae: "UAE", are: "UAE", uae: "UAE", "united arab emirates": "United Arab Emirates"
+};
+
+function expandCountry(country) {
+    if (!country) return "";
+    var c = country.toString().trim();
+    var key = c.toLowerCase();
+    if (typeof COUNTRY_MAP !== "undefined" && COUNTRY_MAP[key]) return COUNTRY_MAP[key];
+    if (c.length === 2 || c.length === 3) return c.toUpperCase();
+    return c.charAt(0).toUpperCase() + c.slice(1);
+}
+
+var REGION_MAP_CA = {
+    ab: "Alberta", bc: "British Columbia", mb: "Manitoba", nb: "New Brunswick",
+    nl: "Newfoundland and Labrador", ns: "Nova Scotia", nt: "Northwest Territories",
+    nu: "Nunavut", on: "Ontario", pe: "Prince Edward Island", pei: "Prince Edward Island",
+    qc: "Quebec", sk: "Saskatchewan", yt: "Yukon"
+};
+
+var REGION_MAP_US = {
+    al: "Alabama", ak: "Alaska", az: "Arizona", ar: "Arkansas", ca: "California",
+    co: "Colorado", ct: "Connecticut", de: "Delaware", fl: "Florida", ga: "Georgia",
+    hi: "Hawaii", id: "Idaho", il: "Illinois", in: "Indiana", ia: "Iowa",
+    ks: "Kansas", ky: "Kentucky", la: "Louisiana", me: "Maine", md: "Maryland",
+    ma: "Massachusetts", mi: "Michigan", mn: "Minnesota", ms: "Mississippi", mo: "Missouri",
+    mt: "Montana", ne: "Nebraska", nv: "Nevada", nh: "New Hampshire", nj: "New Jersey",
+    nm: "New Mexico", ny: "New York", nc: "North Carolina", nd: "North Dakota", oh: "Ohio",
+    ok: "Oklahoma", or: "Oregon", pa: "Pennsylvania", ri: "Rhode Island", sc: "South Carolina",
+    sd: "South Dakota", tn: "Tennessee", tx: "Texas", ut: "Utah", vt: "Vermont",
+    va: "Virginia", wa: "Washington", wv: "West Virginia", wi: "Wisconsin", wy: "Wyoming",
+    dc: "Washington D.C."
+};
+
+var REGION_MAP_AU = {
+    nsw: "New South Wales", vic: "Victoria", qld: "Queensland", sa: "South Australia",
+    tas: "Tasmania", act: "Australian Capital Territory", nt: "Northern Territory"
+};
+
+var REGION_MAP_UK = {
+    eng: "England", sct: "Scotland", wls: "Wales", nir: "Northern Ireland"
+};
+
+function expandRegion(region, country) {
+    if (!region) return "";
+    var r = region.toString().trim();
+    var key = r.toLowerCase().replace(/\./g, "");
+    var cKey = (country || "").toString().trim().toLowerCase();
+
+    if (cKey === "ca" || cKey === "can" || cKey === "canada") {
+        if (typeof REGION_MAP_CA !== "undefined" && REGION_MAP_CA[key]) return REGION_MAP_CA[key];
+    }
+    if (cKey === "us" || cKey === "usa" || cKey === "united states") {
+        if (typeof REGION_MAP_US !== "undefined" && REGION_MAP_US[key]) return REGION_MAP_US[key];
+    }
+    if (cKey === "au" || cKey === "aus" || cKey === "australia") {
+        if (key === "wa") return "Western Australia";
+        if (typeof REGION_MAP_AU !== "undefined" && REGION_MAP_AU[key]) return REGION_MAP_AU[key];
+    }
+    if (cKey === "gb" || cKey === "gbr" || cKey === "uk" || cKey === "united kingdom") {
+        if (typeof REGION_MAP_UK !== "undefined" && REGION_MAP_UK[key]) return REGION_MAP_UK[key];
+    }
+
+    if (typeof REGION_MAP_CA !== "undefined" && REGION_MAP_CA[key]) return REGION_MAP_CA[key];
+    if (typeof REGION_MAP_US !== "undefined" && REGION_MAP_US[key]) return REGION_MAP_US[key];
+    if (typeof REGION_MAP_AU !== "undefined" && REGION_MAP_AU[key]) return REGION_MAP_AU[key];
+    if (typeof REGION_MAP_UK !== "undefined" && REGION_MAP_UK[key]) return REGION_MAP_UK[key];
+
+    return r;
+}
+
+function abbreviateRegion(region, country) {
+    return expandRegion(region, country);
+}
+
 Module(function DefaultPlane() {
     function getPlane() {
         var location = {};
@@ -25064,9 +25187,11 @@ Module(function DefaultPlane() {
             location = Data.User.getLocation() || {};
             coords = Data.User.getCoords() || coords
         } catch (e) { }
-        var address = location.region || location.country_name || location.country || "Planet Earth";
-        var country = (location.country || "").toUpperCase() || "US";
-        var countryName = location.country_name || location.country || "";
+        var rawCountry = (location.country || "").toUpperCase() || "US";
+        var countryName = expandCountry(location.country_name || location.country || rawCountry || "USA");
+        var region = expandRegion(location.region || "", countryName || rawCountry);
+        var address = region || countryName || "Planet Earth";
+        var country = rawCountry;
         var pool = "world";
         try {
             pool = Data.User.getPool(location.country, coords)
@@ -25077,7 +25202,11 @@ Module(function DefaultPlane() {
                 pool: pool,
                 date: "May 18, 2016",
                 address: address,
+                location: formatLiveLocationText("", region, countryName),
+                city: "",
+                region: region,
                 country: country,
+                country_name: countryName,
                 countries: 1,
                 stamps: [{
                     position: {
@@ -25090,6 +25219,9 @@ Module(function DefaultPlane() {
                     image: 1,
                     date: "05.18.16",
                     address: address,
+                    location: formatLiveLocationText("", region, countryName),
+                    city: "",
+                    region: region,
                     country: country,
                     country_name: countryName,
                     coords: coords
@@ -26704,88 +26836,6 @@ Class(function SocketPipeSender(_type, _exp, _atIO) {
         ;
     this.event = function (data) { }
 });
-function abbreviateRegion(region, country) {
-    region = (region || "").toString().trim();
-    if (!region) {
-        return ""
-    }
-    var normalized = region.toLowerCase().replace(/\./g, "");
-    var countryCode = (country || "").toString().trim().toLowerCase();
-    var map = {
-        alberta: "AB",
-        "british columbia": "BC",
-        manitoba: "MB",
-        "new brunswick": "NB",
-        "newfoundland and labrador": "NL",
-        "newfoundland": "NL",
-        "nova scotia": "NS",
-        ontario: "ON",
-        "prince edward island": "PE",
-        quebec: "QC",
-        saskatchewan: "SK",
-        yukon: "YT",
-        "northwest territories": "NT",
-        nunavut: "NU",
-        alabama: "AL",
-        alaska: "AK",
-        arizona: "AZ",
-        arkansas: "AR",
-        california: "CA",
-        colorado: "CO",
-        connecticut: "CT",
-        delaware: "DE",
-        florida: "FL",
-        georgia: "GA",
-        hawaii: "HI",
-        idaho: "ID",
-        illinois: "IL",
-        indiana: "IN",
-        iowa: "IA",
-        kansas: "KS",
-        kentucky: "KY",
-        louisiana: "LA",
-        maine: "ME",
-        maryland: "MD",
-        massachusetts: "MA",
-        michigan: "MI",
-        minnesota: "MN",
-        mississippi: "MS",
-        missouri: "MO",
-        montana: "MT",
-        nebraska: "NE",
-        nevada: "NV",
-        "new hampshire": "NH",
-        "new jersey": "NJ",
-        "new mexico": "NM",
-        "new york": "NY",
-        "north carolina": "NC",
-        "north dakota": "ND",
-        ohio: "OH",
-        oklahoma: "OK",
-        oregon: "OR",
-        pennsylvania: "PA",
-        "rhode island": "RI",
-        "south carolina": "SC",
-        "south dakota": "SD",
-        tennessee: "TN",
-        texas: "TX",
-        utah: "UT",
-        vermont: "VT",
-        virginia: "VA",
-        washington: "WA",
-        "west virginia": "WV",
-        wisconsin: "WI",
-        wyoming: "WY",
-        "district of columbia": "DC"
-    };
-    if (normalized.length <= 3) {
-        return normalized.toUpperCase()
-    }
-    if (countryCode == "ca" || countryCode == "us" || countryCode == "canada" || countryCode == "usa") {
-        return map[normalized] || region
-    }
-    return region
-}
 
 var ISO_JP_MAP = {
     "JP-01": "Hokkaido", "JP-02": "Aomori", "JP-03": "Iwate", "JP-04": "Miyagi", "JP-05": "Akita",
@@ -27348,7 +27398,7 @@ var GlobalLocationResolver = {
 
 function resolveRegionFromText(text, fallbackCountry) {
     if (!text || typeof text !== "string") {
-        return { region: "", country: fallbackCountry || "" };
+        return { region: "", country: expandCountry(fallbackCountry) || "" };
     }
     var trimmed = text.trim();
     if (trimmed.indexOf(",") !== -1) {
@@ -27357,52 +27407,61 @@ function resolveRegionFromText(text, fallbackCountry) {
         var cityMatch = matchCity(firstKey, parts[parts.length - 1] || fallbackCountry);
         if (cityMatch) {
             return {
-                region: cityMatch.region,
-                country: parts[parts.length - 1] || cityMatch.country || fallbackCountry || ""
+                region: expandRegion(cityMatch.region, parts[parts.length - 1] || cityMatch.country || fallbackCountry),
+                country: expandCountry(parts[parts.length - 1] || cityMatch.country || fallbackCountry || "")
             };
         }
         if (parts.length >= 3) {
-            return { region: parts[1], country: parts[2] };
+            var country = expandCountry(parts[parts.length - 1] || fallbackCountry);
+            var region = expandRegion(parts[1], country);
+            return { region: region, country: country };
         }
         if (parts.length === 2) {
             if (isCountryName(parts[1])) {
-                var country = parts[1];
-                if (isKnownRegionOrAdministrative(parts[0])) {
-                    return { region: parts[0], country: country };
+                var country = expandCountry(parts[1]);
+                var expanded0 = expandRegion(parts[0], country);
+                if (expanded0 !== parts[0] || isKnownRegionOrAdministrative(parts[0])) {
+                    return { region: expanded0, country: country };
                 }
                 var cm = matchCity(parts[0].toLowerCase(), country);
                 if (cm) {
                     return {
-                        region: cm.region,
+                        region: expandRegion(cm.region, country),
                         country: country
                     };
                 }
                 GlobalLocationResolver.resolvePlace(parts[0] + ", " + country);
                 return { region: "", country: country };
             }
-            return { region: parts[1], country: fallbackCountry || "" };
+            var country = expandCountry(fallbackCountry);
+            var region = expandRegion(parts[1], country);
+            return { region: region, country: country };
         }
     }
     var key = trimmed.toLowerCase();
     var cmSingle = matchCity(key, fallbackCountry);
     if (cmSingle) {
-        return cmSingle;
+        return {
+            region: expandRegion(cmSingle.region, cmSingle.country || fallbackCountry),
+            country: expandCountry(cmSingle.country || fallbackCountry)
+        };
     }
     if (isCountryName(trimmed)) {
-        return { region: "", country: trimmed };
+        return { region: "", country: expandCountry(trimmed) };
     }
-    if (isKnownRegionOrAdministrative(trimmed)) {
-        return { region: trimmed, country: fallbackCountry || "" };
+    var expandedTrimmed = expandRegion(trimmed, fallbackCountry);
+    if (expandedTrimmed !== trimmed || isKnownRegionOrAdministrative(trimmed)) {
+        return { region: expandedTrimmed, country: expandCountry(fallbackCountry) };
     }
-    return { region: "", country: fallbackCountry || "" };
+    return { region: "", country: expandCountry(fallbackCountry) };
 }
 
 function formatLocationText(city, region, countryName) {
     var province = "";
     var country = "";
     if (arguments.length === 3) {
-        province = (region || "").toString().trim();
-        country = (countryName || "").toString().trim();
+        country = expandCountry((countryName || "").toString().trim());
+        province = expandRegion((region || "").toString().trim(), country);
         if (!province && city) {
             var resolved = resolveRegionFromText(city, country);
             province = resolved.region;
@@ -27410,11 +27469,13 @@ function formatLocationText(city, region, countryName) {
         }
     } else if (arguments.length === 2) {
         province = (arguments[0] || "").toString().trim();
-        country = (arguments[1] || "").toString().trim();
+        country = expandCountry((arguments[1] || "").toString().trim());
         if (province && !country) {
             var resolved = resolveRegionFromText(province, "");
             province = resolved.region;
             country = resolved.country;
+        } else {
+            province = expandRegion(province, country);
         }
     } else if (arguments.length === 1) {
         var resolved = resolveRegionFromText(arguments[0], "");
@@ -27435,13 +27496,13 @@ function formatLocationText(city, region, countryName) {
 }
 
 function formatLiveLocationText(city, region, countryName) {
-    var province = (region || "").toString().trim();
-    countryName = (countryName || "").toString().trim();
+    countryName = expandCountry((countryName || "").toString().trim());
+    var province = expandRegion((region || "").toString().trim(), countryName);
     if (!province && city) {
         var resolved = resolveRegionFromText(city, countryName);
-        province = resolved.region;
+        province = expandRegion(resolved.region, countryName || resolved.country);
         if (!countryName) {
-            countryName = resolved.country;
+            countryName = expandCountry(resolved.country);
         }
     }
     if (province && countryName) {
@@ -27455,35 +27516,28 @@ function formatLiveLocationText(city, region, countryName) {
 
 function getStampProvinceText(data) {
     if (!data) return "";
+    var country = expandCountry(data.country_name || data.country || "");
     var region = (data.region || "").toString().trim();
     if (region) {
-        return abbreviateRegion(region, data.country_name || data.country);
+        return expandRegion(region, country);
+    }
+    if (data.location && typeof data.location === "string") {
+        var resolved = resolveRegionFromText(data.location, country);
+        if (resolved.region) {
+            return expandRegion(resolved.region, resolved.country || country);
+        }
     }
     if (data.address && typeof data.address === "string") {
         var addr = data.address.trim();
-        if (addr.indexOf(",") !== -1) {
-            var parts = addr.split(",").map(function (p) { return p.trim(); });
-            if (parts.length === 2) {
-                if (isCountryName(parts[1])) {
-                    var resolved = resolveRegionFromText(addr, data.country_name || data.country);
-                    return abbreviateRegion(resolved.region, resolved.country || data.country_name || parts[1] || data.country);
-                }
-                return abbreviateRegion(parts[1], data.country_name || data.country);
-            }
-            if (parts.length >= 3) {
-                return abbreviateRegion(parts[1], data.country_name || parts[2] || data.country);
-            }
-        }
-        var resolved = resolveRegionFromText(addr, data.country_name || data.country);
+        var resolved = resolveRegionFromText(addr, country);
         if (resolved.region) {
-            return abbreviateRegion(resolved.region, resolved.country || data.country_name || data.country);
+            return expandRegion(resolved.region, resolved.country || country);
         }
-        return abbreviateRegion(addr, data.country_name || data.country);
     }
     if (data.city && typeof data.city === "string") {
-        var resolved = resolveRegionFromText(data.city, data.country_name || data.country);
+        var resolved = resolveRegionFromText(data.city, country);
         if (resolved.region) {
-            return abbreviateRegion(resolved.region, resolved.country || data.country_name || data.country);
+            return expandRegion(resolved.region, resolved.country || country);
         }
     }
     return "";
@@ -27527,22 +27581,17 @@ Data.Class(function User() {
         data = data || {};
         var address = data.address || {};
         var city = "";
-        var region = extractRegionFromOsmAddress(address) || data.region_code || data.region || address.state || address.region || address.county || "";
         var country = (data.country_code || data.country || address.country_code || "").toString().toLowerCase();
         var countryName = data.country_name || data.country || address.country || "";
         countryName = (countryName || "").toString().trim();
-        if (countryName.toLowerCase() === "russian federation") {
+        if (countryName.toLowerCase() === "russian federation" || country === "ru") {
             countryName = "Russia";
         }
-        if (country === "ru" && (!countryName || countryName.toLowerCase() === "ru")) {
-            countryName = "Russia";
-        }
-        if (countryName && countryName.length === 2) {
-            countryName = countryName.toUpperCase()
-        }
-        region = abbreviateRegion(region, country);
+        countryName = expandCountry(countryName || country);
+        var rawRegion = extractRegionFromOsmAddress(address) || data.region_code || data.region || address.state || address.region || address.county || "";
+        var region = expandRegion(rawRegion, countryName || country);
         var coords = data.coords || [data.latitude || 0, data.longitude || 0];
-        var addressStr = region || countryName || country || "Planet Earth";
+        var addressStr = region || countryName || "Planet Earth";
         return {
             region: region,
             city: city,
@@ -29524,12 +29573,19 @@ Class(function CreatePlane() {
         console.log("[PaperPlanes] CreatePlane.endFlow fired");
         removePlane();
         var location = Data.User.getLocation();
-        var address = location.region || location.country_name || location.country || "Planet Earth";
+        var rawCountry = (location.country || "").toUpperCase();
+        var countryName = expandCountry(location.country_name || location.country || rawCountry);
+        var region = expandRegion(location.region || "", countryName || rawCountry);
+        var address = region || countryName || "Planet Earth";
         var date = DateUtil.getDate();
         var data = {
             date: date.text,
             address: address,
-            country: (location.country || "").toUpperCase(),
+            location: formatLiveLocationText("", region, countryName),
+            city: "",
+            region: region,
+            country: rawCountry,
+            country_name: countryName,
             countries: 1,
             stamps: [PlaneStampTexture.DATA]
         };
@@ -34179,7 +34235,15 @@ Class(function EarthDetailLocationPopup(_data) {
             lineHeight: 14,
             fontWeight: "bold"
         });
-        $text2.html(_data.address + ",<br/>" + _data.country);
+        var province = getStampProvinceText(_data);
+        var countryStr = expandCountry(_data.country_name || _data.country || "");
+        var locHtml = "";
+        if (province && countryStr && province.toLowerCase() !== countryStr.toLowerCase()) {
+            locHtml = province + ",<br/>" + countryStr;
+        } else {
+            locHtml = province || countryStr || "Planet Earth";
+        }
+        $text2.html(locHtml);
         $this.css({
             opacity: 0
         }).hide()
@@ -37028,13 +37092,14 @@ Class(function PlaneThrow(_plane, _animation, _shadow, _isRethrow) {
         var stampLocation = Data.User.getLocation();
         var coords = PlaneStampTexture.DATA.coords;
         var color = PlaneStampTexture.DATA.color;
-        var region = stampLocation.region || PlaneStampTexture.DATA.region || "";
+        var rawCountry = stampLocation.country || PlaneStampTexture.DATA.country || "";
+        var countryName = expandCountry(stampLocation.country_name || PlaneStampTexture.DATA.country_name || rawCountry);
+        var region = expandRegion(stampLocation.region || PlaneStampTexture.DATA.region || "", countryName || rawCountry);
         var scale = {
             x: _plane.mesh.scale.x,
             z: _plane.mesh.scale.z
         };
-        var country = stampLocation.country || PlaneStampTexture.DATA.country || "";
-        var countryName = stampLocation.country_name || PlaneStampTexture.DATA.country_name || country;
+        var country = rawCountry;
         var address = region || countryName || "Planet Earth";
         var location = formatLiveLocationText("", region, countryName);
         Data.Planes.throwPlane({
@@ -37249,10 +37314,11 @@ Class(function PlaneStampTexture() {
         var color = _colors[colorIndex];
         var rotation = Utils.doRandom(-30, 30);
         var location = Data.User.getLocation();
-        var region = location.region || "";
+        var rawCountry = (location.country || "").toUpperCase();
+        var countryName = expandCountry(location.country_name || location.country || rawCountry);
+        var region = expandRegion(location.region || "", countryName || rawCountry);
         var date = DateUtil.getDate();
         GATracker.trackEvent("plane", "stamp", "plane stamp", 1);
-        var country = (location.country || "").toUpperCase();
         var countryCodeMap = {
             "US": "USA", "CA": "CAN", "AU": "AUS", "RU": "RUS", "GB": "GBR", "UK": "GBR",
             "DE": "DEU", "FR": "FRA", "IT": "ITA", "ES": "ESP", "JP": "JPN", "CN": "CHN",
@@ -37264,10 +37330,7 @@ Class(function PlaneStampTexture() {
             "ID": "IDN", "TH": "THA", "VN": "VNM", "PH": "PHL", "PK": "PAK", "NG": "NGA",
             "KE": "KEN", "IL": "ISR", "AE": "ARE"
         };
-        if (countryCodeMap[country]) {
-            country = countryCodeMap[country];
-        }
-        var countryName = location.country_name || country;
+        var country = countryCodeMap[rawCountry] || rawCountry;
         var address = region || countryName || "Planet Earth";
         var fullLocation = formatLiveLocationText("", region, countryName);
         PlaneStampTexture.DATA = {
@@ -37321,13 +37384,22 @@ Class(function PlaneStampTexture() {
     }
         ;
     this.addOldStamp = function (data) {
-        if (data.style == undefined || data.style >= _stylesList.length) {
+        if (!data || data.style == undefined || data.style >= _stylesList.length) {
             return
         }
+        var countryStr = expandCountry(data.country_name || data.country || "");
+        var province = getStampProvinceText(data);
+        var cleanData = Object.assign({}, data, {
+            region: province,
+            country_name: countryStr,
+            address: province || countryStr || "Planet Earth",
+            location: formatLiveLocationText("", province, countryStr),
+            city: ""
+        });
         var style = _stylesList[data.style];
         var canvas = _this.initClass(Canvas, 210 * _s, 297 * _s);
         _canvases.push(canvas);
-        style.addStamp(canvas, data, function (graphics) {
+        style.addStamp(canvas, cleanData, function (graphics) {
             _this.delayedCall(function () {
                 canvas.add(graphics);
                 canvas.render();
@@ -37632,13 +37704,14 @@ Class(function PeaceDayStamp(_s) {
             image.x = -175;
             image.y = -179;
             mask.add(image);
-            var date = new CanvasTexture(drawArcText(data.date + " " + data.country, 200, false, false), 400, 400);
+            var dateCountry = expandCountry(data.country_name || data.country || "");
+            var date = new CanvasTexture(drawArcText(data.date + (dateCountry ? (" " + dateCountry) : ""), 200, false, false), 400, 400);
             date.x = -200;
             date.y = -200;
             mask.add(date);
             var province = getStampProvinceText(data);
-            var countryStr = data.country_name || data.country || "";
-            var locationText = (province && countryStr) ? (province + ", " + countryStr) : (province || countryStr || "Planet Earth");
+            var countryStr = expandCountry(data.country_name || data.country || "");
+            var locationText = (province && countryStr && province.toLowerCase() !== countryStr.toLowerCase()) ? (province + ", " + countryStr) : (province || countryStr || "Planet Earth");
             var location = new CanvasTexture(drawArcText(locationText, 200, true), 440, 440);
             location.x = -220;
             location.y = -220;
@@ -37726,8 +37799,8 @@ Class(function SpecialStamp(_s) {
             date.y = -200;
             mask.add(date);
             var province = getStampProvinceText(data);
-            var countryStr = data.country_name || data.country || "";
-            var locationText = (province && countryStr) ? (province + ", " + countryStr) : (province || countryStr || "Planet Earth");
+            var countryStr = expandCountry(data.country_name || data.country || "");
+            var locationText = (province && countryStr && province.toLowerCase() !== countryStr.toLowerCase()) ? (province + ", " + countryStr) : (province || countryStr || "Planet Earth");
             var location = new CanvasTexture(drawArcText(locationText, 200, true), 440, 440);
             location.x = -220;
             location.y = -220;
@@ -37775,7 +37848,8 @@ Class(function StampStyle1(_s) {
             address.fillText(text.toUpperCase(), 0, 20);
             graphics.add(address);
             var max = 15;
-            var countryName = data.country_name && data.country_name.length < max ? data.country_name : data.country;
+            var fullC = expandCountry(data.country_name || data.country || "");
+            var countryName = fullC && fullC.length < max ? fullC : (data.country || fullC);
             var size = Utils.convertRange(countryName.length, 5, max, 9, 5);
             var country = new CanvasGraphics();
             country.font = "bold " + size * _s + "pt roboto";
@@ -37825,9 +37899,10 @@ Class(function StampStyle2(_s) {
         img.src = Images.getProxyPath("assets/images/stamps/outlines/1.png");
         img.onload = function () {
             var max = 15;
-            var countryName = data.country_name && data.country_name.length < max ? data.country_name : data.country;
+            var fullC = expandCountry(data.country_name || data.country || "");
+            var countryName = fullC && fullC.length < max ? fullC : (data.country || fullC);
             var split = countryName.split(" ");
-            if (split.length > 2) {
+            if (split.length > 2 && data.country) {
                 countryName = data.country
             }
             var size = Utils.convertRange(countryName.length, 5, max, 7.5, 5);
@@ -37922,7 +37997,8 @@ Class(function StampStyle3(_s) {
             address.fillText(text.toUpperCase(), 0, -12);
             graphics.add(address);
             var max = 15;
-            var countryName = data.country_name && data.country_name.length < max ? data.country_name : data.country;
+            var fullC = expandCountry(data.country_name || data.country || "");
+            var countryName = fullC && fullC.length < max ? fullC : (data.country || fullC);
             var size = Utils.convertRange(countryName.length, 5, max, 9, 5);
             var country = new CanvasGraphics();
             country.font = "bold " + size * _s + "pt roboto";
@@ -37987,7 +38063,8 @@ Class(function StampStyle4(_s) {
             address.fillText(text.toUpperCase(), 0, -25);
             graphics.add(address);
             var max = 15;
-            var countryName = data.country_name && data.country_name.length < max ? data.country_name : data.country;
+            var fullC = expandCountry(data.country_name || data.country || "");
+            var countryName = fullC && fullC.length < max ? fullC : (data.country || fullC);
             var size = Utils.convertRange(countryName.length, 5, max, 9, 5);
             var country = new CanvasGraphics();
             country.font = "bold " + size * _s + "pt roboto";
@@ -38047,7 +38124,8 @@ Class(function StampStyle5(_s) {
             country.textAlign = "center";
             country.fillStyle = "#000";
             country.textBaseline = "middle";
-            country.fillText(data.country.toUpperCase(), 0, 20);
+            var countryName = expandCountry(data.country_name || data.country || "");
+            country.fillText(countryName.toUpperCase(), 0, 20);
             graphics.add(country);
             var image = new CanvasTexture(img, 400, 400);
             image.x = -200;
@@ -38141,7 +38219,8 @@ Class(function StampStyle6(_s) {
             country.textAlign = "center";
             country.fillStyle = "#000";
             country.textBaseline = "middle";
-            country.fillText(data.country.toUpperCase(), 0, -5);
+            var countryName = expandCountry(data.country_name || data.country || "");
+            country.fillText(countryName.toUpperCase(), 0, -5);
             graphics.add(country);
             var color = new CanvasGraphics();
             color.blendMode = "source-in";
