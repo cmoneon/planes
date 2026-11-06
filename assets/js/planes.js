@@ -2033,7 +2033,9 @@ Class(function Device() {
         this.mobile = false
     }
     if (this.mobile) {
-        this.mobile.tablet = Math.max(screen.width, screen.height) > 800;
+        var minScreenDim = window.screen ? Math.min(screen.width, screen.height) : 400;
+        var isPhoneUA = this.detect(["iphone", "ipod", "mobile"]) || (this.detect("android") && !this.detect("tablet")) || (minScreenDim > 0 && minScreenDim < 600);
+        this.mobile.tablet = !isPhoneUA && minScreenDim >= 600;
         this.mobile.phone = !this.mobile.tablet
     }
     this.browser = {};
@@ -3177,7 +3179,7 @@ Class(function Mobile() {
         Hydra.ready(function () {
             window.addEventListener("orientationchange", orientationChange);
             window.onresize = resizeHandler;
-            if (_this.browser == "Safari" && (!_this.NativeCore || !_this.NativeCore.active)) {
+            if (_this.browser == "Safari" && _this.version < 13 && (!_this.NativeCore || !_this.NativeCore.active)) {
                 document.body.scrollTop = 0;
                 __body.css({
                     height: "101%"
@@ -3198,15 +3200,9 @@ Class(function Mobile() {
             _type = _this.phone ? "phone" : "tablet"
         });
         function determineType() {
-            var isPhoneByUA = Device.detect(["iphone", "ipod"]) || (Device.detect("android") && !Device.detect("tablet"));
-            Device.mobile.tablet = !isPhoneByUA && (function () {
-                if (Stage.width > Stage.height) {
-                    return document.body.clientWidth > 800
-                } else {
-                    return document.body.clientHeight > 800
-                }
-            }
-            )();
+            var minDim = Math.min(window.screen ? screen.width : Stage.width, window.screen ? screen.height : Stage.height);
+            var isPhoneByUA = Device.detect(["iphone", "ipod", "mobile"]) || (Device.detect("android") && !Device.detect("tablet")) || (minDim > 0 && minDim < 600);
+            Device.mobile.tablet = !isPhoneByUA && (minDim >= 600);
             Device.mobile.phone = !Device.mobile.tablet;
             _this.phone = Device.mobile.phone;
             _this.tablet = Device.mobile.tablet
@@ -3363,7 +3359,7 @@ Class(function Mobile() {
             }
             return true
         } else {
-            if (_this.os == "iOS" && _this.version >= 7) {
+            if (_this.os == "iOS" && _this.version >= 7 && _this.version < 13) {
                 if (_this.browser == "Chrome" || _this.browser == "Safari") {
                     initIOSFullscreen();
                     return true
@@ -5369,6 +5365,7 @@ Mobile.Class(function ScreenLock() {
         })
     }
     this.lock = function (orientation) {
+        _this.unlock();
         _lockedNodes.push({
             object: Stage,
             orientation: orientation
@@ -5378,13 +5375,11 @@ Mobile.Class(function ScreenLock() {
         ;
     this.unlock = function () {
         var obj = Stage;
-        _lockedNodes.every(function (o, i) {
-            if (o.object == obj) {
+        for (var i = _lockedNodes.length - 1; i >= 0; i--) {
+            if (_lockedNodes[i].object == obj) {
                 _lockedNodes.splice(i, 1);
-                return false
             }
-            return true
-        })
+        }
     }
         ;
     this.forceOrientationChange = orientationChange
@@ -9010,6 +9005,10 @@ Class(function AssetLoader(_assets, _complete) {
             case "js":
             case "php":
             case undefined:
+                if (asset.indexOf("three.min.js") > -1 && window.THREE) {
+                    assetLoaded(asset);
+                    break;
+                }
                 XHR.get(asset, function (script) {
                     script = script.replace("use strict", "");
                     eval.call(window, script);
@@ -9422,14 +9421,17 @@ Class(function DistributedWorker(_time) {
     (function () { }
     )();
     function loop() {
-        while (_total < _time) {
+        var iterations = 0;
+        while (_total < _time && iterations < 50) {
             var start = performance.now();
             if (_callback) {
                 _callback()
             } else {
                 return
             }
-            _total += performance.now() - start
+            var elapsed = performance.now() - start;
+            _total += Math.max(elapsed, 0.1);
+            iterations++;
         }
         _total = 0
     }
@@ -25843,7 +25845,15 @@ Data.Class(function WebNotifications() {
             return
         }
         _this.active = true;
-        navigator.serviceWorker.register("sw.js").then(handleRegistration).then(handleReady).then(handleError).then(listen)
+        try {
+            navigator.serviceWorker.register("sw.js")
+                .then(handleRegistration)
+                .then(handleReady)
+                .then(listen)
+                .catch(handleError);
+        } catch (e) {
+            handleError(e);
+        }
     }
     function handleRegistration(e) {
         _registration = e
@@ -25851,7 +25861,9 @@ Data.Class(function WebNotifications() {
     function handleReady() {
         uploadAssets()
     }
-    function handleError(e) { }
+    function handleError(e) {
+        console.warn("[WebNotifications] Registration error ignored:", e);
+    }
     function getAssets() {
         var assets = [];
         assets.push(Config.CDN + "assets/css/style.css");
@@ -32857,19 +32869,6 @@ Class(function DOFPass(_nuke, _scene, _camera, _renderer) {
     }
     )();
     function initRT() {
-        if (usesFirebaseBackend()) {
-            _type = "firebase";
-            _io = true;
-            _pipe = FirebasePlanesBridge.connectSocket({
-                type: _type,
-                experience: _exp,
-                onMessage: receiveData,
-                onEvent: receiveEvent,
-                onSide: sideMessage,
-                onReady: pipeReady
-            });
-            return
-        }
         if (_rt) {
             _rt.dispose()
         }
