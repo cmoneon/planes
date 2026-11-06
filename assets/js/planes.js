@@ -10410,39 +10410,6 @@ Class(function Config() {
         country: "CA",
         country_name: "Canada"
     }, {
-        location: "Nova Scotia, Canada",
-        coords: {
-            lat: 44.65,
-            lng: -63.59
-        },
-        priority: 4,
-        realtime: true,
-        region: "Nova Scotia",
-        country: "CA",
-        country_name: "Canada"
-    }, {
-        location: "Nova Scotia, Canada",
-        coords: {
-            lat: 45.36,
-            lng: -63.27
-        },
-        priority: 4,
-        realtime: true,
-        region: "Nova Scotia",
-        country: "CA",
-        country_name: "Canada"
-    }, {
-        location: "Nova Scotia, Canada",
-        coords: {
-            lat: 45.09,
-            lng: -64.36
-        },
-        priority: 4,
-        realtime: true,
-        region: "Nova Scotia",
-        country: "CA",
-        country_name: "Canada"
-    }, {
         location: "Ontario, Canada",
         coords: {
             lat: 45.42,
@@ -10563,17 +10530,6 @@ Class(function Config() {
         region: "Tuscany",
         country: "IT",
         country_name: "Italy"
-    }, {
-        location: "Nova Scotia, Canada",
-        coords: {
-            lat: 44.37,
-            lng: -64.30
-        },
-        priority: 4,
-        realtime: true,
-        region: "Nova Scotia",
-        country: "CA",
-        country_name: "Canada"
     }, {
         location: "Alberta, Canada",
         coords: {
