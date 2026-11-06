@@ -26787,88 +26787,365 @@ function abbreviateRegion(region, country) {
     return region
 }
 
+var ISO_JP_MAP = {
+    "JP-01": "Hokkaido", "JP-02": "Aomori", "JP-03": "Iwate", "JP-04": "Miyagi", "JP-05": "Akita",
+    "JP-06": "Yamagata", "JP-07": "Fukushima", "JP-08": "Ibaraki", "JP-09": "Tochigi", "JP-10": "Gunma",
+    "JP-11": "Saitama", "JP-12": "Chiba", "JP-13": "Tokyo", "JP-14": "Kanagawa", "JP-15": "Niigata",
+    "JP-16": "Toyama", "JP-17": "Ishikawa", "JP-18": "Fukui", "JP-19": "Yamanashi", "JP-20": "Nagano",
+    "JP-21": "Gifu", "JP-22": "Shizuoka", "JP-23": "Aichi", "JP-24": "Mie", "JP-25": "Shiga",
+    "JP-26": "Kyoto", "JP-27": "Osaka", "JP-28": "Hyogo", "JP-29": "Nara", "JP-30": "Wakayama",
+    "JP-31": "Tottori", "JP-32": "Shimane", "JP-33": "Okayama", "JP-34": "Hiroshima", "JP-35": "Yamaguchi",
+    "JP-36": "Tokushima", "JP-37": "Kagawa", "JP-38": "Ehime", "JP-39": "Kochi", "JP-40": "Fukuoka",
+    "JP-41": "Saga", "JP-42": "Nagasaki", "JP-43": "Kumamoto", "JP-44": "Oita", "JP-45": "Miyazaki",
+    "JP-46": "Kagoshima", "JP-47": "Okinawa"
+};
+
+function extractRegionFromOsmAddress(addr) {
+    if (!addr) return "";
+    var region = addr.state || addr.province || addr.prefecture || addr.region || addr.canton ||
+                 addr.emirate || addr.governorate || addr.voivodeship || addr.department ||
+                 addr.state_district || addr.county || addr.territory || "";
+    if (!region && addr["ISO3166-2-lvl4"] && ISO_JP_MAP[addr["ISO3166-2-lvl4"]]) {
+        region = ISO_JP_MAP[addr["ISO3166-2-lvl4"]];
+    }
+    return region;
+}
+
 var KNOWN_COUNTRIES = [
-    "russia", "russian federation", "rus", "ru",
-    "canada", "can",
-    "united states", "united states of america", "usa", "us",
-    "united kingdom", "uk", "great britain", "gbr", "england", "scotland", "wales", "northern ireland",
-    "australia", "aus",
-    "germany", "deutschland", "deu",
-    "france", "fra",
-    "italy", "italia", "ita",
-    "japan", "jpn",
-    "china", "chn",
-    "india", "ind",
-    "brazil", "brasil", "bra",
-    "mexico", "mex",
-    "spain", "espana", "esp",
-    "netherlands", "nld", "holland",
-    "switzerland", "che",
-    "sweden", "swe",
-    "norway", "nor",
-    "finland", "fin",
-    "denmark", "dnk",
-    "poland", "polska", "pol",
-    "ukraine", "ukr",
-    "belgium", "bel",
-    "austria", "aut",
-    "ireland", "irl",
-    "portugal", "prt",
-    "greece", "grc",
-    "czech republic", "czechia", "cze",
-    "hungary", "hun",
-    "romania", "rou",
-    "new zealand", "nzl",
-    "south korea", "korea", "kor",
-    "argentina", "arg",
-    "chile", "chl",
-    "colombia", "col",
-    "south africa", "zaf",
-    "egypt", "egy",
-    "turkey", "turkiye", "tur",
-    "saudi arabia", "sau",
-    "singapore", "sgp",
-    "malaysia", "mys",
-    "indonesia", "idn",
-    "thailand", "tha",
-    "vietnam", "vnm",
-    "philippines", "phl",
-    "pakistan", "pak",
-    "bangladesh", "bgd",
-    "nigeria", "nga",
-    "kenya", "ken",
-    "israel", "isr",
-    "united arab emirates", "uae", "are"
+    "afghanistan", "albania", "algeria", "andorra", "angola", "antigua and barbuda", "argentina", "arg", "armenia", "australia", "aus", "austria", "aut", "azerbaijan",
+    "bahamas", "bahrain", "bangladesh", "bgd", "barbados", "belarus", "belgium", "bel", "belize", "benin", "bhutan", "bolivia", "bosnia and herzegovina", "botswana", "brazil", "brasil", "bra", "brunei", "bulgaria", "burkina faso", "burundi",
+    "cabo verde", "cambodia", "cameroon", "canada", "can", "central african republic", "chad", "chile", "chl", "china", "chn", "colombia", "col", "comoros", "congo", "costa rica", "croatia", "cuba", "cyprus", "czech republic", "czechia", "cze",
+    "denmark", "dnk", "djibouti", "dominica", "dominican republic", "east timor", "ecuador", "egypt", "egy", "el salvador", "equatorial guinea", "eritrea", "estonia", "eswatini", "ethiopia",
+    "fiji", "finland", "fin", "france", "fra",
+    "gabon", "gambia", "georgia", "germany", "deutschland", "deu", "ghana", "greece", "grc", "grenada", "guatemala", "guinea", "guinea-bissau", "guyana",
+    "haiti", "honduras", "hungary", "hun",
+    "iceland", "india", "ind", "indonesia", "idn", "iran", "iraq", "ireland", "irl", "israel", "isr", "italy", "italia", "ita",
+    "jamaica", "japan", "jpn", "jordan",
+    "kazakhstan", "kenya", "ken", "kiribati", "north korea", "south korea", "korea", "kor", "kosovo", "kuwait", "kyrgyzstan",
+    "laos", "latvia", "lebanon", "lesotho", "liberia", "libya", "liechtenstein", "lithuania", "luxembourg",
+    "madagascar", "malawi", "malaysia", "mys", "maldives", "mali", "malta", "marshall islands", "mauritania", "mauritius", "mexico", "mex", "micronesia", "moldova", "monaco", "mongolia", "montenegro", "morocco", "mozambique", "myanmar",
+    "namibia", "nauru", "nepal", "netherlands", "nld", "holland", "new zealand", "nzl", "nicaragua", "niger", "nigeria", "nga", "north macedonia", "norway", "nor",
+    "oman",
+    "pakistan", "pak", "palau", "palestine", "panama", "papua new guinea", "paraguay", "peru", "philippines", "phl", "poland", "polska", "pol", "portugal", "prt",
+    "qatar",
+    "romania", "rou", "russia", "russian federation", "rus", "ru", "rwanda",
+    "saint kitts and nevis", "saint lucia", "saint vincent and the grenadines", "samoa", "san marino", "sao tome and principe", "saudi arabia", "sau", "senegal", "serbia", "seychelles", "sierra leone", "singapore", "sgp", "slovakia", "slovenia", "solomon islands", "somalia", "south africa", "zaf", "south sudan", "spain", "espana", "esp", "sri lanka", "sudan", "suriname", "sweden", "swe", "switzerland", "che", "syria",
+    "taiwan", "tajikistan", "tanzania", "thailand", "tha", "togo", "tonga", "trinidad and tobago", "tunisia", "turkey", "turkiye", "tur", "turkmenistan", "tuvalu",
+    "uganda", "ukraine", "ukr", "united arab emirates", "uae", "are", "united kingdom", "uk", "great britain", "gbr", "england", "scotland", "wales", "northern ireland", "united states", "united states of america", "usa", "us", "uruguay", "uzbekistan",
+    "vanuatu", "vatican city", "venezuela", "vietnam", "vnm",
+    "yemen", "zambia", "zimbabwe"
 ];
+var KNOWN_COUNTRIES_SET = {};
+for (var i = 0; i < KNOWN_COUNTRIES.length; i++) {
+    KNOWN_COUNTRIES_SET[KNOWN_COUNTRIES[i]] = true;
+}
+
 function isCountryName(str) {
     if (!str) return false;
-    var s = str.trim().toLowerCase();
-    return KNOWN_COUNTRIES.indexOf(s) !== -1;
+    return KNOWN_COUNTRIES_SET[str.trim().toLowerCase()] === true;
+}
+
+var KNOWN_REGIONS = [
+    // Canada
+    "alberta", "british columbia", "manitoba", "new brunswick", "newfoundland and labrador", "newfoundland", "nova scotia", "ontario", "prince edward island", "quebec", "saskatchewan", "northwest territories", "nunavut", "yukon",
+    // USA
+    "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware", "florida", "georgia", "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts", "michigan", "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new hampshire", "new jersey", "new mexico", "new york", "north carolina", "north dakota", "ohio", "oklahoma", "oregon", "pennsylvania", "rhode island", "south carolina", "south dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington", "west virginia", "wisconsin", "wyoming", "district of columbia", "puerto rico",
+    // Australia
+    "new south wales", "victoria", "queensland", "western australia", "south australia", "tasmania", "northern territory", "australian capital territory",
+    // UK
+    "england", "scotland", "wales", "northern ireland",
+    // Germany
+    "bavaria", "bayern", "baden-wurttemberg", "baden-württemberg", "berlin", "brandenburg", "bremen", "hamburg", "hesse", "hessen", "lower saxony", "niedersachsen", "mecklenburg-vorpommern", "north rhine-westphalia", "nordrhein-westfalen", "rhineland-palatinate", "rheinland-pfalz", "saarland", "saxony", "sachsen", "saxony-anhalt", "sachsen-anhalt", "schleswig-holstein", "thuringia", "thüringen",
+    // France
+    "ile-de-france", "île-de-france", "auvergne-rhone-alpes", "auvergne-rhône-alpes", "nouvelle-aquitaine", "occitanie", "hauts-de-france", "provence-alpes-cote d'azur", "provence-alpes-côte d'azur", "grand est", "brittany", "bretagne", "pays de la loire", "normandy", "normandie", "bourgogne-franche-comte", "bourgogne-franche-comté", "centre-val de loire", "corsica", "corse",
+    // Italy
+    "abruzzo", "apulia", "puglia", "basilicata", "calabria", "campania", "emilia-romagna", "friuli venezia giulia", "lazio", "liguria", "lombardy", "lombardia", "marche", "molise", "piedmont", "piemonte", "sardinia", "sardegna", "sicily", "sicilia", "trentino-alto adige", "tuscany", "toscana", "umbria", "aosta valley", "valle d'aosta", "veneto",
+    // Spain
+    "andalusia", "andalucía", "aragon", "aragón", "asturias", "balearic islands", "islas baleares", "basque country", "país vasco", "canary islands", "islas canarias", "cantabria", "castile and leon", "castilla y león", "castilla-la mancha", "catalonia", "catalunya", "cataluña", "extremadura", "galicia", "community of madrid", "comunidad de madrid", "madrid", "region of murcia", "región de murcia", "navarre", "navarra", "la rioja", "valencian community", "comunidad valenciana"
+];
+var KNOWN_REGIONS_SET = {};
+for (var i = 0; i < KNOWN_REGIONS.length; i++) {
+    KNOWN_REGIONS_SET[KNOWN_REGIONS[i]] = true;
+}
+
+var ADMINISTRATIVE_KEYWORDS = [
+    "oblast", "krai", "republic", "prefecture", "province", "state", "county", "canton",
+    "region", "department", "governorate", "district", "emirate", "voivodeship", "territory",
+    "autonomous", "community", "division", "island", "islands"
+];
+
+function isKnownRegionOrAdministrative(str) {
+    if (!str || typeof str !== "string") return false;
+    var trimmed = str.trim();
+    if (trimmed.length <= 3) return true;
+    var lower = trimmed.toLowerCase();
+    if (KNOWN_REGIONS_SET[lower]) return true;
+    for (var i = 0; i < ADMINISTRATIVE_KEYWORDS.length; i++) {
+        if (lower.indexOf(ADMINISTRATIVE_KEYWORDS[i]) !== -1) return true;
+    }
+    return false;
 }
 
 var CITY_TO_REGION_MAP = {
+    // Canada
     "antigonish": { region: "Nova Scotia", country: "Canada" },
     "halifax": { region: "Nova Scotia", country: "Canada" },
+    "dartmouth": { region: "Nova Scotia", country: "Canada" },
     "truro": { region: "Nova Scotia", country: "Canada" },
     "kentville": { region: "Nova Scotia", country: "Canada" },
     "lunenburg": { region: "Nova Scotia", country: "Canada" },
+    "new glasgow": { region: "Nova Scotia", country: "Canada" },
     "ottawa": { region: "Ontario", country: "Canada" },
+    "toronto": { region: "Ontario", country: "Canada" },
+    "mississauga": { region: "Ontario", country: "Canada" },
+    "brampton": { region: "Ontario", country: "Canada" },
+    "hamilton": { region: "Ontario", country: "Canada" },
+    "markham": { region: "Ontario", country: "Canada" },
+    "vaughan": { region: "Ontario", country: "Canada" },
+    "kitchener": { region: "Ontario", country: "Canada" },
+    "windsor": { region: "Ontario", country: "Canada" },
     "st. john's": { region: "Newfoundland and Labrador", country: "Canada" },
+    "vancouver": { region: "British Columbia", country: "Canada" },
     "surrey": { region: "British Columbia", country: "Canada" },
-    "montreal": { region: "Quebec", country: "Canada" },
+    "burnaby": { region: "British Columbia", country: "Canada" },
+    "richmond": { region: "British Columbia", country: "Canada" },
+    "victoria": { region: "British Columbia", country: "Canada" },
+    "kelowna": { region: "British Columbia", country: "Canada" },
+    "calgary": { region: "Alberta", country: "Canada" },
+    "edmonton": { region: "Alberta", country: "Canada" },
     "red deer": { region: "Alberta", country: "Canada" },
-    "cedar rapids": { region: "Iowa", country: "USA" },
-    "denver": { region: "Colorado", country: "USA" },
-    "seattle": { region: "Washington", country: "USA" },
-    "austin": { region: "Texas", country: "USA" },
-    "sheffield": { region: "England", country: "UK" },
-    "glasgow": { region: "Scotland", country: "UK" },
-    "florence": { region: "Tuscany", country: "Italy" },
+    "lethbridge": { region: "Alberta", country: "Canada" },
+    "winnipeg": { region: "Manitoba", country: "Canada" },
+    "saskatoon": { region: "Saskatchewan", country: "Canada" },
+    "regina": { region: "Saskatchewan", country: "Canada" },
+    "montreal": { region: "Quebec", country: "Canada" },
+    "quebec city": { region: "Quebec", country: "Canada" },
+    "quebec": { region: "Quebec", country: "Canada" },
+    "laval": { region: "Quebec", country: "Canada" },
+    "gatineau": { region: "Quebec", country: "Canada" },
+    "fredericton": { region: "New Brunswick", country: "Canada" },
+    "moncton": { region: "New Brunswick", country: "Canada" },
+    "saint john": { region: "New Brunswick", country: "Canada" },
+    "charlottetown": { region: "Prince Edward Island", country: "Canada" },
+    "whitehorse": { region: "Yukon", country: "Canada" },
+    "yellowknife": { region: "Northwest Territories", country: "Canada" },
+
+    // Disambiguated cross-country cities
+    "sydney": [
+        { region: "New South Wales", country: "Australia" },
+        { region: "Nova Scotia", country: "Canada" }
+    ],
+    "london": [
+        { region: "England", country: "UK" },
+        { region: "Ontario", country: "Canada" }
+    ],
+    "st. petersburg": [
+        { region: "Saint Petersburg", country: "Russia" },
+        { region: "Florida", country: "USA" }
+    ],
+    "melbourne": [
+        { region: "Victoria", country: "Australia" },
+        { region: "Florida", country: "USA" }
+    ],
+    "paris": [
+        { region: "Île-de-France", country: "France" },
+        { region: "Texas", country: "USA" }
+    ],
+
+    // USA
+    "new york": { region: "New York", country: "USA" },
+    "buffalo": { region: "New York", country: "USA" },
+    "rochester": { region: "New York", country: "USA" },
+    "albany": { region: "New York", country: "USA" },
     "los angeles": { region: "California", country: "USA" },
+    "san francisco": { region: "California", country: "USA" },
+    "san diego": { region: "California", country: "USA" },
+    "san jose": { region: "California", country: "USA" },
+    "fresno": { region: "California", country: "USA" },
+    "sacramento": { region: "California", country: "USA" },
+    "long beach": { region: "California", country: "USA" },
+    "oakland": { region: "California", country: "USA" },
     "mountain view": { region: "California", country: "USA" },
+    "anaheim": { region: "California", country: "USA" },
+    "irvine": { region: "California", country: "USA" },
+    "chicago": { region: "Illinois", country: "USA" },
+    "aurora": { region: "Illinois", country: "USA" },
+    "naperville": { region: "Illinois", country: "USA" },
+    "houston": { region: "Texas", country: "USA" },
+    "san antonio": { region: "Texas", country: "USA" },
+    "dallas": { region: "Texas", country: "USA" },
+    "austin": { region: "Texas", country: "USA" },
+    "fort worth": { region: "Texas", country: "USA" },
+    "el paso": { region: "Texas", country: "USA" },
+    "arlington": { region: "Texas", country: "USA" },
+    "corpus christi": { region: "Texas", country: "USA" },
+    "plano": { region: "Texas", country: "USA" },
+    "phoenix": { region: "Arizona", country: "USA" },
+    "tucson": { region: "Arizona", country: "USA" },
+    "mesa": { region: "Arizona", country: "USA" },
+    "scottsdale": { region: "Arizona", country: "USA" },
+    "philadelphia": { region: "Pennsylvania", country: "USA" },
+    "pittsburgh": { region: "Pennsylvania", country: "USA" },
+    "miami": { region: "Florida", country: "USA" },
+    "orlando": { region: "Florida", country: "USA" },
+    "tampa": { region: "Florida", country: "USA" },
+    "jacksonville": { region: "Florida", country: "USA" },
+    "tallahassee": { region: "Florida", country: "USA" },
+    "atlanta": { region: "Georgia", country: "USA" },
+    "savannah": { region: "Georgia", country: "USA" },
+    "seattle": { region: "Washington", country: "USA" },
+    "spokane": { region: "Washington", country: "USA" },
+    "tacoma": { region: "Washington", country: "USA" },
+    "boston": { region: "Massachusetts", country: "USA" },
+    "cambridge": { region: "Massachusetts", country: "USA" },
+    "denver": { region: "Colorado", country: "USA" },
+    "colorado springs": { region: "Colorado", country: "USA" },
+    "detroit": { region: "Michigan", country: "USA" },
+    "minneapolis": { region: "Minnesota", country: "USA" },
+    "st. paul": { region: "Minnesota", country: "USA" },
+    "portland": { region: "Oregon", country: "USA" },
+    "las vegas": { region: "Nevada", country: "USA" },
+    "reno": { region: "Nevada", country: "USA" },
+    "nashville": { region: "Tennessee", country: "USA" },
+    "memphis": { region: "Tennessee", country: "USA" },
+    "charlotte": { region: "North Carolina", country: "USA" },
+    "raleigh": { region: "North Carolina", country: "USA" },
+    "columbus": { region: "Ohio", country: "USA" },
+    "cleveland": { region: "Ohio", country: "USA" },
+    "cincinnati": { region: "Ohio", country: "USA" },
+    "indianapolis": { region: "Indiana", country: "USA" },
+    "kansas city": { region: "Missouri", country: "USA" },
+    "st. louis": { region: "Missouri", country: "USA" },
+    "baltimore": { region: "Maryland", country: "USA" },
+    "milwaukee": { region: "Wisconsin", country: "USA" },
+    "madison": { region: "Wisconsin", country: "USA" },
+    "albuquerque": { region: "New Mexico", country: "USA" },
+    "honolulu": { region: "Hawaii", country: "USA" },
+    "anchorage": { region: "Alaska", country: "USA" },
+    "new orleans": { region: "Louisiana", country: "USA" },
+    "salt lake city": { region: "Utah", country: "USA" },
+    "washington": { region: "District of Columbia", country: "USA" },
+    "cedar rapids": { region: "Iowa", country: "USA" },
+
+    // UK
+    "birmingham": { region: "England", country: "UK" },
+    "manchester": { region: "England", country: "UK" },
+    "leeds": { region: "England", country: "UK" },
+    "liverpool": { region: "England", country: "UK" },
+    "newcastle": { region: "England", country: "UK" },
+    "sheffield": { region: "England", country: "UK" },
+    "bristol": { region: "England", country: "UK" },
+    "nottingham": { region: "England", country: "UK" },
+    "leicester": { region: "England", country: "UK" },
+    "edinburgh": { region: "Scotland", country: "UK" },
+    "glasgow": { region: "Scotland", country: "UK" },
+    "aberdeen": { region: "Scotland", country: "UK" },
+    "dundee": { region: "Scotland", country: "UK" },
+    "cardiff": { region: "Wales", country: "UK" },
+    "swansea": { region: "Wales", country: "UK" },
+    "belfast": { region: "Northern Ireland", country: "UK" },
+    "derry": { region: "Northern Ireland", country: "UK" },
+
+    // Australia
+    "geelong": { region: "Victoria", country: "Australia" },
+    "brisbane": { region: "Queensland", country: "Australia" },
+    "gold coast": { region: "Queensland", country: "Australia" },
+    "cairns": { region: "Queensland", country: "Australia" },
+    "perth": { region: "Western Australia", country: "Australia" },
+    "adelaide": { region: "South Australia", country: "Australia" },
+    "hobart": { region: "Tasmania", country: "Australia" },
+    "darwin": { region: "Northern Territory", country: "Australia" },
+    "canberra": { region: "Australian Capital Territory", country: "Australia" },
+
+    // Germany
+    "berlin": { region: "Berlin", country: "Germany" },
+    "munich": { region: "Bavaria", country: "Germany" },
+    "nuremberg": { region: "Bavaria", country: "Germany" },
+    "augsburg": { region: "Bavaria", country: "Germany" },
+    "hamburg": { region: "Hamburg", country: "Germany" },
+    "frankfurt": { region: "Hesse", country: "Germany" },
+    "wiesbaden": { region: "Hesse", country: "Germany" },
+    "cologne": { region: "North Rhine-Westphalia", country: "Germany" },
+    "dusseldorf": { region: "North Rhine-Westphalia", country: "Germany" },
+    "düsseldorf": { region: "North Rhine-Westphalia", country: "Germany" },
+    "dortmund": { region: "North Rhine-Westphalia", country: "Germany" },
+    "essen": { region: "North Rhine-Westphalia", country: "Germany" },
+    "bonn": { region: "North Rhine-Westphalia", country: "Germany" },
+    "stuttgart": { region: "Baden-Württemberg", country: "Germany" },
+    "mannheim": { region: "Baden-Württemberg", country: "Germany" },
+    "karlsruhe": { region: "Baden-Württemberg", country: "Germany" },
+    "freiburg": { region: "Baden-Württemberg", country: "Germany" },
+    "leipzig": { region: "Saxony", country: "Germany" },
+    "dresden": { region: "Saxony", country: "Germany" },
+    "hanover": { region: "Lower Saxony", country: "Germany" },
+    "bremen": { region: "Bremen", country: "Germany" },
+
+    // France
+    "marseille": { region: "Provence-Alpes-Côte d'Azur", country: "France" },
+    "nice": { region: "Provence-Alpes-Côte d'Azur", country: "France" },
+    "toulon": { region: "Provence-Alpes-Côte d'Azur", country: "France" },
+    "lyon": { region: "Auvergne-Rhône-Alpes", country: "France" },
+    "grenoble": { region: "Auvergne-Rhône-Alpes", country: "France" },
+    "saint-etienne": { region: "Auvergne-Rhône-Alpes", country: "France" },
+    "toulouse": { region: "Occitanie", country: "France" },
+    "montpellier": { region: "Occitanie", country: "France" },
+    "bordeaux": { region: "Nouvelle-Aquitaine", country: "France" },
+    "lille": { region: "Hauts-de-France", country: "France" },
+    "strasbourg": { region: "Grand Est", country: "France" },
+    "rennes": { region: "Brittany", country: "France" },
+    "brest": { region: "Brittany", country: "France" },
+    "nantes": { region: "Pays de la Loire", country: "France" },
+
+    // Italy
+    "rome": { region: "Lazio", country: "Italy" },
+    "milan": { region: "Lombardy", country: "Italy" },
+    "naples": { region: "Campania", country: "Italy" },
+    "turin": { region: "Piedmont", country: "Italy" },
+    "florence": { region: "Tuscany", country: "Italy" },
+    "pisa": { region: "Tuscany", country: "Italy" },
+    "siena": { region: "Tuscany", country: "Italy" },
+    "venice": { region: "Veneto", country: "Italy" },
+    "verona": { region: "Veneto", country: "Italy" },
+    "bologna": { region: "Emilia-Romagna", country: "Italy" },
+    "parma": { region: "Emilia-Romagna", country: "Italy" },
+    "palermo": { region: "Sicily", country: "Italy" },
+    "catania": { region: "Sicily", country: "Italy" },
+    "genoa": { region: "Liguria", country: "Italy" },
+    "bari": { region: "Apulia", country: "Italy" },
+
+    // Spain
+    "madrid": { region: "Community of Madrid", country: "Spain" },
+    "barcelona": { region: "Catalonia", country: "Spain" },
+    "girona": { region: "Catalonia", country: "Spain" },
+    "valencia": { region: "Valencian Community", country: "Spain" },
+    "alicante": { region: "Valencian Community", country: "Spain" },
+    "seville": { region: "Andalusia", country: "Spain" },
+    "malaga": { region: "Andalusia", country: "Spain" },
+    "málaga": { region: "Andalusia", country: "Spain" },
+    "granada": { region: "Andalusia", country: "Spain" },
+    "cordoba": { region: "Andalusia", country: "Spain" },
+    "córdoba": { region: "Andalusia", country: "Spain" },
+    "bilbao": { region: "Basque Country", country: "Spain" },
+    "san sebastian": { region: "Basque Country", country: "Spain" },
+    "zaragoza": { region: "Aragon", country: "Spain" },
+    "palma": { region: "Balearic Islands", country: "Spain" },
+
+    // Japan
+    "tokyo": { region: "Tokyo", country: "Japan" },
+    "yokohama": { region: "Kanagawa", country: "Japan" },
+    "kawasaki": { region: "Kanagawa", country: "Japan" },
+    "osaka": { region: "Osaka Prefecture", country: "Japan" },
+    "nagoya": { region: "Aichi", country: "Japan" },
+    "sapporo": { region: "Hokkaido", country: "Japan" },
+    "fukuoka": { region: "Fukuoka", country: "Japan" },
+    "kobe": { region: "Hyogo", country: "Japan" },
+    "kyoto": { region: "Kyoto Prefecture", country: "Japan" },
+    "hiroshima": { region: "Hiroshima", country: "Japan" },
+    "sendai": { region: "Miyagi", country: "Japan" },
+
+    // Russia
     "moscow": { region: "Moscow", country: "Russia" },
     "saint petersburg": { region: "Saint Petersburg", country: "Russia" },
-    "st. petersburg": { region: "Saint Petersburg", country: "Russia" },
     "novosibirsk": { region: "Novosibirsk Oblast", country: "Russia" },
     "yekaterinburg": { region: "Sverdlovsk Oblast", country: "Russia" },
     "nizhny novgorod": { region: "Nizhny Novgorod Oblast", country: "Russia" },
@@ -26891,7 +27168,182 @@ var CITY_TO_REGION_MAP = {
     "vladivostok": { region: "Primorsky Krai", country: "Russia" },
     "khabarovsk": { region: "Khabarovsk Krai", country: "Russia" },
     "yaroslavl": { region: "Yaroslavl Oblast", country: "Russia" },
-    "sochi": { region: "Krasnodar Krai", country: "Russia" }
+    "sochi": { region: "Krasnodar Krai", country: "Russia" },
+
+    // Brazil
+    "sao paulo": { region: "São Paulo", country: "Brazil" },
+    "são paulo": { region: "São Paulo", country: "Brazil" },
+    "rio de janeiro": { region: "Rio de Janeiro", country: "Brazil" },
+    "brasilia": { region: "Federal District", country: "Brazil" },
+    "brasília": { region: "Federal District", country: "Brazil" },
+    "salvador": { region: "Bahia", country: "Brazil" },
+    "fortaleza": { region: "Ceará", country: "Brazil" },
+    "belo horizonte": { region: "Minas Gerais", country: "Brazil" },
+    "curitiba": { region: "Paraná", country: "Brazil" },
+    "porto alegre": { region: "Rio Grande do Sul", country: "Brazil" },
+
+    // Mexico
+    "mexico city": { region: "Mexico City", country: "Mexico" },
+    "guadalajara": { region: "Jalisco", country: "Mexico" },
+    "monterrey": { region: "Nuevo León", country: "Mexico" },
+    "puebla": { region: "Puebla", country: "Mexico" },
+    "tijuana": { region: "Baja California", country: "Mexico" },
+    "cancun": { region: "Quintana Roo", country: "Mexico" },
+    "cancún": { region: "Quintana Roo", country: "Mexico" },
+
+    // China
+    "beijing": { region: "Beijing", country: "China" },
+    "shanghai": { region: "Shanghai", country: "China" },
+    "guangzhou": { region: "Guangdong", country: "China" },
+    "shenzhen": { region: "Guangdong", country: "China" },
+    "chengdu": { region: "Sichuan", country: "China" },
+    "hangzhou": { region: "Zhejiang", country: "China" },
+    "wuhan": { region: "Hubei", country: "China" },
+    "xi'an": { region: "Shaanxi", country: "China" },
+    "hong kong": { region: "Hong Kong", country: "China" },
+    "taipei": { region: "Taiwan", country: "Taiwan" },
+
+    // India
+    "mumbai": { region: "Maharashtra", country: "India" },
+    "delhi": { region: "Delhi", country: "India" },
+    "new delhi": { region: "Delhi", country: "India" },
+    "bangalore": { region: "Karnataka", country: "India" },
+    "bengaluru": { region: "Karnataka", country: "India" },
+    "hyderabad": { region: "Telangana", country: "India" },
+    "chennai": { region: "Tamil Nadu", country: "India" },
+    "kolkata": { region: "West Bengal", country: "India" },
+
+    // Others
+    "amsterdam": { region: "North Holland", country: "Netherlands" },
+    "rotterdam": { region: "South Holland", country: "Netherlands" },
+    "zurich": { region: "Zurich", country: "Switzerland" },
+    "geneva": { region: "Geneva", country: "Switzerland" },
+    "vienna": { region: "Vienna", country: "Austria" },
+    "warsaw": { region: "Mazovia", country: "Poland" },
+    "krakow": { region: "Lesser Poland", country: "Poland" },
+    "kraków": { region: "Lesser Poland", country: "Poland" },
+    "stockholm": { region: "Stockholm County", country: "Sweden" },
+    "oslo": { region: "Oslo", country: "Norway" },
+    "copenhagen": { region: "Capital Region", country: "Denmark" },
+    "dublin": { region: "County Dublin", country: "Ireland" },
+    "lisbon": { region: "Lisbon", country: "Portugal" },
+    "porto": { region: "Porto", country: "Portugal" },
+    "athens": { region: "Attica", country: "Greece" },
+    "istanbul": { region: "Istanbul", country: "Turkey" },
+    "cairo": { region: "Cairo Governorate", country: "Egypt" },
+    "johannesburg": { region: "Gauteng", country: "South Africa" },
+    "cape town": { region: "Western Cape", country: "South Africa" },
+    "auckland": { region: "Auckland", country: "New Zealand" },
+    "wellington": { region: "Wellington", country: "New Zealand" },
+    "buenos aires": { region: "Buenos Aires", country: "Argentina" },
+    "santiago": { region: "Santiago Metropolitan", country: "Chile" },
+    "bogota": { region: "Capital District", country: "Colombia" },
+    "bogotá": { region: "Capital District", country: "Colombia" },
+    "medellin": { region: "Antioquia", country: "Colombia" },
+    "medellín": { region: "Antioquia", country: "Colombia" },
+    "seoul": { region: "Seoul", country: "South Korea" },
+    "riyadh": { region: "Riyadh Province", country: "Saudi Arabia" },
+    "dubai": { region: "Dubai", country: "United Arab Emirates" },
+    "abu dhabi": { region: "Abu Dhabi", country: "United Arab Emirates" },
+    "singapore": { region: "Singapore", country: "Singapore" },
+    "jakarta": { region: "Jakarta", country: "Indonesia" },
+    "bali": { region: "Bali", country: "Indonesia" },
+    "manila": { region: "Metro Manila", country: "Philippines" },
+    "bangkok": { region: "Bangkok", country: "Thailand" },
+    "ho chi minh city": { region: "Ho Chi Minh City", country: "Vietnam" },
+    "hanoi": { region: "Hanoi", country: "Vietnam" }
+};
+
+function matchCity(firstKey, targetCountry) {
+    var entry = CITY_TO_REGION_MAP[firstKey];
+    if (!entry) return null;
+    if (!Array.isArray(entry)) return entry;
+    if (!targetCountry) return entry[0];
+    var tc = targetCountry.trim().toLowerCase();
+    for (var i = 0; i < entry.length; i++) {
+        var c = entry[i].country.toLowerCase();
+        if (tc.indexOf(c) !== -1 || c.indexOf(tc) !== -1) {
+            return entry[i];
+        }
+    }
+    return entry[0];
+}
+
+var GlobalLocationResolver = {
+    cache: {},
+    pending: {},
+    getCacheKey: function (lat, lng) {
+        return Math.round(lat * 100) / 100 + "," + Math.round(lng * 100) / 100;
+    },
+    resolveCoords: function (coords, callback) {
+        if (!coords) return;
+        var lat = coords.lat !== undefined ? coords.lat : coords[0];
+        var lng = coords.lng !== undefined ? coords.lng : coords[1];
+        if (typeof lat !== "number" || typeof lng !== "number") return;
+        var key = this.getCacheKey(lat, lng);
+        if (this.cache[key]) {
+            if (callback) callback(this.cache[key]);
+            return;
+        }
+        if (this.pending[key]) {
+            if (callback) this.pending[key].push(callback);
+            return;
+        }
+        this.pending[key] = callback ? [callback] : [];
+        var self = this;
+        var url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=en&lat=" + lat + "&lon=" + lng;
+        if (typeof XHR !== "undefined") {
+            XHR.get(url, function (data) {
+                try {
+                    if (typeof data === "string") data = JSON.parse(data);
+                    if (data && data.address) {
+                        var addr = data.address;
+                        var region = extractRegionFromOsmAddress(addr);
+                        var country = addr.country || "";
+                        var countryCode = (addr.country_code || "").toUpperCase();
+                        var res = { region: region, country: country, countryCode: countryCode };
+                        self.cache[key] = res;
+                        var callbacks = self.pending[key] || [];
+                        delete self.pending[key];
+                        callbacks.forEach(function (cb) { cb(res); });
+                    }
+                } catch (e) {}
+            });
+        }
+    },
+    resolvePlace: function (query, callback) {
+        if (!query || typeof query !== "string") return;
+        var trimmed = query.trim().toLowerCase();
+        if (this.cache[trimmed]) {
+            if (callback) callback(this.cache[trimmed]);
+            return;
+        }
+        if (this.pending[trimmed]) {
+            if (callback) this.pending[trimmed].push(callback);
+            return;
+        }
+        this.pending[trimmed] = callback ? [callback] : [];
+        var self = this;
+        var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&accept-language=en&limit=1&addressdetails=1&q=" + encodeURIComponent(query);
+        if (typeof XHR !== "undefined") {
+            XHR.get(url, function (data) {
+                try {
+                    if (typeof data === "string") data = JSON.parse(data);
+                    if (Array.isArray(data) && data.length > 0 && data[0].address) {
+                        var addr = data[0].address;
+                        var region = extractRegionFromOsmAddress(addr);
+                        var country = addr.country || "";
+                        var countryCode = (addr.country_code || "").toUpperCase();
+                        var res = { region: region, country: country, countryCode: countryCode };
+                        self.cache[trimmed] = res;
+                        var callbacks = self.pending[trimmed] || [];
+                        delete self.pending[trimmed];
+                        callbacks.forEach(function (cb) { cb(res); });
+                    }
+                } catch (e) {}
+            });
+        }
+    }
 };
 
 function resolveRegionFromText(text, fallbackCountry) {
@@ -26901,28 +27353,48 @@ function resolveRegionFromText(text, fallbackCountry) {
     var trimmed = text.trim();
     if (trimmed.indexOf(",") !== -1) {
         var parts = trimmed.split(",").map(function (p) { return p.trim(); });
-        var cityKey = parts[0].toLowerCase();
-        if (CITY_TO_REGION_MAP[cityKey]) {
+        var firstKey = parts[0].toLowerCase();
+        var cityMatch = matchCity(firstKey, parts[parts.length - 1] || fallbackCountry);
+        if (cityMatch) {
             return {
-                region: CITY_TO_REGION_MAP[cityKey].region,
-                country: parts[1] || CITY_TO_REGION_MAP[cityKey].country || fallbackCountry || ""
+                region: cityMatch.region,
+                country: parts[parts.length - 1] || cityMatch.country || fallbackCountry || ""
             };
         }
         if (parts.length >= 3) {
             return { region: parts[1], country: parts[2] };
         }
         if (parts.length === 2) {
-            if (!isCountryName(parts[1])) {
-                return { region: parts[1], country: fallbackCountry || "" };
+            if (isCountryName(parts[1])) {
+                var country = parts[1];
+                if (isKnownRegionOrAdministrative(parts[0])) {
+                    return { region: parts[0], country: country };
+                }
+                var cm = matchCity(parts[0].toLowerCase(), country);
+                if (cm) {
+                    return {
+                        region: cm.region,
+                        country: country
+                    };
+                }
+                GlobalLocationResolver.resolvePlace(parts[0] + ", " + country);
+                return { region: "", country: country };
             }
-            return { region: parts[0], country: parts[1] };
+            return { region: parts[1], country: fallbackCountry || "" };
         }
     }
     var key = trimmed.toLowerCase();
-    if (CITY_TO_REGION_MAP[key]) {
-        return CITY_TO_REGION_MAP[key];
+    var cmSingle = matchCity(key, fallbackCountry);
+    if (cmSingle) {
+        return cmSingle;
     }
-    return { region: trimmed, country: fallbackCountry || "" };
+    if (isCountryName(trimmed)) {
+        return { region: "", country: trimmed };
+    }
+    if (isKnownRegionOrAdministrative(trimmed)) {
+        return { region: trimmed, country: fallbackCountry || "" };
+    }
+    return { region: "", country: fallbackCountry || "" };
 }
 
 function formatLocationText(city, region, countryName) {
@@ -26950,6 +27422,9 @@ function formatLocationText(city, region, countryName) {
         country = resolved.country;
     }
     var parts = [];
+    if (province && country && province.toLowerCase() === country.toLowerCase()) {
+        return country;
+    }
     if (province) {
         parts.push(province);
     }
@@ -26970,6 +27445,9 @@ function formatLiveLocationText(city, region, countryName) {
         }
     }
     if (province && countryName) {
+        if (province.toLowerCase() === countryName.toLowerCase()) {
+            return countryName;
+        }
         return province + ", " + countryName;
     }
     return province || countryName || "Planet Earth";
@@ -27048,8 +27526,8 @@ Data.Class(function User() {
     function normalizeGeo(data) {
         data = data || {};
         var address = data.address || {};
-        var city = data.city || data.locality || data.town || data.village || data.suburb || address.city || address.town || address.village || address.suburb || address.municipality || address.county || data.region || data.country_name || data.country || "";
-        var region = data.region_code || data.region || address.state || address.region || address.county || "";
+        var city = "";
+        var region = extractRegionFromOsmAddress(address) || data.region_code || data.region || address.state || address.region || address.county || "";
         var country = (data.country_code || data.country || address.country_code || "").toString().toLowerCase();
         var countryName = data.country_name || data.country || address.country || "";
         countryName = (countryName || "").toString().trim();
@@ -27062,10 +27540,9 @@ Data.Class(function User() {
         if (countryName && countryName.length === 2) {
             countryName = countryName.toUpperCase()
         }
-        city = (city || "").toString().trim() || "Planet Earth";
         region = abbreviateRegion(region, country);
         var coords = data.coords || [data.latitude || 0, data.longitude || 0];
-        var address = region || countryName || country || "Planet Earth";
+        var addressStr = region || countryName || country || "Planet Earth";
         return {
             region: region,
             city: city,
@@ -27073,7 +27550,7 @@ Data.Class(function User() {
             country_name: countryName,
             coords: coords,
             ip: data.ip || "",
-            address: address
+            address: addressStr
         }
     }
     function getNativeGeo() {
@@ -27120,29 +27597,50 @@ Data.Class(function User() {
             Storage.set("accurate_geo", _data)
         };
         var loadIpGeo = function () {
+            var tryIpApi = function () {
+                XHR.get("https://ipapi.co/json/", function (data) {
+                    try {
+                        if (typeof data == "string") data = JSON.parse(data);
+                        if (data && (data.country_name || data.country)) {
+                            applyGeo({
+                                region: data.region || data.region_code || "",
+                                city: "",
+                                country: (data.country_code || data.country || "").toLowerCase(),
+                                country_name: data.country_name || data.country || "",
+                                coords: [data.latitude || 0, data.longitude || 0],
+                                ip: data.ip || ""
+                            });
+                            return;
+                        }
+                    } catch (e) {}
+                    checkEmpty();
+                    Storage.set("accurate_geo", _data);
+                }).onError = function () {
+                    checkEmpty();
+                    Storage.set("accurate_geo", _data);
+                };
+            };
             XHR.get("https://geolocation-db.com/json/", function (data) {
                 try {
                     if (typeof data == "string") {
                         data = JSON.parse(data)
                     }
-                    if (!data) {
-                        throw new Error("IP lookup failed")
+                    if (!data || (!data.country_name && !data.country_code)) {
+                        return tryIpApi();
                     }
                     applyGeo({
                         region: data.state || data.region_code || data.region || "",
-                        city: data.city || "",
+                        city: "",
                         country: data.country_code || data.country || "",
                         country_name: data.country || data.country_name || "",
                         coords: [data.latitude || 0, data.longitude || 0],
                         ip: data.IPv4 || data.ip || ""
                     })
                 } catch (e) {
-                    checkEmpty();
-                    Storage.set("accurate_geo", _data)
+                    tryIpApi();
                 }
             }).onError = function () {
-                checkEmpty();
-                Storage.set("accurate_geo", _data)
+                tryIpApi();
             }
         };
         if (navigator.geolocation) {
@@ -27157,8 +27655,8 @@ Data.Class(function User() {
                         }
                         applyGeo({
                             address: data.address || {},
-                            city: data.address && (data.address.city || data.address.town || data.address.village || data.address.suburb || data.address.municipality || data.address.county) || "",
-                            region: data.address && (data.address.state || data.address.region || data.address.county) || "",
+                            city: "",
+                            region: extractRegionFromOsmAddress(data.address),
                             country: data.address && (data.address.country_code || data.address.country || "") || "",
                             country_name: data.address && (data.address.country || "") || "",
                             coords: [position.coords.latitude, position.coords.longitude],
@@ -32046,8 +32544,9 @@ Class(function StatsMeshText() {
     this.animateIn = function (stat, position) {
         _rotation.position = position;
         _this.group.scale.set(1, 1, 1);
+        var loc = formatLiveLocationText(stat.city || stat.location || stat.address, stat.region, stat.country_name || stat.country);
         var text = new BMFontText({
-            text: stat.location,
+            text: loc,
             font: _titleFont,
             width: 4000,
             align: "center",
@@ -32057,6 +32556,31 @@ Class(function StatsMeshText() {
         _titleMesh.geometry = _titleGeometry;
         _titleGeometry.needsUpdate = true;
         _titleShader.uniforms.count.value = _titleGeometry.attributes.letter.count / 4;
+        if ((!stat.region || stat.region === "") && (stat.coords || stat.location || stat.address)) {
+            var updateMesh = function (res) {
+                if (!res || !res.region) return;
+                var updated = formatLiveLocationText("", res.region, res.country);
+                if (updated && updated !== "Planet Earth" && updated !== loc) {
+                    loc = updated;
+                    var newBMText = new BMFontText({
+                        text: loc,
+                        font: _titleFont,
+                        width: 4000,
+                        align: "center",
+                        letterSpacing: -5,
+                    });
+                    _titleGeometry = newBMText.geometry;
+                    _titleMesh.geometry = _titleGeometry;
+                    _titleGeometry.needsUpdate = true;
+                    _titleShader.uniforms.count.value = _titleGeometry.attributes.letter.count / 4;
+                }
+            };
+            if (stat.coords) {
+                GlobalLocationResolver.resolveCoords(stat.coords, updateMesh);
+            } else if (stat.location || stat.address) {
+                GlobalLocationResolver.resolvePlace(stat.location || stat.address, updateMesh);
+            }
+        }
         text = new BMFontText({
             text: Copy.THROWN_TEXT[Utils.doRandom(0, Copy.THROWN_TEXT.length - 1)],
             font: _captionFont,
@@ -32186,6 +32710,21 @@ Class(function StatsText() {
         }
         $text1.html(Copy.THROWN_TEXT[Utils.doRandom(0, Copy.THROWN_TEXT.length - 1)]).clearTransform().clearAlpha();
         $text2.html(locationText).clearTransform().clearAlpha();
+        if ((!stat.region || stat.region === "") && (stat.coords || stat.location || stat.address)) {
+            var updateLive = function (res) {
+                if (!res || !res.region) return;
+                var updated = formatLiveLocationText("", res.region, res.country);
+                if (updated && updated !== "Planet Earth" && updated !== locationText) {
+                    locationText = updated;
+                    $text2.html(locationText);
+                }
+            };
+            if (stat.coords) {
+                GlobalLocationResolver.resolveCoords(stat.coords, updateLive);
+            } else if (stat.location || stat.address) {
+                GlobalLocationResolver.resolvePlace(stat.location || stat.address, updateLive);
+            }
+        }
         $text2.fontSize = Utils.convertRange(locationText.length, 5, 40, 90, 44);
         $text2.css({
             fontSize: $text2.fontSize
@@ -36714,17 +37253,19 @@ Class(function PlaneStampTexture() {
         var date = DateUtil.getDate();
         GATracker.trackEvent("plane", "stamp", "plane stamp", 1);
         var country = (location.country || "").toUpperCase();
-        if (country == "US") {
-            country = "USA"
-        }
-        if (country == "CA") {
-            country = "CAN"
-        }
-        if (country == "AU") {
-            country = "AUS"
-        }
-        if (country == "RU") {
-            country = "RUS"
+        var countryCodeMap = {
+            "US": "USA", "CA": "CAN", "AU": "AUS", "RU": "RUS", "GB": "GBR", "UK": "GBR",
+            "DE": "DEU", "FR": "FRA", "IT": "ITA", "ES": "ESP", "JP": "JPN", "CN": "CHN",
+            "IN": "IND", "BR": "BRA", "MX": "MEX", "NL": "NLD", "CH": "CHE", "SE": "SWE",
+            "NO": "NOR", "FI": "FIN", "DK": "DNK", "PL": "POL", "UA": "UKR", "BE": "BEL",
+            "AT": "AUT", "IE": "IRL", "PT": "PRT", "GR": "GRC", "CZ": "CZE", "HU": "HUN",
+            "RO": "ROU", "NZ": "NZL", "KR": "KOR", "AR": "ARG", "CL": "CHL", "CO": "COL",
+            "ZA": "ZAF", "EG": "EGY", "TR": "TUR", "SA": "SAU", "SG": "SGP", "MY": "MYS",
+            "ID": "IDN", "TH": "THA", "VN": "VNM", "PH": "PHL", "PK": "PAK", "NG": "NGA",
+            "KE": "KEN", "IL": "ISR", "AE": "ARE"
+        };
+        if (countryCodeMap[country]) {
+            country = countryCodeMap[country];
         }
         var countryName = location.country_name || country;
         var address = region || countryName || "Planet Earth";
