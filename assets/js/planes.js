@@ -10412,8 +10412,8 @@ Class(function Config() {
     }, {
         location: "Ontario, Canada",
         coords: {
-            lat: 45.42,
-            lng: -75.70
+            lat: 51.24,
+            lng: -86.02
         },
         priority: 4,
         realtime: false,
@@ -10423,8 +10423,8 @@ Class(function Config() {
     }, {
         location: "Newfoundland and Labrador, Canada",
         coords: {
-            lat: 47.56,
-            lng: -52.73
+            lat: 52.31,
+            lng: -56.54
         },
         priority: 4,
         realtime: true,
@@ -10434,8 +10434,8 @@ Class(function Config() {
     }, {
         location: "British Columbia, Canada",
         coords: {
-            lat: 49.19,
-            lng: -122.85
+            lat: 54.29,
+            lng: -124.53
         },
         priority: 4,
         realtime: true,
@@ -10445,8 +10445,8 @@ Class(function Config() {
     }, {
         location: "Iowa, USA",
         coords: {
-            lat: 41.97,
-            lng: -91.66
+            lat: 42.09,
+            lng: -93.51
         },
         priority: 4,
         realtime: true,
@@ -10456,8 +10456,8 @@ Class(function Config() {
     }, {
         location: "Colorado, USA",
         coords: {
-            lat: 39.73,
-            lng: -104.98
+            lat: 38.94,
+            lng: -105.49
         },
         priority: 4,
         realtime: true,
@@ -10467,8 +10467,8 @@ Class(function Config() {
     }, {
         location: "Quebec, Canada",
         coords: {
-            lat: 45.501689,
-            lng: -73.567256
+            lat: 51.50,
+            lng: -73.10
         },
         priority: 4,
         realtime: true,
@@ -10478,8 +10478,8 @@ Class(function Config() {
     }, {
         location: "Washington, USA",
         coords: {
-            lat: 47.60,
-            lng: -122.32
+            lat: 47.38,
+            lng: -119.78
         },
         priority: 4,
         realtime: true,
@@ -10489,8 +10489,8 @@ Class(function Config() {
     }, {
         location: "England, UK",
         coords: {
-            lat: 53.38,
-            lng: -1.47
+            lat: 52.10,
+            lng: -1.77
         },
         priority: 4,
         realtime: false,
@@ -10500,8 +10500,8 @@ Class(function Config() {
     }, {
         location: "Texas, USA",
         coords: {
-            lat: 30.267153,
-            lng: -97.743061
+            lat: 31.49,
+            lng: -99.07
         },
         priority: 4,
         realtime: true,
@@ -10511,8 +10511,8 @@ Class(function Config() {
     }, {
         location: "Scotland, UK",
         coords: {
-            lat: 55.86,
-            lng: -4.25
+            lat: 57.07,
+            lng: -4.27
         },
         priority: 4,
         realtime: true,
@@ -10522,8 +10522,8 @@ Class(function Config() {
     }, {
         location: "Tuscany, Italy",
         coords: {
-            lat: 43.77,
-            lng: 11.25
+            lat: 43.46,
+            lng: 11.21
         },
         priority: 4,
         realtime: true,
@@ -10533,8 +10533,8 @@ Class(function Config() {
     }, {
         location: "Alberta, Canada",
         coords: {
-            lat: -52.27,
-            lng: -113.80
+            lat: 56.45,
+            lng: -115.18
         },
         priority: 4,
         realtime: false,
