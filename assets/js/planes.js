@@ -9528,7 +9528,10 @@ Class(function Thread(_class) {
         }
     }
     function addListeners() {
-        _worker.addEventListener("message", workerMessage)
+        _worker.addEventListener("message", workerMessage);
+        _worker.addEventListener("error", function (err) {
+            console.warn("[Thread] Worker error:", err.message || err)
+        })
     }
     function workerMessage(e) {
         if (e.data.console) {
@@ -9588,8 +9591,18 @@ Class(function Thread(_class) {
                 importScript: true
             })
         } else {
+            var fullPath;
+            if (path.strpos("http") || path.indexOf("//") === 0) {
+                fullPath = path
+            } else {
+                var base = location.protocol + "//" + location.host + location.pathname;
+                if (base.charAt(base.length - 1) !== "/") {
+                    base = base.substring(0, base.lastIndexOf("/") + 1)
+                }
+                fullPath = base + path.replace(/^\//, "")
+            }
             _worker.postMessage({
-                path: path.strpos("http") ? path : location.protocol + "//" + location.hostname + location.pathname + "/" + path,
+                path: fullPath,
                 importScript: true
             })
         }
@@ -25984,15 +25997,37 @@ Data.Class(function Planes() {
         }
     }
     )();
+    var _isRetrieving = false;
     function retrievePlanes(callback) {
         if (!Mobile.System.CONNECTIVITY) {
             return
         }
+        if (_isRetrieving) {
+            if (callback) {
+                callback(_myPlanes)
+            }
+            return
+        }
+        if (!_createdPlanes.length) {
+            _myPlanes = [];
+            Storage.set("myPlanes", _myPlanes);
+            _this.events.fire(PlanesEvents.LOADED_MY_PLANES);
+            if (callback) {
+                callback(_myPlanes)
+            }
+            return
+        }
+        _isRetrieving = true;
         var queue = [];
         var myPlanes = [];
-        var load = function () {
-            var obj = queue.shift();
-            if (!obj || !obj.id) {
+        var planeTotal = Math.min(_createdPlanes.length, 5);
+        var activeWorkers = planeTotal;
+        var finished = false;
+        var onDone = function () {
+            activeWorkers--;
+            if (activeWorkers <= 0 && !finished) {
+                finished = true;
+                _isRetrieving = false;
                 _myPlanes = myPlanes;
                 Storage.set("myPlanes", _myPlanes);
                 _this.events.fire(PlanesEvents.LOADED_MY_PLANES);
@@ -26000,6 +26035,12 @@ Data.Class(function Planes() {
                     callback(_myPlanes);
                     callback = null
                 }
+            }
+        };
+        var load = function () {
+            var obj = queue.shift();
+            if (!obj || !obj.id) {
+                onDone();
                 return
             }
             if (usesFirebaseBackend()) {
@@ -26039,7 +26080,6 @@ Data.Class(function Planes() {
         _createdPlanes.forEach(function (obj) {
             queue.push(obj)
         });
-        var planeTotal = Math.min(_createdPlanes.length, 5);
         for (var i = 0; i < planeTotal; i++) {
             load()
         }
@@ -30693,6 +30733,9 @@ Class(function PlaneFlockingCPU(_numParticles, _numThreads, _geometry) {
     }
     )();
     function initChunks() {
+        if (_chunks.length) {
+            return
+        }
         for (var i = 0; i < _numThreads; i++) {
             var chunk = _this.initClass(PlaneFlockingChunk, i, Math.floor(_numParticles / _numThreads), _geometry, _numThreads);
             _chunks.push(chunk)
@@ -31095,6 +31138,7 @@ Class(function PlaneFlockingChunk(_index, _numParticles, _geometry, _numThreads)
     Inherit(this, Component);
     var _this = this;
     var _thread, _recycle, _render;
+    var _inFlight = false;
     var OFFSET = 7;
     (function () {
         initThread();
@@ -31111,14 +31155,19 @@ Class(function PlaneFlockingChunk(_index, _numParticles, _geometry, _numThreads)
         _thread.on("transfer", updateGeometry)
     }
     function loop() {
+        if (_inFlight) {
+            return
+        }
         if (!_render) {
             _render = {}
         }
         _render.time = Render.TSL;
         _render.delta = Render.DELTA;
+        _inFlight = true;
         _thread.render(_render)
     }
     function updateGeometry(e) {
+        _inFlight = false;
         var audioPos;
         var releasedPlanes = [];
         for (var k = 0; k < _numThreads; k++) {
@@ -35048,7 +35097,7 @@ Class(function MyPlanesList() {
     function addHandlers() {
         _this.events.subscribe(PlanesEvents.MY_PLANES_SWIPE_PROGRESS, update);
         _this.events.subscribe(PlanesEvents.CONFIRMATION_HIDDEN, updateList);
-        _this.events.subscribe(PlanesEvents.LOADED_MY_PLANES, updateList)
+        _this.events.subscribe(PlanesEvents.LOADED_MY_PLANES, rebuildList)
     }
     function update(e) {
         $title.css({
@@ -35059,23 +35108,24 @@ Class(function MyPlanesList() {
         });
         $this.show()
     }
+    function rebuildList() {
+        if (_dw) {
+            _dw.stop()
+        }
+        _items.forEach(function (item) {
+            item.destroy()
+        });
+        _items = [];
+        initData();
+        initList();
+        var text = Copy.MADE.replace("##", _data.length);
+        if (_data.length == 1) {
+            text = text.slice(0, -1)
+        }
+        $title.html(text)
+    }
     function updateList() {
-        Data.Planes.refreshPlanes(function () {
-            if (_dw) {
-                _dw.stop()
-            }
-            _items.forEach(function (item) {
-                item.destroy()
-            });
-            _items = [];
-            initData();
-            initList();
-            var text = Copy.MADE.replace("##", _data.length);
-            if (_data.length == 1) {
-                text = text.slice(0, -1)
-            }
-            $title.html(text)
-        })
+        Data.Planes.refreshPlanes(rebuildList)
     }
     this.animateOut = function (callback) {
         $title.tween({
@@ -35753,6 +35803,9 @@ Class(function PlaneButterflies() {
         World.instance().scene.add(_planes.object3D)
     }
     function initChunks() {
+        if (_chunks.length) {
+            return
+        }
         for (var i = 0; i < _numThreads; i++) {
             var chunk = _this.initClass(PlaneButterfliesChunk, i, Math.floor(_numParticles / _numThreads), _planes.geometry);
             _chunks.push(chunk)
@@ -35857,6 +35910,7 @@ Class(function PlaneButterfliesChunk(_index, _numParticles, _geometry) {
     Inherit(this, Component);
     var _this = this;
     var _thread, _recycle, _render;
+    var _inFlight = false;
     var OFFSET = 7;
     (function () {
         initThread();
@@ -35873,14 +35927,19 @@ Class(function PlaneButterfliesChunk(_index, _numParticles, _geometry) {
         _thread.on("transfer", updateGeometry)
     }
     function loop() {
+        if (_inFlight) {
+            return
+        }
         if (!_render) {
             _render = {}
         }
         _render.time = Render.TSL;
         _render.delta = Render.DELTA;
+        _inFlight = true;
         _thread.render(_render)
     }
     function updateGeometry(e) {
+        _inFlight = false;
         for (var i = 0, j = _index * _numParticles; i < e.values.length; i += OFFSET,
             j++) {
             _geometry.attributes.offset.setXYZ(j, e.values[i + 0], e.values[i + 1], e.values[i + 2]);
@@ -36128,7 +36187,12 @@ Class(function PlaneCaught() {
             _this.events.fire(PlanesEvents.RE_THROW_CAUGHT_PLANE)
         }
     }
+    var _handlersAdded = false;
     this.init = function () {
+        if (_handlersAdded) {
+            return
+        }
+        _handlersAdded = true;
         addHandlers()
     }
         ;
