@@ -10553,7 +10553,7 @@ Class(function Copy() {
     this.INTRO = "Throw and catch<br />paper planes with people<br />around the world";
     this.INTRO_DESKTOP = "Use your phone to throw and catch<br />paper planes with people around the world";
     this.BLOCK_SUB = "This experience requires location data.<br/>You'll need to <strong>Enable Location Services.</strong>";
-    this.DESKTOP_SUB = "Join on your phone at<br/> <strong>cmoneon.github.io/planes</strong>";
+    this.DESKTOP_SUB = "Join on your phone at<br/> <strong>planes.cmoneon.cc</strong>";
     this.AFTER = "Thanks for flying with us!";
     this.AFTER_DESKTOP = "Thanks for flying with us!<br />We hope you enjoyed the experience.";
     this.AFTER_DESKTOP_SUB = "But don't worry, we're working hard<br />to bring this to everyone soon";
@@ -10574,8 +10574,8 @@ Class(function Copy() {
     this.CONFIRM_TEXT = "Your plane is now<br />flying around the world<br />with ## others";
     this.CONFIRM_TEXT_BACK = "The plane is back<br />flying around the world<br />with ## others";
     this.MADE = "You’ve made<br />## planes";
-    this.SIDESCREEN = "Join on<br />your phone at<br /><strong>cmoneon.github.io/planes</strong>";
-    this.INFO_TEXT = ["This experience allows people to throw and catch virtual paper planes with one another<br/><br/>Visit <strong>cmoneon.github.io/planes</strong> on your computer to throw planes<br/>into your screen", 'Made by some friends at <a href="http://damvan.ca/" target="_blank">Damvan</a>'];
+    this.SIDESCREEN = "Join on<br />your phone at<br /><strong>planes.cmoneon.cc</strong>";
+    this.INFO_TEXT = ["This experience allows people to throw and catch virtual paper planes with one another<br/><br/>Visit <strong>planes.cmoneon.cc</strong> on your computer to throw planes<br/>into your screen", 'Made by CmoNeon and Friends</a>'];
     this.INFO_GPS_1 = "Currently using IP for location.";
     this.INFO_GPS_2 = "Enable GPS for more accuracy.";
     this.LOCATION_DENIED_TITLE = "Location needed";
@@ -32157,7 +32157,7 @@ Class(function IntroDesktopView() {
             bottom: "50%",
             left: 0,
         });
-        $url.html("cmoneon.github.io/planes").css({
+        $url.html("planes.cmoneon.cc").css({
             top: "50%",
             right: 0,
             left: 0,
@@ -39811,7 +39811,7 @@ Class(function Main() {
         }
         GATracker.trackPage(Mobile.isNative() ? "native" : "web");
         if (!Device.graphics.webgl) {
-            return window.location = "https://cmoneon.github.io/planes/fallback"
+            return window.location = "https://planes.cmoneon.cc/fallback"
         }
         Hydra.CDN = Config.CDN;
         Utils3D.PATH = Config.CDN;
